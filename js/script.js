@@ -1,13 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Intro Loader Logic
-    const introLoader = document.getElementById("intro-loader");
-    if (introLoader) {
-        setTimeout(() => {
-            introLoader.classList.add("fade-out");
+    // Intro Video Experience Logic
+    const enterBtn = document.getElementById("enter-btn");
+    const introScreen = document.getElementById("intro-screen");
+    
+    if (enterBtn && introScreen) {
+        enterBtn.addEventListener("click", () => {
+            introScreen.style.opacity = '0';
             setTimeout(() => {
-                introLoader.style.display = "none";
+                introScreen.style.display = 'none';
             }, 1000);
-        }, 1500);
+        });
     }
 
     // Inject UI elements
@@ -61,36 +63,36 @@ async function fetchMenuData() {
 function renderMenu(data, container) {
     for (const [category, items] of Object.entries(data)) {
         const section = document.createElement('section');
-        section.className = 'mb-16';
 
         const title = document.createElement('h2');
-        title.className = 'text-3xl font-bold mb-8 text-white capitalize border-b border-stone-800 pb-2 tracking-wide';
+        title.className = 'text-4xl md:text-5xl font-bold mb-10 text-white capitalize tracking-wide font-serif italic';
         title.textContent = category;
         section.appendChild(title);
 
         const grid = document.createElement('div');
-        grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8';
+        grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10';
 
         items.forEach(item => {
             const card = document.createElement('div');
-            card.className = 'bg-stone-800 rounded-2xl overflow-hidden shadow-lg border border-stone-700/50 flex flex-col transform transition duration-300 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(217,119,6,0.15)] group relative';
+            card.className = 'bg-cafe-bg rounded-[2rem] overflow-hidden shadow-2xl border border-white/5 flex flex-col transform transition duration-500 hover:-translate-y-3 hover:shadow-[0_20px_50px_rgba(217,119,6,0.15)] hover:border-cafe-accent/30 group';
             
-            const badgeHTML = item.tag ? `<div class="absolute top-4 right-4 bg-brand-accent text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md z-10">${item.tag}</div>` : '';
+            const badgeHTML = item.tag ? `<div class="absolute top-6 right-6 bg-cafe-accent text-white text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-xl z-20">${item.tag}</div>` : '';
             
             card.innerHTML = `
-                <div class="relative h-56 w-full overflow-hidden">
+                <div class="relative h-64 w-full overflow-hidden hover-zoom">
                     ${badgeHTML}
-                    <img src="${item.image}" alt="${item.name}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transform transition duration-500 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-transparent opacity-80"></div>
+                    <img src="${item.image}" alt="${item.name}" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg via-transparent to-transparent opacity-90"></div>
                 </div>
-                <div class="p-6 bg-gradient-to-b from-stone-800 to-stone-900 flex-grow flex flex-col">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-xl font-bold text-white tracking-tight">${item.name}</h3>
-                        <span class="text-xl font-bold text-brand-accent ml-4">₹${item.price}</span>
+                <div class="p-8 flex-grow flex flex-col relative">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-2xl font-bold text-white tracking-tight">${item.name}</h3>
+                        <span class="text-2xl font-bold text-cafe-accent ml-4 mt-0.5">₹${item.price}</span>
                     </div>
-                    <p class="text-stone-400 text-sm flex-grow mb-6 leading-relaxed">${item.description}</p>
-                    <button onclick="addToCart('${item.id}', '${item.name}', ${item.price})" class="w-full py-3 bg-stone-700 hover:bg-brand-accent text-center text-sm font-bold tracking-wide uppercase rounded-xl transition-all duration-300 border border-stone-600 hover:border-transparent text-white mt-auto flex items-center justify-center gap-2">
-                        Add to Cart
+                    <p class="text-cafe-muted text-base flex-grow mb-8 font-light leading-relaxed">${item.description}</p>
+                    <button onclick="addToCart('${item.id}', '${item.name}', ${item.price})" class="w-full py-4 bg-cafe-card hover:bg-cafe-accent text-center text-sm font-bold tracking-widest uppercase rounded-2xl transition-all duration-300 border border-white/10 hover:border-transparent text-white mt-auto shadow-md flex items-center justify-center gap-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        Add to Order
                     </button>
                 </div>
             `;
@@ -110,7 +112,8 @@ window.addToCart = function(id, name, price) {
         cart.push({ id, name, price, quantity: 1 });
     }
     saveCart();
-    // Open cart for UX
+    
+    // Smoothly open cart
     document.getElementById('cart-slider').classList.add('open');
     document.getElementById('cart-backdrop').classList.add('open');
 };
@@ -137,26 +140,26 @@ function renderCartItems() {
     let total = 0;
     
     if (cart.length === 0) {
-        container.innerHTML = `<div class="text-center text-stone-500 mt-10">Your cart is empty.</div>`;
+        container.innerHTML = `<div class="text-center text-cafe-muted mt-20 text-lg font-light">Your basket feels light.</div>`;
         btn.disabled = true;
-        btn.classList.add("opacity-50", "cursor-not-allowed");
+        btn.classList.add("opacity-30", "cursor-not-allowed");
     } else {
         btn.disabled = false;
-        btn.classList.remove("opacity-50", "cursor-not-allowed");
+        btn.classList.remove("opacity-30", "cursor-not-allowed");
         
         cart.forEach(item => {
             total += item.price * item.quantity;
             const row = document.createElement("div");
-            row.className = "flex justify-between items-center mb-4 p-4 bg-stone-800 rounded-xl border border-stone-700";
+            row.className = "flex justify-between items-center mb-6 p-5 bg-cafe-card rounded-2xl border border-white/5 shadow-sm";
             row.innerHTML = `
                 <div class="flex-grow">
-                    <h4 class="text-white font-bold">${item.name}</h4>
-                    <span class="text-brand-accent text-sm font-bold">₹${item.price}</span>
+                    <h4 class="text-white font-bold text-lg mb-1">${item.name}</h4>
+                    <span class="text-cafe-accent text-sm font-bold tracking-widest">₹${item.price}</span>
                 </div>
-                <div class="flex items-center space-x-3 bg-stone-900 rounded-lg p-1 border border-stone-700">
-                    <button onclick="updateQuantity('${item.id}', -1)" class="w-8 h-8 flex items-center justify-center text-white hover:bg-stone-700 rounded-md transition-colors">-</button>
-                    <span class="text-white font-bold w-4 text-center">${item.quantity}</span>
-                    <button onclick="updateQuantity('${item.id}', 1)" class="w-8 h-8 flex items-center justify-center text-white hover:bg-stone-700 rounded-md transition-colors">+</button>
+                <div class="flex items-center space-x-3 bg-cafe-bg rounded-xl border border-white/5 p-1.5 shadow-inner">
+                    <button onclick="updateQuantity('${item.id}', -1)" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded-lg transition-colors font-bold">-</button>
+                    <span class="text-white font-bold w-6 text-center">${item.quantity}</span>
+                    <button onclick="updateQuantity('${item.id}', 1)" class="w-8 h-8 flex items-center justify-center text-white hover:bg-white/10 rounded-lg transition-colors font-bold">+</button>
                 </div>
             `;
             container.appendChild(row);
@@ -167,27 +170,27 @@ function renderCartItems() {
 
 // --- UI INJECTION & MODALS ---
 function injectCartUI() {
-    // Check if toggles exist
     const toggles = document.querySelectorAll("#cart-toggle");
     
     const ui = document.createElement("div");
     ui.innerHTML = `
-        <div id="cart-backdrop" class="cart-backdrop fixed inset-0 z-40 bg-black/60 backdrop-blur-sm cursor-pointer border-none"></div>
-        <div id="cart-slider" class="cart-slider fixed top-0 right-0 h-full w-full sm:w-[400px] bg-stone-900 z-50 shadow-2xl flex flex-col border-l border-stone-800">
-            <div class="p-6 border-b border-stone-800 flex justify-between items-center bg-stone-950">
-                <h2 class="text-2xl font-bold text-white tracking-tight">Your Cart</h2>
-                <button id="close-cart" class="text-stone-400 hover:text-white transition-colors">
+        <div id="cart-backdrop" class="cart-backdrop fixed inset-0 z-40 bg-black/80 backdrop-blur-sm cursor-pointer border-none"></div>
+        <div id="cart-slider" class="cart-slider fixed top-0 right-0 h-full w-full sm:w-[450px] bg-cafe-bg z-50 shadow-2xl flex flex-col border-l border-white/10">
+            <div class="p-8 border-b border-white/5 flex justify-between items-center">
+                <h2 class="text-3xl font-bold text-white tracking-tight font-serif italic">Your Order</h2>
+                <button id="close-cart" class="p-2 text-cafe-muted hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <div class="p-6 flex-grow overflow-y-auto" id="cart-items-container"></div>
-            <div class="p-6 border-t border-stone-800 bg-stone-950">
-                <div class="flex justify-between items-center mb-6">
-                    <span class="text-stone-400 font-bold uppercase tracking-widest text-sm">Total</span>
-                    <span id="cart-total" class="text-3xl font-bold text-brand-accent tracking-tighter">₹0</span>
+            <div class="p-8 flex-grow overflow-y-auto" id="cart-items-container"></div>
+            <div class="p-8 border-t border-white/5 bg-cafe-card">
+                <div class="flex justify-between items-center mb-8">
+                    <span class="text-cafe-muted font-bold uppercase tracking-widest text-sm">Estimated Total</span>
+                    <span id="cart-total" class="text-4xl font-bold text-cafe-accent tracking-tighter">₹0</span>
                 </div>
-                <button id="checkout-btn" class="w-full py-4 bg-brand-accent hover:bg-brand-accentHover text-white font-bold uppercase tracking-widest rounded-xl transition-all shadow-lg flex justify-center items-center gap-2">
-                    Place Order
+                <button id="checkout-btn" class="w-full py-5 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-widest rounded-2xl transition-all shadow-xl hover:scale-[1.02] flex justify-center items-center gap-3">
+                    Proceed to Checkout
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </button>
             </div>
         </div>
@@ -218,35 +221,38 @@ function injectCartUI() {
 function injectCheckoutModal() {
     const ui = document.createElement("div");
     ui.innerHTML = `
-        <div id="checkout-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" id="checkout-backdrop"></div>
-            <div class="relative bg-stone-900 border border-stone-800 rounded-3xl p-8 w-full max-w-md shadow-2xl transform">
-                <button id="close-checkout" class="absolute top-6 right-6 text-stone-400 hover:text-white transition-colors">
+        <div id="checkout-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-6">
+            <div class="absolute inset-0 bg-black/90 backdrop-blur-md" id="checkout-backdrop"></div>
+            <div class="relative bg-cafe-bg border border-white/10 rounded-[2.5rem] p-10 w-full max-w-lg shadow-[0_0_50px_rgba(0,0,0,0.5)] transform">
+                <button id="close-checkout" class="absolute top-8 right-8 p-2 text-cafe-muted hover:text-white bg-white/5 hover:bg-white/10 rounded-full transition-colors">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
-                <h2 class="text-3xl font-bold text-white mb-2 tracking-tight">Checkout</h2>
-                <p class="text-stone-400 mb-8 font-light">Complete your order details.</p>
                 
-                <form id="checkout-form" class="space-y-6">
+                <h2 class="text-4xl font-bold text-white mb-2 font-serif italic tracking-tight">Checkout</h2>
+                <p class="text-cafe-muted mb-10 font-light text-lg">Just a few details to get this to your table.</p>
+                
+                <form id="checkout-form" class="space-y-8">
                     <div>
-                        <label class="block text-sm font-bold text-stone-300 uppercase tracking-widest mb-2">Customer Name</label>
-                        <input type="text" id="cust-name" required class="w-full bg-stone-800 border border-stone-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-accent transition-colors" placeholder="e.g. John Doe">
+                        <label class="block text-xs font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Your Name</label>
+                        <input type="text" id="cust-name" required class="w-full bg-cafe-card border border-white/5 rounded-2xl px-5 py-4 text-white text-lg focus:outline-none focus:border-cafe-accent transition-colors shadow-inner" placeholder="e.g. Jane">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-stone-300 uppercase tracking-widest mb-2">Table Number</label>
-                        <input type="number" id="table-number" min="1" max="99" required class="w-full bg-stone-800 border border-stone-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-brand-accent transition-colors" placeholder="e.g. 5">
+                        <label class="block text-xs font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Table Number</label>
+                        <input type="number" id="table-number" min="1" max="99" required class="w-full bg-cafe-card border border-white/5 rounded-2xl px-5 py-4 text-white text-lg focus:outline-none focus:border-cafe-accent transition-colors shadow-inner" placeholder="e.g. 5">
                     </div>
                     
-                    <button type="submit" class="w-full py-4 bg-brand-accent hover:bg-brand-accentHover text-white font-bold uppercase tracking-widest rounded-xl transition-all shadow-lg mt-4">
-                        Confirm Order
+                    <button type="submit" class="w-full py-5 mt-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-widest rounded-2xl transition-all shadow-xl hover:-translate-y-1">
+                        Place Order
                     </button>
                 </form>
             </div>
         </div>
         
-        <div id="success-toast" class="modal fixed top-10 right-10 z-[60] bg-green-500 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 transform translate-y-[-20px]">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-            <span class="font-bold">Order placed successfully!</span>
+        <div id="success-toast" class="modal fixed top-10 left-1/2 -translate-x-1/2 z-[100] bg-cafe-card border border-cafe-accent text-white px-8 py-5 rounded-full shadow-2xl flex items-center gap-4 transform -translate-y-10 transition-all duration-500">
+            <div class="bg-cafe-accent p-1.5 rounded-full">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span class="font-bold tracking-wide text-lg">Order placed successfully!</span>
         </div>
     `;
     document.body.appendChild(ui);
@@ -259,36 +265,22 @@ function injectCheckoutModal() {
     document.getElementById("checkout-form").addEventListener("submit", (e) => {
         e.preventDefault();
         
-        const name = document.getElementById("cust-name").value;
-        const table = document.getElementById("table-number").value;
-        const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-        
-        const order = {
-            id: Date.now().toString(),
-            timestamp: new Date().toLocaleTimeString(),
-            customer: name,
-            table: table,
-            items: [...cart],
-            total: total
-        };
-        
-        let allOrders = JSON.parse(localStorage.getItem("cafe_orders")) || [];
-        allOrders.push(order);
-        localStorage.setItem("cafe_orders", JSON.stringify(allOrders));
-        
-        // Reset
+        // Checkout complete purely frontend
         cart = [];
         saveCart();
         modal.classList.remove("open");
         
-        // Show success
+        // Show success animation
         const toast = document.getElementById("success-toast");
         toast.classList.add("open");
-        toast.style.transform = "translateY(0)";
+        toast.classList.remove("-translate-y-10");
+        toast.classList.add("translate-y-5");
+        
         setTimeout(() => {
             toast.classList.remove("open");
-            toast.style.transform = "translateY(-20px)";
-        }, 3000);
+            toast.classList.remove("translate-y-5");
+            toast.classList.add("-translate-y-10");
+        }, 4000);
         
         e.target.reset();
     });

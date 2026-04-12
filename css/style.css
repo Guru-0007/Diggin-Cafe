@@ -1,28 +1,8 @@
-/* Custom scrollbar and animations */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #1c1917; }
-::-webkit-scrollbar-thumb { background: #44403c; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #d97706; }
-
-/* Intro Loader */
-.intro-loader {
-    position: fixed; inset: 0; z-index: 9999;
-    background: #1c1917;
-    display: flex; align-items: center; justify-content: center;
-    transition: opacity 1s ease-out, visibility 1s;
-}
-.intro-loader.fade-out {
-    opacity: 0; visibility: hidden;
-}
-.fade-in-up {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 1s ease-out forwards;
-}
-@keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #292524; } /* stone-800 */
+::-webkit-scrollbar-thumb { background: #57534e; border-radius: 5px; } /* stone-600 */
+::-webkit-scrollbar-thumb:hover { background: #d97706; } /* amber-600 */
 
 /* Slide over cart */
 .cart-slider {
@@ -47,4 +27,12 @@
 }
 .modal.open {
     opacity: 1; visibility: visible;
+}
+
+/* Smooth zoom for images */
+.hover-zoom img {
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.hover-zoom:hover img {
+    transform: scale(1.08);
 }
