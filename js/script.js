@@ -1,29 +1,32 @@
 /* ═══════════════════════════════════════════
-   THE COFFEE HOUSE — Main Script
-   Cart, Menu Rendering, Checkout, Intro
-   Supabase Integration
+   DIGGIN CAFÉ — Premium Script Engine
+   Cart, Menu, Checkout, Intro, QR, Tracking,
+   Sound Design, Dark Mode, Recommendations
    ═══════════════════════════════════════════ */
 
 document.addEventListener("DOMContentLoaded", () => {
+    initTheme();
     initIntro();
     initMobileMenu();
+    initQRAutofill();
     injectOrderTray();
     injectCartDrawer();
     injectCheckoutModal();
     injectCallWaiterBtn();
+    injectOrderTracker();
     updateCartCount();
 
-    // If on menu page, load items
     if (document.getElementById("menu-container")) {
         fetchMenuData();
     }
 
-    // Smooth scroll reveal
     initScrollAnimations();
+    initTypewriter();
 });
 
 // ─── STATE ───────────────────────────────────
 let cart = JSON.parse(localStorage.getItem("cafe_cart")) || [];
+let activeOrderId = sessionStorage.getItem("active_order_id") || null;
 
 function saveCart() {
     localStorage.setItem("cafe_cart", JSON.stringify(cart));
@@ -39,7 +42,6 @@ function updateCartCount() {
         void el.offsetWidth;
         if (total > 0) el.classList.add("badge-pulse");
     });
-    // Update floating tray
     const tray = document.getElementById("order-tray");
     if (tray) {
         const total = cart.reduce((sum, i) => sum + i.quantity, 0);
@@ -60,41 +62,91 @@ function updateCartCount() {
     }
 }
 
+// ─── DARK/LIGHT MODE ─────────────────────────
+function initTheme() {
+    const saved = localStorage.getItem("diggin_theme");
+    if (saved === "light") {
+        document.documentElement.classList.add("light");
+    }
+    document.querySelectorAll(".theme-toggle").forEach(toggle => {
+        toggle.addEventListener("click", () => {
+            document.documentElement.classList.toggle("light");
+            const isLight = document.documentElement.classList.contains("light");
+            localStorage.setItem("diggin_theme", isLight ? "light" : "dark");
+            toggle.querySelector(".theme-toggle-icon").textContent = isLight ? "☀️" : "🌙";
+        });
+    });
+}
+
+// ─── QR TABLE AUTOFILL ───────────────────────
+function initQRAutofill() {
+    const params = new URLSearchParams(window.location.search);
+    const table = params.get("table");
+    if (table) {
+        sessionStorage.setItem("qr_table", table);
+    }
+}
+
+function getQRTable() {
+    return sessionStorage.getItem("qr_table") || "";
+}
+
+// ─── TYPEWRITER EFFECT ───────────────────────
+function initTypewriter() {
+    const el = document.getElementById("typewriter-text");
+    if (!el) return;
+    const text = el.dataset.text || el.textContent;
+    el.textContent = "";
+    el.classList.add("typewriter");
+    let i = 0;
+    const speed = 45;
+    function type() {
+        if (i < text.length) {
+            el.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        } else {
+            setTimeout(() => { el.style.borderRight = "none"; }, 1500);
+        }
+    }
+    setTimeout(type, 800);
+}
+
 // ─── INTRO EXPERIENCE ────────────────────────
 function initIntro() {
     const enterBtn = document.getElementById("enter-btn");
     const introScreen = document.getElementById("intro-screen");
     const mainContent = document.getElementById("main-content");
 
-    // If no intro (e.g. menu.html), show content immediately
     if (!introScreen) {
         if (mainContent) mainContent.style.opacity = "1";
         return;
     }
 
-    // Session-based: show only on first load
     if (sessionStorage.getItem("intro_seen")) {
         introScreen.style.display = "none";
         if (mainContent) mainContent.style.opacity = "1";
         return;
     }
 
-    // Block scroll while intro is visible
     document.body.style.overflow = "hidden";
 
     enterBtn.addEventListener("click", () => {
         sessionStorage.setItem("intro_seen", "true");
-        introScreen.style.transition = "opacity 0.8s ease-out";
+        // Blur + fade out transition
+        introScreen.style.transition = "opacity 1s ease-out, filter 1s ease-out";
         introScreen.style.opacity = "0";
+        introScreen.style.filter = "blur(20px)";
 
         if (mainContent) {
+            mainContent.style.transition = "opacity 1.2s ease-in";
             mainContent.style.opacity = "1";
         }
 
         setTimeout(() => {
             introScreen.style.display = "none";
             document.body.style.overflow = "";
-        }, 800);
+        }, 1000);
     });
 }
 
@@ -122,47 +174,92 @@ function initScrollAnimations() {
     document.querySelectorAll(".scroll-reveal").forEach(el => observer.observe(el));
 }
 
-// ─── FALLBACK MENU ──────────────────────────
+// ─── SOUND DESIGN ────────────────────────────
+function playSound(type) {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    if (type === "order") {
+        // Soft bell — pleasant chime
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(830, audioCtx.currentTime);
+        oscillator.frequency.setValueAtTime(1060, audioCtx.currentTime + 0.1);
+        oscillator.frequency.setValueAtTime(830, audioCtx.currentTime + 0.2);
+        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.5);
+    } else if (type === "urgent") {
+        // Urgent bell — faster, higher
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime);
+        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime + 0.1);
+        oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime + 0.2);
+        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime + 0.3);
+        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.6);
+    } else {
+        // Success chime
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(523, audioCtx.currentTime);
+        oscillator.frequency.setValueAtTime(659, audioCtx.currentTime + 0.15);
+        oscillator.frequency.setValueAtTime(784, audioCtx.currentTime + 0.3);
+        gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.6);
+    }
+}
+
+// ─── MENU DATA ───────────────────────────────
+const categoryIcons = {
+    signatures: "☕",
+    coolers: "🧊",
+    pasta: "🍝",
+    pizza: "🍕",
+    starters: "🥗",
+    desserts: "🍰",
+    coffee: "☕",
+    snacks: "🥪",
+    beverages: "🧊"
+};
+
+const categoryLabels = {
+    signatures: "Signature Brews",
+    coolers: "Ice Cold Coolers",
+    pasta: "Handcrafted Pasta",
+    pizza: "Stone-Baked Pizza",
+    starters: "Small Plates",
+    desserts: "Sweet Endings"
+};
+
+// Fallback menu with Diggin branding
 const fallbackMenu = {
-    coffee: [
-        { id: "c1", name: "Cappuccino", price: 150, description: "Espresso with steamed milk and velvety foam.", image: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80", tag: "Popular" },
-        { id: "c2", name: "Latte", price: 180, description: "Smooth espresso blended with velvety steamed milk.", image: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&q=80" },
-        { id: "c3", name: "Espresso", price: 120, description: "A single shot of intense, rich espresso.", image: "https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&q=80" },
-        { id: "c4", name: "Americano", price: 140, description: "Bold espresso with hot water for a clean, strong taste.", image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefda?auto=format&fit=crop&q=80" },
-        { id: "c5", name: "Mocha", price: 200, description: "Espresso with chocolate and steamed milk.", image: "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&q=80", tag: "Best Seller" },
-        { id: "c6", name: "Flat White", price: 170, description: "Velvety micro-foam espresso drink from Australia.", image: "https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&q=80" }
+    signatures: [
+        { id: "sig1", name: "Velvet Cold Brew", price: 295, description: "Slow-steeped 18-hour cold brew, silky smooth with a hint of dark chocolate.", image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&q=80", tag: "Chef's Pick" },
+        { id: "sig2", name: "Caramel Whisper Latte", price: 345, description: "House-pulled espresso swirled with handmade caramel and steamed milk.", image: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&q=80", tag: "Trending" },
+        { id: "sig3", name: "Midnight Espresso", price: 225, description: "Double-shot single-origin espresso — bold, unapologetic, unforgettable.", image: "https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&q=80" },
+        { id: "sig4", name: "Hazelnut Dream Cappuccino", price: 325, description: "Velvety foam kissed with roasted hazelnut and a dusting of cocoa.", image: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80", tag: "Instagram Favorite" }
     ],
-    snacks: [
-        { id: "s1", name: "Grilled Sandwich", price: 140, description: "Freshly toasted sourdough with hearty fillings.", image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80" },
-        { id: "s2", name: "Cheese Croissant", price: 160, description: "Buttery, flaky pastry filled with melted cheese.", image: "https://images.unsplash.com/photo-1555507036-ab1f40ce88f4?auto=format&fit=crop&q=80", tag: "Best Seller" },
-        { id: "s3", name: "Avocado Toast", price: 190, description: "Smashed avocado on artisan bread with chili flakes.", image: "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&q=80", tag: "Popular", time: "breakfast" },
-        { id: "s4", name: "Club Sandwich", price: 220, description: "Triple-decker with chicken, bacon, and fresh veggies.", image: "https://images.unsplash.com/photo-1567234669003-dce7a7a88821?auto=format&fit=crop&q=80", time: "lunch" },
-        { id: "s5", name: "Panini", price: 180, description: "Italian pressed sandwich with mozzarella and pesto.", image: "https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&q=80" }
+    coolers: [
+        { id: "cool1", name: "Sunset Citrus Iced Tea", price: 245, description: "Blood orange and passion fruit iced tea that tastes like golden hour.", image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80", tag: "Instagram Favorite" },
+        { id: "cool2", name: "Berry Blush Smoothie", price: 295, description: "Mixed berries blended thick with Greek yogurt and a honey drizzle.", image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&q=80", tag: "Trending" }
+    ],
+    pasta: [
+        { id: "p1", name: "Spaghetti Carbonara", price: 475, description: "Creamy egg-based sauce with crispy pancetta — the Roman original.", image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&q=80", tag: "Chef's Pick" },
+        { id: "p2", name: "Garden Herb Penne", price: 425, description: "Fresh basil, thyme, and roasted garlic tossed in olive oil and parmesan.", image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&q=80", tag: "Instagram Favorite" }
     ],
     desserts: [
-        { id: "d1", name: "Chocolate Cake", price: 220, description: "Rich double chocolate cake slice with a smooth glaze.", image: "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&q=80", tag: "Popular" },
-        { id: "d2", name: "Brownie", price: 180, description: "Fudgy warm brownie with dark chocolate chunks.", image: "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&q=80" },
-        { id: "d3", name: "Tiramisu", price: 280, description: "Classic Italian dessert with mascarpone and espresso.", image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&q=80", tag: "Best Seller" },
-        { id: "d4", name: "Cheesecake", price: 250, description: "New York-style creamy cheesecake with berry compote.", image: "https://images.unsplash.com/photo-1524351199432-f330e91a4dab?auto=format&fit=crop&q=80" }
-    ],
-    beverages: [
-        { id: "b1", name: "Cold Coffee", price: 200, description: "Thick, blended chilled coffee with a hint of vanilla.", image: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba1?auto=format&fit=crop&q=80" },
-        { id: "b2", name: "Iced Latte", price: 210, description: "Chilled espresso poured over creamy milk and ice.", image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80" },
-        { id: "b3", name: "Matcha Latte", price: 230, description: "Premium Japanese matcha whisked with steamed milk.", image: "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&q=80", tag: "Popular" },
-        { id: "b4", name: "Fresh Juice", price: 160, description: "Seasonal fruits cold-pressed to perfection.", image: "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?auto=format&fit=crop&q=80" },
-        { id: "b5", name: "Smoothie Bowl", price: 250, description: "Açaí blended thick with granola and fresh berries.", image: "https://images.unsplash.com/photo-1511690743698-d9d18f7e20f1?auto=format&fit=crop&q=80", time: "breakfast" }
+        { id: "d1", name: "Lotus Biscoff Cheesecake", price: 345, description: "Creamy cheesecake on a Biscoff crust, drizzled with caramelized cookie butter.", image: "https://images.unsplash.com/photo-1524351199432-f330e91a4dab?auto=format&fit=crop&q=80", tag: "Trending" },
+        { id: "d2", name: "Tiramisu Royale", price: 385, description: "Layers of espresso-soaked ladyfingers and mascarpone — Italian heaven.", image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&q=80", tag: "Chef's Pick" }
     ]
 };
 
-// ─── TIME-BASED FILTERING ────────────────────
-function getTimeOfDay() {
-    const hour = new Date().getHours();
-    if (hour < 11) return "breakfast";
-    if (hour < 16) return "lunch";
-    return "evening";
-}
-
-// ─── MENU FETCHING & RENDERING ───────────────
 async function fetchMenuData() {
     const loading = document.getElementById("loading-state");
     const error = document.getElementById("error-state");
@@ -178,21 +275,32 @@ async function fetchMenuData() {
         data = fallbackMenu;
     }
 
-    loading.classList.add("hidden");
+    if (loading) loading.classList.add("hidden");
     if (error) error.classList.add("hidden");
-    container.classList.remove("hidden");
+    if (container) container.classList.remove("hidden");
     renderMenu(data, container);
 }
 
 function renderMenu(data, container) {
-    const categoryIcons = {
-        coffee: "☕",
-        snacks: "🥪",
-        desserts: "🍰",
-        beverages: "🧊"
-    };
+    // Peak time indicator
+    const pendingCount = parseInt(sessionStorage.getItem("pending_orders") || "0");
+    if (pendingCount > 5) {
+        const peakBadge = document.createElement("div");
+        peakBadge.className = "flex justify-center mb-10 scroll-reveal";
+        peakBadge.innerHTML = `<span class="peak-badge">🔥 High demand right now — orders may take a bit longer</span>`;
+        container.appendChild(peakBadge);
+    }
 
-    const timeOfDay = getTimeOfDay();
+    // Search bar
+    const searchWrap = document.createElement("div");
+    searchWrap.className = "mb-8 scroll-reveal";
+    searchWrap.innerHTML = `
+        <div class="relative max-w-md">
+            <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cafe-muted/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <input type="text" id="menu-search" placeholder="Search the menu..." class="w-full bg-cafe-card border border-white/[0.06] rounded-xl pl-12 pr-5 py-3.5 text-cafe-text text-sm focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40">
+        </div>
+    `;
+    container.appendChild(searchWrap);
 
     // Category filter tabs
     const filterWrap = document.createElement("div");
@@ -202,15 +310,25 @@ function renderMenu(data, container) {
         <button class="category-filter active px-5 py-2.5 rounded-full text-sm font-bold uppercase tracking-[0.1em] transition-all duration-300 bg-cafe-accent text-white" data-cat="all">All</button>
         ${categories.map(cat => `
             <button class="category-filter px-5 py-2.5 rounded-full text-sm font-bold uppercase tracking-[0.1em] transition-all duration-300 bg-white/[0.04] text-cafe-muted hover:bg-cafe-accent/20 hover:text-cafe-accent border border-white/[0.06]" data-cat="${cat}">
-                ${categoryIcons[cat] || "🍽️"} ${cat}
+                ${categoryIcons[cat] || "🍽️"} ${categoryLabels[cat] || cat}
             </button>
         `).join("")}
-        <div class="ml-auto flex items-center gap-2 text-cafe-muted/60 text-xs">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <span>${timeOfDay === 'breakfast' ? 'Breakfast menu active' : timeOfDay === 'lunch' ? 'Lunch specials active' : 'Evening picks'}</span>
-        </div>
     `;
     container.appendChild(filterWrap);
+
+    // Search functionality
+    const searchInput = document.getElementById("menu-search");
+    if (searchInput) {
+        searchInput.addEventListener("input", (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            container.querySelectorAll(".menu-item-card").forEach(card => {
+                const name = card.dataset.name || "";
+                const desc = card.dataset.desc || "";
+                const match = !query || name.includes(query) || desc.includes(query);
+                card.style.display = match ? "" : "none";
+            });
+        });
+    }
 
     // Category filter logic
     filterWrap.querySelectorAll(".category-filter").forEach(btn => {
@@ -238,38 +356,45 @@ function renderMenu(data, container) {
         section.className = "menu-category-section scroll-reveal";
         section.dataset.category = category;
 
-        // Category header
         const header = document.createElement("div");
         header.className = "flex items-center gap-4 mb-10";
         header.innerHTML = `
             <span class="text-3xl">${categoryIcons[category] || "🍽️"}</span>
-            <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text capitalize">${category}</h2>
+            <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text capitalize">${categoryLabels[category] || category}</h2>
             <div class="flex-grow h-px bg-white/[0.06] ml-4"></div>
         `;
         section.appendChild(header);
 
-        // Grid
         const grid = document.createElement("div");
-        grid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8";
+        grid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children";
 
         items.forEach(item => {
-            // Time-based: highlight relevant items
-            if (item.time && item.time === timeOfDay) {
-                item.tag = item.tag || "⏰ " + timeOfDay.charAt(0).toUpperCase() + timeOfDay.slice(1);
-            }
             grid.appendChild(createMenuCard(item));
         });
 
         section.appendChild(grid);
         container.appendChild(section);
     }
+
+    // Smart Recommendations section
+    if (cart.length > 0) {
+        renderRecommendations(data, container);
+    }
+
+    // Re-init scroll animations for new elements
+    initScrollAnimations();
 }
 
 function createMenuCard(item) {
     const card = document.createElement("div");
-    card.className = "bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] flex flex-col group transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] hover:border-cafe-accent/20 img-zoom";
+    card.className = "menu-item-card bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] flex flex-col group transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)] hover:border-cafe-accent/20 img-zoom scroll-reveal";
+    card.dataset.name = item.name.toLowerCase();
+    card.dataset.desc = (item.description || "").toLowerCase();
 
     const tagColors = {
+        "Chef's Pick": "bg-cafe-accent/90",
+        "Trending": "bg-rose-500/90",
+        "Instagram Favorite": "bg-violet-500/90",
         "Popular": "bg-cafe-accent/90",
         "Best Seller": "bg-red-500/90"
     };
@@ -290,7 +415,7 @@ function createMenuCard(item) {
                 <span class="text-xl font-bold text-cafe-accent whitespace-nowrap">₹${item.price}</span>
             </div>
             <p class="text-cafe-muted text-sm font-light leading-relaxed mb-6 flex-grow">${item.description}</p>
-            <button onclick="addToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price})" class="btn-press w-full py-3.5 bg-white/[0.04] hover:bg-cafe-accent text-center text-[13px] font-bold tracking-[0.12em] uppercase rounded-xl transition-all duration-300 border border-white/[0.06] hover:border-transparent text-cafe-text hover:text-white mt-auto flex items-center justify-center gap-2.5 shadow-sm hover:shadow-[0_4px_20px_rgba(200,135,58,0.25)]">
+            <button onclick="addToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, this)" class="btn-press w-full py-3.5 bg-white/[0.04] hover:bg-cafe-accent text-center text-[13px] font-bold tracking-[0.12em] uppercase rounded-xl transition-all duration-300 border border-white/[0.06] hover:border-transparent text-cafe-text hover:text-white mt-auto flex items-center justify-center gap-2.5 shadow-sm hover:shadow-[0_4px_20px_rgba(200,135,58,0.25)]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                 Add to Order
             </button>
@@ -299,8 +424,47 @@ function createMenuCard(item) {
     return card;
 }
 
+// ─── SMART RECOMMENDATIONS ───────────────────
+function renderRecommendations(menuData, container) {
+    const cartIds = cart.map(c => c.id);
+    const allItems = [];
+    for (const items of Object.values(menuData)) {
+        items.forEach(item => {
+            if (!cartIds.includes(item.id)) {
+                allItems.push(item);
+            }
+        });
+    }
+
+    // Pick 3 random items not in cart
+    const shuffled = allItems.sort(() => 0.5 - Math.random()).slice(0, 3);
+    if (shuffled.length === 0) return;
+
+    const recoSection = document.createElement("div");
+    recoSection.className = "mt-16 scroll-reveal";
+    recoSection.innerHTML = `
+        <div class="flex items-center gap-3 mb-6">
+            <span class="text-xl">✨</span>
+            <h3 class="text-xl font-serif italic text-cafe-text">People also ordered</h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            ${shuffled.map(item => `
+                <div class="reco-card" onclick="addToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price})">
+                    <img src="${item.image}" alt="${item.name}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0" loading="lazy">
+                    <div class="flex-grow min-w-0">
+                        <div class="text-cafe-text font-bold text-sm truncate">${item.name}</div>
+                        <div class="text-cafe-accent font-bold text-sm">₹${item.price}</div>
+                    </div>
+                    <svg class="w-5 h-5 text-cafe-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                </div>
+            `).join("")}
+        </div>
+    `;
+    container.appendChild(recoSection);
+}
+
 // ─── CART LOGIC ──────────────────────────────
-window.addToCart = function (id, name, price) {
+window.addToCart = function (id, name, price, btnEl) {
     const existing = cart.find(c => c.id === id);
     if (existing) {
         existing.quantity += 1;
@@ -309,7 +473,32 @@ window.addToCart = function (id, name, price) {
     }
     saveCart();
 
-    // Show add-to-cart toast
+    // Fly-to-cart animation
+    if (btnEl) {
+        const ghost = document.createElement("div");
+        ghost.className = "fly-to-cart";
+        ghost.textContent = "+" + (existing ? existing.quantity : 1);
+        ghost.style.cssText = `
+            font-size: 14px; font-weight: 700; color: white;
+            background: var(--accent, #c8873a); padding: 8px 16px;
+            border-radius: 999px; box-shadow: 0 4px 12px rgba(200,135,58,0.4);
+        `;
+        const rect = btnEl.getBoundingClientRect();
+        ghost.style.left = rect.left + rect.width / 2 - 20 + "px";
+        ghost.style.top = rect.top + "px";
+        document.body.appendChild(ghost);
+        setTimeout(() => ghost.remove(), 700);
+    }
+
+    // Pulse tray
+    const tray = document.getElementById("order-tray");
+    if (tray) {
+        tray.classList.remove("tray-pulse");
+        void tray.offsetWidth;
+        tray.classList.add("tray-pulse");
+    }
+
+    playSound("order");
     showMiniToast(`${name} added to order`);
 };
 
@@ -328,7 +517,7 @@ function showMiniToast(msg) {
     if (!toast) {
         toast = document.createElement("div");
         toast.id = "mini-toast";
-        toast.className = "fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] bg-cafe-card border border-cafe-accent/30 text-cafe-text px-6 py-3 rounded-xl shadow-2xl text-sm font-semibold transition-all duration-500 opacity-0 translate-y-4 pointer-events-none";
+        toast.className = "fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] bg-cafe-card border border-cafe-accent/30 text-cafe-text px-6 py-3 rounded-xl shadow-2xl text-sm font-semibold transition-all duration-500 opacity-0 translate-y-4 pointer-events-none backdrop-blur-xl";
         document.body.appendChild(toast);
     }
     toast.textContent = msg;
@@ -338,8 +527,31 @@ function showMiniToast(msg) {
     toast._timer = setTimeout(() => {
         toast.classList.add("opacity-0", "translate-y-4");
         toast.classList.remove("opacity-100", "translate-y-0");
-    }, 2000);
+    }, 2500);
 }
+
+// Show notification toast (top-right, for chef/cashier)
+window.showNotificationToast = function(msg, urgent) {
+    const toast = document.createElement("div");
+    toast.className = `notification-toast ${urgent ? "urgent" : ""}`;
+    toast.innerHTML = `
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${urgent ? "bg-red-500/20 text-red-400" : "bg-cafe-accent/20 text-cafe-accent"}">
+                ${urgent ? "🔔" : "📦"}
+            </div>
+            <div>
+                <div class="text-cafe-text font-bold text-sm">${msg}</div>
+                <div class="text-cafe-muted text-xs mt-0.5">Just now</div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add("show"));
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 600);
+    }, 5000);
+};
 
 function renderCartItems() {
     const container = document.getElementById("cart-items-container");
@@ -355,7 +567,7 @@ function renderCartItems() {
             <div class="text-center py-16">
                 <div class="text-5xl mb-4 opacity-30">☕</div>
                 <p class="text-cafe-muted font-light text-lg">Your order is empty</p>
-                <p class="text-cafe-muted/50 text-sm mt-2">Add items from the menu</p>
+                <p class="text-cafe-muted/50 text-sm mt-2">Add items from the menu to get started</p>
             </div>
         `;
         if (btn) {
@@ -371,7 +583,7 @@ function renderCartItems() {
         cart.forEach(item => {
             total += item.price * item.quantity;
             const row = document.createElement("div");
-            row.className = "flex justify-between items-center mb-4 p-4 bg-cafe-card rounded-xl border border-white/[0.04]";
+            row.className = "flex justify-between items-center mb-4 p-4 bg-cafe-card rounded-xl border border-white/[0.04] transition-all duration-300 hover:border-cafe-accent/10";
             row.innerHTML = `
                 <div class="flex-grow mr-4">
                     <h4 class="text-cafe-text font-bold text-[15px] mb-0.5">${item.name}</h4>
@@ -419,29 +631,21 @@ function injectOrderTray() {
     });
 }
 
-// ─── CART DRAWER UI ─────────────────────────
+// ─── CART DRAWER ────────────────────────────
 function injectCartDrawer() {
     const toggles = document.querySelectorAll("#cart-toggle");
 
     const wrapper = document.createElement("div");
     wrapper.innerHTML = `
-        <!-- Backdrop -->
         <div id="cart-backdrop" class="cart-backdrop fixed inset-0 z-40 bg-black/70 backdrop-blur-sm cursor-pointer"></div>
-
-        <!-- Cart Drawer -->
         <div id="cart-slider" class="cart-slider fixed top-0 right-0 h-full w-full sm:w-[420px] bg-cafe-bg z-50 shadow-2xl flex flex-col border-l border-white/[0.06]">
-            <!-- Header -->
             <div class="px-7 py-6 border-b border-white/[0.04] flex justify-between items-center bg-cafe-bg">
                 <h2 class="text-2xl font-serif italic text-cafe-text">Your Order</h2>
                 <button id="close-cart" class="p-2 text-cafe-muted hover:text-cafe-text bg-white/[0.04] hover:bg-white/[0.08] rounded-full transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-
-            <!-- Items -->
             <div class="px-7 py-6 flex-grow overflow-y-auto" id="cart-items-container"></div>
-
-            <!-- Footer -->
             <div class="px-7 py-6 border-t border-white/[0.04] bg-cafe-card">
                 <div class="flex justify-between items-center mb-6">
                     <span class="text-cafe-muted text-xs font-bold uppercase tracking-[0.2em]">Estimated Total</span>
@@ -482,62 +686,62 @@ function injectCartDrawer() {
 
 // ─── CHECKOUT MODAL ──────────────────────────
 function injectCheckoutModal() {
+    const qrTable = getQRTable();
     const wrapper = document.createElement("div");
     wrapper.innerHTML = `
-        <!-- Modal Overlay -->
         <div id="checkout-overlay" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-6">
             <div class="absolute inset-0 bg-black/85 backdrop-blur-md" id="checkout-bg"></div>
             <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[2rem] p-8 sm:p-10 w-full max-w-md shadow-2xl">
-                <!-- Close -->
                 <button id="close-checkout" class="absolute top-6 right-6 p-2 text-cafe-muted hover:text-cafe-text bg-white/[0.04] hover:bg-white/[0.08] rounded-full transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
-
-                <!-- Header -->
                 <div class="flex items-center gap-3 mb-2">
                     <div class="w-8 h-px bg-cafe-accent"></div>
                     <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Checkout</span>
                 </div>
                 <h2 class="text-3xl font-serif italic text-cafe-text mb-2">Almost There</h2>
                 <p class="text-cafe-muted text-sm font-light mb-8">Just your name and table number.</p>
-
-                <!-- Order Summary -->
                 <div id="checkout-summary" class="mb-6 p-4 bg-cafe-card rounded-xl border border-white/[0.04] max-h-32 overflow-y-auto"></div>
-
-                <!-- Form -->
                 <form id="checkout-form" class="space-y-6">
                     <div>
                         <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Your Name</label>
-                        <input type="text" id="cust-name" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="e.g. Jane">
+                        <input type="text" id="cust-name" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="e.g. Riya">
                     </div>
                     <div>
-                        <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Table Number</label>
-                        <input type="number" id="table-number" min="1" max="99" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="e.g. 5">
+                        <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Table Number ${qrTable ? '<span class="text-cafe-accent normal-case">(auto-filled via QR)</span>' : ''}</label>
+                        <input type="number" id="table-number" min="1" max="99" required value="${qrTable}" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="e.g. 5">
                     </div>
-
                     <div class="flex justify-between items-center p-4 bg-cafe-accent/10 rounded-xl border border-cafe-accent/20">
                         <span class="text-cafe-muted text-sm font-bold uppercase tracking-wider">Total</span>
                         <span id="checkout-total" class="text-2xl font-bold text-cafe-accent">₹0</span>
                     </div>
-
-                    <button type="submit" id="submit-order-btn" class="btn-press w-full py-4 mt-2 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg hover:shadow-[0_8px_30px_rgba(200,135,58,0.25)] text-sm">
+                    <button type="submit" id="submit-order-btn" class="btn-press w-full py-4 mt-2 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg hover:shadow-[0_8px_30px_rgba(200,135,58,0.25)] text-sm flex items-center justify-center gap-2">
                         Confirm Order
                     </button>
                 </form>
             </div>
         </div>
 
-        <!-- Success Toast -->
-        <div id="success-toast" class="toast fixed top-8 left-1/2 -translate-x-1/2 z-[100] bg-cafe-bg border border-cafe-accent/40 text-cafe-text px-7 py-4 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.5)] flex items-center gap-4">
-            <div class="bg-green-500 p-1.5 rounded-full flex-shrink-0">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+        <!-- Success Screen -->
+        <div id="success-screen" class="modal-overlay fixed inset-0 z-[60] flex items-center justify-center p-6">
+            <div class="absolute inset-0 bg-black/90 backdrop-blur-lg"></div>
+            <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[2rem] p-10 w-full max-w-sm shadow-2xl text-center">
+                <div class="success-check w-20 h-20 mx-auto bg-green-500/15 rounded-full flex items-center justify-center mb-6 border-2 border-green-500/30">
+                    <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-2xl font-serif italic text-cafe-text mb-3">Order Placed!</h2>
+                <p class="text-cafe-muted text-sm font-light mb-8">Your food is being prepared with love. Sit back and relax.</p>
+                <div id="success-tracker" class="mb-8"></div>
+                <button id="close-success" class="w-full py-3.5 bg-white/[0.04] border border-white/[0.06] text-cafe-text font-bold uppercase tracking-[0.12em] rounded-xl transition-all hover:bg-cafe-accent hover:text-white hover:border-transparent text-sm">
+                    Back to Menu
+                </button>
             </div>
-            <span class="font-semibold text-sm">Order placed! Your food is being prepared 🎉</span>
         </div>
     `;
     document.body.appendChild(wrapper);
 
     const overlay = document.getElementById("checkout-overlay");
+    const successScreen = document.getElementById("success-screen");
     const closeOverlay = () => overlay.classList.remove("open");
 
     // Populate summary when opened
@@ -552,6 +756,10 @@ function injectCheckoutModal() {
                 </div>
             `).join("");
             document.getElementById("checkout-total").textContent = `₹${total}`;
+            // Autofill table from QR
+            const tableInput = document.getElementById("table-number");
+            const qr = getQRTable();
+            if (qr && !tableInput.value) tableInput.value = qr;
         }
     });
     observer.observe(overlay, { attributes: true, attributeFilter: ["class"] });
@@ -559,16 +767,26 @@ function injectCheckoutModal() {
     document.getElementById("close-checkout").addEventListener("click", closeOverlay);
     document.getElementById("checkout-bg").addEventListener("click", closeOverlay);
 
+    document.getElementById("close-success")?.addEventListener("click", () => {
+        successScreen.classList.remove("open");
+    });
+
     document.getElementById("checkout-form").addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const btn = document.getElementById("submit-order-btn");
         const custName = document.getElementById("cust-name").value.trim();
         const tableNum = document.getElementById("table-number").value.trim();
+
+        if (!custName || !tableNum) {
+            showMiniToast("Please fill in all fields");
+            return;
+        }
+
         const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
 
         btn.disabled = true;
-        btn.textContent = "Placing Order...";
+        btn.innerHTML = `<span class="spinner"></span> Placing Order...`;
 
         const orderData = {
             table_number: tableNum,
@@ -579,11 +797,13 @@ function injectCheckoutModal() {
         };
 
         try {
-            // Insert into Supabase
             if (typeof insertOrder === "function") {
-                await insertOrder(orderData);
+                const result = await insertOrder(orderData);
+                if (result && result.id) {
+                    activeOrderId = result.id;
+                    sessionStorage.setItem("active_order_id", result.id);
+                }
             } else {
-                // Fallback: localStorage
                 const order = {
                     id: Date.now().toString(),
                     customer: custName,
@@ -598,58 +818,150 @@ function injectCheckoutModal() {
                 localStorage.setItem("cafe_orders", JSON.stringify(orders));
             }
 
-            // Clear cart
             cart = [];
             saveCart();
             closeOverlay();
 
-            // Show toast
-            const toast = document.getElementById("success-toast");
-            toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 4000);
+            playSound("success");
+
+            // Show success screen with tracker
+            const tracker = document.getElementById("success-tracker");
+            if (tracker) {
+                tracker.innerHTML = `
+                    <div class="status-tracker">
+                        <div class="status-tracker-step active">
+                            <span class="status-tracker-dot">📦</span>
+                            <span class="status-tracker-label">Placed</span>
+                        </div>
+                        <div class="status-tracker-step">
+                            <span class="status-tracker-dot">👨‍🍳</span>
+                            <span class="status-tracker-label">Preparing</span>
+                        </div>
+                        <div class="status-tracker-step">
+                            <span class="status-tracker-dot">✅</span>
+                            <span class="status-tracker-label">Ready</span>
+                        </div>
+                    </div>
+                `;
+            }
+            successScreen.classList.add("open");
+
+            // Start polling for order status
+            if (activeOrderId) {
+                pollOrderStatus(activeOrderId);
+            }
+
         } catch (err) {
             console.error("Order failed:", err);
             showMiniToast("Failed to place order. Please try again.");
         } finally {
             btn.disabled = false;
-            btn.textContent = "Confirm Order";
+            btn.innerHTML = `Confirm Order`;
             e.target.reset();
         }
     });
 }
 
-// ─── CALL WAITER BUTTON ─────────────────────
+// ─── ORDER STATUS POLLING ────────────────────
+function pollOrderStatus(orderId) {
+    if (!orderId || typeof fetchOrders !== "function") return;
+    const interval = setInterval(async () => {
+        try {
+            const orders = await fetchOrders(null);
+            const order = orders.find(o => o.id === orderId);
+            if (!order) { clearInterval(interval); return; }
+
+            const tracker = document.getElementById("success-tracker");
+            if (!tracker) { clearInterval(interval); return; }
+
+            const steps = tracker.querySelectorAll(".status-tracker-step");
+            if (steps.length < 3) return;
+
+            // Reset
+            steps.forEach(s => { s.classList.remove("active", "completed"); });
+
+            if (order.status === "pending") {
+                steps[0].classList.add("active");
+            } else if (order.status === "preparing") {
+                steps[0].classList.add("completed");
+                steps[1].classList.add("active");
+            } else if (order.status === "ready" || order.status === "paid") {
+                steps[0].classList.add("completed");
+                steps[1].classList.add("completed");
+                steps[2].classList.add("active");
+                clearInterval(interval);
+                playSound("success");
+                showMiniToast("Your order is ready! 🎉");
+            }
+        } catch (e) {
+            // Silently fail
+        }
+    }, 5000);
+}
+
+// ─── ORDER TRACKER WIDGET ────────────────────
+function injectOrderTracker() {
+    if (!activeOrderId) return;
+    // Small floating tracker on bottom-left
+    const tracker = document.createElement("div");
+    tracker.id = "floating-tracker";
+    tracker.className = "fixed bottom-6 left-6 z-[85] bg-cafe-card/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl px-5 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.4)] cursor-pointer hover:border-cafe-accent/30 transition-all max-w-[200px]";
+    tracker.innerHTML = `
+        <div class="text-[10px] font-bold text-cafe-accent uppercase tracking-[0.2em] mb-1">Live Order</div>
+        <div class="text-cafe-text text-sm font-bold" id="floating-status">Pending...</div>
+    `;
+    document.body.appendChild(tracker);
+    tracker.addEventListener("click", () => {
+        const ss = document.getElementById("success-screen");
+        if (ss) ss.classList.add("open");
+    });
+
+    // Poll and update
+    if (typeof fetchOrders === "function") {
+        setInterval(async () => {
+            try {
+                const orders = await fetchOrders(null);
+                const order = orders.find(o => o.id === activeOrderId);
+                const statusEl = document.getElementById("floating-status");
+                if (order && statusEl) {
+                    const labels = { pending: "⏳ Pending...", preparing: "👨‍🍳 Preparing...", ready: "✅ Ready!" };
+                    statusEl.textContent = labels[order.status] || order.status;
+                }
+            } catch (e) {}
+        }, 5000);
+    }
+}
+
+// ─── CALL WAITER ─────────────────────────────
 function injectCallWaiterBtn() {
     const btn = document.createElement("button");
     btn.id = "call-waiter-btn";
     btn.className = "fixed bottom-6 right-6 z-[80] w-14 h-14 bg-cafe-accent hover:bg-cafe-accentHover text-white rounded-full shadow-[0_8px_30px_rgba(200,135,58,0.3)] flex items-center justify-center transition-all duration-300 hover:scale-110 group";
     btn.title = "Call Waiter";
-    btn.innerHTML = `
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-    `;
+    btn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>`;
     document.body.appendChild(btn);
 
-    // Call waiter modal
     const modal = document.createElement("div");
     modal.id = "call-waiter-modal";
     modal.className = "modal-overlay fixed inset-0 z-[95] flex items-center justify-center p-6";
+    const qrTable = getQRTable();
     modal.innerHTML = `
         <div class="absolute inset-0 bg-black/85 backdrop-blur-md call-waiter-bg"></div>
         <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[2rem] p-8 sm:p-10 w-full max-w-sm shadow-2xl text-center">
             <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
             </div>
-            <h3 class="text-2xl font-serif italic text-cafe-text mb-2">Call Waiter</h3>
-            <p class="text-cafe-muted text-sm font-light mb-6">Enter your table number and we'll send someone over.</p>
+            <h3 class="text-2xl font-serif italic text-cafe-text mb-2">Need Assistance?</h3>
+            <p class="text-cafe-muted text-sm font-light mb-6">We'll send someone to your table right away.</p>
             <form id="call-waiter-form" class="space-y-4">
-                <input type="number" id="call-table" min="1" max="99" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-center text-lg focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="Table #">
+                <input type="number" id="call-table" min="1" max="99" required value="${qrTable}" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-center text-lg focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="Table #">
                 <select id="call-type" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
                     <option value="waiter">Call Waiter</option>
                     <option value="water">Need Water</option>
                     <option value="bill">Request Bill</option>
                     <option value="help">Need Help</option>
                 </select>
-                <button type="submit" id="call-submit-btn" class="btn-press w-full py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg text-sm">
+                <button type="submit" id="call-submit-btn" class="btn-press w-full py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg text-sm flex items-center justify-center gap-2">
                     Send Request
                 </button>
             </form>
@@ -668,8 +980,13 @@ function injectCallWaiterBtn() {
         const type = document.getElementById("call-type").value;
         const submitBtn = document.getElementById("call-submit-btn");
 
+        if (!table) {
+            showMiniToast("Please enter your table number");
+            return;
+        }
+
         submitBtn.disabled = true;
-        submitBtn.textContent = "Sending...";
+        submitBtn.innerHTML = `<span class="spinner"></span> Sending...`;
 
         try {
             if (typeof insertCall === "function") {
@@ -680,12 +997,13 @@ function injectCallWaiterBtn() {
                 });
             }
             modal.classList.remove("open");
-            showMiniToast("Waiter has been notified! 🔔");
+            playSound("urgent");
+            showMiniToast("Staff has been notified! 🔔");
         } catch (err) {
             showMiniToast("Failed to send request. Try again.");
         } finally {
             submitBtn.disabled = false;
-            submitBtn.textContent = "Send Request";
+            submitBtn.innerHTML = `Send Request`;
             e.target.reset();
         }
     });

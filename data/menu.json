@@ -1,160 +1,240 @@
 {
-  "coffee": [
+  "signatures": [
     {
-      "id": "c1",
-      "name": "Cappuccino",
-      "price": 150,
-      "description": "Espresso mixed with steamed milk and a thick layer of velvety foam.",
-      "image": "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80",
-      "tag": "Popular"
+      "id": "sig1",
+      "name": "Velvet Cold Brew",
+      "price": 295,
+      "description": "Slow-steeped 18-hour cold brew, silky smooth with a hint of dark chocolate.",
+      "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&q=80",
+      "tag": "Chef's Pick"
     },
     {
-      "id": "c2",
-      "name": "Latte",
-      "price": 180,
-      "description": "Smooth espresso blended with velvety steamed milk.",
-      "image": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&q=80"
+      "id": "sig2",
+      "name": "Caramel Whisper Latte",
+      "price": 345,
+      "description": "House-pulled espresso swirled with handmade caramel and steamed milk.",
+      "image": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&q=80",
+      "tag": "Trending"
     },
     {
-      "id": "c3",
-      "name": "Espresso",
-      "price": 120,
-      "description": "A single shot of intense, rich espresso.",
+      "id": "sig3",
+      "name": "Midnight Espresso",
+      "price": 225,
+      "description": "Double-shot single-origin espresso — bold, unapologetic, unforgettable.",
       "image": "https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&q=80"
     },
     {
-      "id": "c4",
-      "name": "Americano",
-      "price": 140,
-      "description": "Bold espresso with hot water for a clean, strong taste.",
-      "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefda?auto=format&fit=crop&q=80"
+      "id": "sig4",
+      "name": "Hazelnut Dream Cappuccino",
+      "price": 325,
+      "description": "Velvety foam kissed with roasted hazelnut and a dusting of cocoa.",
+      "image": "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80",
+      "tag": "Instagram Favorite"
     },
     {
-      "id": "c5",
-      "name": "Mocha",
-      "price": 200,
-      "description": "Rich espresso with chocolate and steamed milk topped with cream.",
-      "image": "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&q=80",
-      "tag": "Best Seller"
+      "id": "sig5",
+      "name": "Rose Cardamom Latte",
+      "price": 365,
+      "description": "An aromatic Indian-inspired latte with rose syrup and fresh cardamom.",
+      "image": "https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&q=80",
+      "tag": "Chef's Pick"
     },
     {
-      "id": "c6",
-      "name": "Flat White",
-      "price": 170,
-      "description": "Velvety micro-foam espresso drink from Australia.",
-      "image": "https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&q=80"
+      "id": "sig6",
+      "name": "Banta Masala Soda",
+      "price": 195,
+      "description": "Diggin's legendary mint lemonade — fizzy, tangy, and absolutely addictive.",
+      "image": "https://images.unsplash.com/photo-1513558161293-cdaf765ed514?auto=format&fit=crop&q=80",
+      "tag": "Trending"
     }
   ],
-  "snacks": [
+  "coolers": [
     {
-      "id": "s1",
-      "name": "Grilled Sandwich",
-      "price": 140,
-      "description": "Freshly toasted sourdough with hearty fillings and house sauce.",
-      "image": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80"
+      "id": "cool1",
+      "name": "Sunset Citrus Iced Tea",
+      "price": 245,
+      "description": "Blood orange and passion fruit iced tea that tastes like golden hour.",
+      "image": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80",
+      "tag": "Instagram Favorite"
     },
     {
-      "id": "s2",
-      "name": "Cheese Croissant",
-      "price": 160,
-      "description": "Buttery, flaky classic French pastry filled with melted cheese.",
-      "image": "https://images.unsplash.com/photo-1555507036-ab1f40ce88f4?auto=format&fit=crop&q=80",
-      "tag": "Best Seller"
+      "id": "cool2",
+      "name": "Berry Blush Smoothie",
+      "price": 295,
+      "description": "Mixed berries blended thick with Greek yogurt and a honey drizzle.",
+      "image": "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&q=80",
+      "tag": "Trending"
     },
     {
-      "id": "s3",
-      "name": "Avocado Toast",
-      "price": 190,
-      "description": "Smashed avocado on artisan bread with chili flakes and lemon.",
-      "image": "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d?auto=format&fit=crop&q=80",
-      "tag": "Popular",
-      "time": "breakfast"
+      "id": "cool3",
+      "name": "Mango Tango Cooler",
+      "price": 275,
+      "description": "Alphonso mango puree shaken with lime, mint, and crushed ice.",
+      "image": "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?auto=format&fit=crop&q=80",
+      "tag": "Chef's Pick"
     },
     {
-      "id": "s4",
-      "name": "Club Sandwich",
-      "price": 220,
-      "description": "Triple-decker with chicken, bacon, lettuce and fresh veggies.",
-      "image": "https://images.unsplash.com/photo-1567234669003-dce7a7a88821?auto=format&fit=crop&q=80",
-      "time": "lunch"
+      "id": "cool4",
+      "name": "Matcha Zen Latte",
+      "price": 325,
+      "description": "Ceremonial-grade Japanese matcha whisked with oat milk over ice.",
+      "image": "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&q=80"
     },
     {
-      "id": "s5",
-      "name": "Panini",
-      "price": 180,
-      "description": "Italian pressed sandwich with mozzarella and pesto.",
-      "image": "https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&q=80"
+      "id": "cool5",
+      "name": "Classic Oreo Shake",
+      "price": 285,
+      "description": "Thick, creamy, loaded with crushed Oreos — a Diggin cult classic.",
+      "image": "https://images.unsplash.com/photo-1568901839119-631418a3910d?auto=format&fit=crop&q=80",
+      "tag": "Trending"
+    }
+  ],
+  "pasta": [
+    {
+      "id": "p1",
+      "name": "Spaghetti Carbonara",
+      "price": 475,
+      "description": "Creamy egg-based sauce with crispy pancetta — the Roman original.",
+      "image": "https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&q=80",
+      "tag": "Chef's Pick"
+    },
+    {
+      "id": "p2",
+      "name": "Garden Herb Penne",
+      "price": 425,
+      "description": "Fresh basil, thyme, and roasted garlic tossed in olive oil and parmesan.",
+      "image": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&q=80",
+      "tag": "Instagram Favorite"
+    },
+    {
+      "id": "p3",
+      "name": "Baked Penne Arrabbiata",
+      "price": 475,
+      "description": "Fiery tomato sauce with chili flakes, baked under a golden cheese crust.",
+      "image": "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?auto=format&fit=crop&q=80",
+      "tag": "Trending"
+    },
+    {
+      "id": "p4",
+      "name": "Truffle Mushroom Ravioli",
+      "price": 545,
+      "description": "Handmade ravioli stuffed with wild mushrooms and black truffle oil.",
+      "image": "https://images.unsplash.com/photo-1587740908075-9e245070dfaa?auto=format&fit=crop&q=80",
+      "tag": "Chef's Pick"
+    },
+    {
+      "id": "p5",
+      "name": "Seashell Pesto Pasta",
+      "price": 475,
+      "description": "Conchiglie shells coated in house-made basil pesto with toasted pine nuts.",
+      "image": "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&q=80"
+    }
+  ],
+  "pizza": [
+    {
+      "id": "pz1",
+      "name": "Margherita Classica",
+      "price": 525,
+      "description": "San Marzano tomatoes, fresh mozzarella, basil — stone-baked perfection.",
+      "image": "https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&q=80",
+      "tag": "Instagram Favorite"
+    },
+    {
+      "id": "pz2",
+      "name": "Wild Mushroom & Feta",
+      "price": 575,
+      "description": "Roasted forest mushrooms with crumbled feta and rosemary-infused oil.",
+      "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80",
+      "tag": "Chef's Pick"
+    },
+    {
+      "id": "pz3",
+      "name": "Four Cheese Pizza",
+      "price": 595,
+      "description": "Mozzarella, gorgonzola, parmesan, gruyère — melted to golden bliss.",
+      "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&q=80",
+      "tag": "Trending"
+    },
+    {
+      "id": "pz4",
+      "name": "Pepperoni Fuoco",
+      "price": 625,
+      "description": "Spicy pepperoni, jalapeños, mozzarella, and a drizzle of chili oil.",
+      "image": "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80"
+    }
+  ],
+  "starters": [
+    {
+      "id": "st1",
+      "name": "Truffle Fries",
+      "price": 295,
+      "description": "Hand-cut fries tossed in truffle oil with parmesan and fresh herbs.",
+      "image": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&q=80",
+      "tag": "Trending"
+    },
+    {
+      "id": "st2",
+      "name": "Mushroom Bruschetta",
+      "price": 325,
+      "description": "Toasted ciabatta topped with sautéed wild mushrooms and aged balsamic.",
+      "image": "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?auto=format&fit=crop&q=80",
+      "tag": "Chef's Pick"
+    },
+    {
+      "id": "st3",
+      "name": "Cheesy Jalapeño Poppers",
+      "price": 245,
+      "description": "Cream cheese-stuffed jalapeños, golden-fried to crunchy perfection.",
+      "image": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&q=80"
+    },
+    {
+      "id": "st4",
+      "name": "Garlic Cheese Bread",
+      "price": 255,
+      "description": "Warm sourdough brushed with roasted garlic butter and melted cheese.",
+      "image": "https://images.unsplash.com/photo-1619535860434-ba1d8fa12536?auto=format&fit=crop&q=80",
+      "tag": "Instagram Favorite"
     }
   ],
   "desserts": [
     {
       "id": "d1",
-      "name": "Chocolate Cake",
-      "price": 220,
-      "description": "Rich double chocolate cake slice with a smooth glaze.",
-      "image": "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&q=80",
-      "tag": "Popular"
+      "name": "Lotus Biscoff Cheesecake",
+      "price": 345,
+      "description": "Creamy cheesecake on a Biscoff crust, drizzled with caramelized cookie butter.",
+      "image": "https://images.unsplash.com/photo-1524351199432-f330e91a4dab?auto=format&fit=crop&q=80",
+      "tag": "Trending"
     },
     {
       "id": "d2",
-      "name": "Brownie",
-      "price": 180,
-      "description": "Fudgy warm brownie with dark chocolate chunks.",
-      "image": "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&q=80"
+      "name": "Tiramisu Royale",
+      "price": 385,
+      "description": "Layers of espresso-soaked ladyfingers and mascarpone — Italian heaven.",
+      "image": "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&q=80",
+      "tag": "Chef's Pick"
     },
     {
       "id": "d3",
-      "name": "Tiramisu",
-      "price": 280,
-      "description": "Classic Italian dessert with mascarpone and espresso layers.",
-      "image": "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&q=80",
-      "tag": "Best Seller"
+      "name": "Crème Brûlée",
+      "price": 325,
+      "description": "Custard with a coffee twist and a torched sugar crown. Pure indulgence.",
+      "image": "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?auto=format&fit=crop&q=80",
+      "tag": "Instagram Favorite"
     },
     {
       "id": "d4",
-      "name": "Cheesecake",
-      "price": 250,
-      "description": "New York-style creamy cheesecake with berry compote.",
-      "image": "https://images.unsplash.com/photo-1524351199432-f330e91a4dab?auto=format&fit=crop&q=80"
-    }
-  ],
-  "beverages": [
-    {
-      "id": "b1",
-      "name": "Cold Coffee",
-      "price": 200,
-      "description": "Thick, blended chilled coffee with a hint of vanilla.",
-      "image": "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba1?auto=format&fit=crop&q=80"
+      "name": "Molten Lava Cake",
+      "price": 295,
+      "description": "Warm dark chocolate cake with a gooey, flowing center. Served with gelato.",
+      "image": "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&q=80"
     },
     {
-      "id": "b2",
-      "name": "Iced Latte",
-      "price": 210,
-      "description": "Chilled espresso poured over creamy milk and ice.",
-      "image": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "b3",
-      "name": "Matcha Latte",
-      "price": 230,
-      "description": "Premium Japanese matcha whisked with steamed milk.",
-      "image": "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&q=80",
-      "tag": "Popular"
-    },
-    {
-      "id": "b4",
-      "name": "Fresh Juice",
-      "price": 160,
-      "description": "Seasonal fruits cold-pressed to perfection.",
-      "image": "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?auto=format&fit=crop&q=80"
-    },
-    {
-      "id": "b5",
-      "name": "Smoothie Bowl",
-      "price": 250,
-      "description": "Açaí blended thick with granola and fresh berries.",
-      "image": "https://images.unsplash.com/photo-1511690743698-d9d18f7e20f1?auto=format&fit=crop&q=80",
-      "time": "breakfast"
+      "id": "d5",
+      "name": "Apple Crumble",
+      "price": 275,
+      "description": "Warm cinnamon-spiced apples under a buttery oat crumble with vanilla cream.",
+      "image": "https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?auto=format&fit=crop&q=80",
+      "tag": "Chef's Pick"
     }
   ]
 }

@@ -3,32 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chef Dashboard | The Coffee House</title>
+    <title>Chef Dashboard | Diggin Café</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                        serif: ['Playfair Display', 'serif']
-                    },
-                    colors: {
-                        cafe: {
-                            bg: '#1a1714',
-                            card: '#252220',
-                            surface: '#2e2a27',
-                            text: '#faf6f1',
-                            muted: '#9c9590',
-                            accent: '#c8873a',
-                            accentHover: '#a66e2a',
-                        }
-                    }
-                }
-            }
+            theme: { extend: {
+                fontFamily: { sans: ['Outfit', 'sans-serif'], serif: ['Playfair Display', 'serif'] },
+                colors: { cafe: { bg: '#0f0f0f', card: '#1a1714', surface: '#252220', text: '#faf6f1', muted: '#9c9590', accent: '#c8873a', accentHover: '#a66e2a' } }
+            }}
         }
     </script>
 </head>
@@ -41,7 +26,7 @@
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             </div>
             <h2 class="text-3xl font-serif italic text-cafe-text mb-2">Chef Access</h2>
-            <p class="text-cafe-muted text-sm font-light mb-8">Enter password to view live orders.</p>
+            <p class="text-cafe-muted text-sm font-light mb-8">Enter password to view live kitchen orders.</p>
             <form id="login-form" class="space-y-4">
                 <input type="password" id="password" required class="w-full bg-cafe-bg border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-center text-lg tracking-[0.3em] focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/30" placeholder="••••••••">
                 <button type="submit" class="w-full py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg text-sm">Login</button>
@@ -52,13 +37,24 @@
 
     <!-- Dashboard -->
     <div id="dashboard-view" class="hidden min-h-screen flex flex-col">
-        <!-- Top Bar -->
         <nav class="bg-cafe-card border-b border-white/[0.04] px-6 py-4 flex justify-between items-center sticky top-0 z-30">
             <div class="flex items-center gap-4">
-                <h1 class="text-xl font-serif italic text-cafe-accent">Chef Dashboard</h1>
+                <h1 class="text-xl font-serif italic text-cafe-accent">Diggin Kitchen</h1>
                 <a href="cashier.html" class="text-cafe-muted text-xs font-bold uppercase tracking-[0.12em] hover:text-cafe-accent transition-colors px-3 py-1.5 border border-white/[0.06] rounded-lg hover:border-cafe-accent/30">Cashier →</a>
             </div>
             <div class="flex items-center gap-4">
+                <!-- Kitchen Load Indicator -->
+                <div id="kitchen-load" class="kitchen-load free">
+                    <span class="w-2 h-2 rounded-full bg-current"></span>
+                    <span id="kitchen-load-text">Kitchen Free</span>
+                </div>
+                <!-- Notification Badge -->
+                <div id="notif-badge" class="hidden relative">
+                    <div class="w-8 h-8 bg-red-500/20 rounded-full flex items-center justify-center notif-badge-flash">
+                        <span class="text-red-400 text-sm">🔔</span>
+                    </div>
+                    <span id="notif-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+                </div>
                 <div class="flex items-center gap-2">
                     <span class="relative flex h-2.5 w-2.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
@@ -80,7 +76,6 @@
         </div>
 
         <main class="flex-grow p-6 md:p-10">
-            <!-- Tab filters -->
             <div class="flex flex-wrap gap-3 mb-8">
                 <button class="chef-tab active px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-cafe-accent text-white transition-all" data-status="pending,preparing">Active</button>
                 <button class="chef-tab px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-white/[0.04] text-cafe-muted border border-white/[0.06] hover:bg-cafe-accent/20 hover:text-cafe-accent transition-all" data-status="pending">Pending</button>
@@ -88,11 +83,10 @@
                 <button class="chef-tab px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-white/[0.04] text-cafe-muted border border-white/[0.06] hover:bg-cafe-accent/20 hover:text-cafe-accent transition-all" data-status="ready">Ready</button>
             </div>
 
-            <!-- Header -->
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
                 <div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Active Orders</h2>
-                    <p class="text-cafe-muted text-sm mt-2 font-light">Real-time Supabase sync. Orders appear instantly.</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Kitchen Orders</h2>
+                    <p class="text-cafe-muted text-sm mt-2 font-light">Real-time sync · Oldest orders first</p>
                 </div>
                 <div class="text-lg font-bold bg-cafe-card border border-white/[0.04] px-5 py-3 rounded-xl flex items-center gap-2">
                     <span id="order-count" class="text-cafe-accent text-2xl">0</span>
@@ -100,22 +94,15 @@
                 </div>
             </div>
 
-            <!-- Orders Grid -->
             <div id="orders-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"></div>
 
-            <!-- Empty State -->
             <div id="no-orders" class="hidden text-center py-24 mt-6 border-2 border-dashed border-white/[0.06] rounded-[2rem] bg-cafe-card/30">
                 <div class="text-5xl mb-4 opacity-20">🍽️</div>
-                <h3 class="text-xl font-bold text-cafe-muted/60 mb-2">No Active Orders</h3>
+                <h3 class="text-xl font-bold text-cafe-muted/60 mb-2">Kitchen's Clear</h3>
                 <p class="text-cafe-muted/40 text-sm font-light">Waiting for customers to place an order...</p>
             </div>
         </main>
     </div>
-
-    <!-- Audio notification -->
-    <audio id="notification-sound" preload="auto">
-        <source src="data:audio/wav;base64,UklGRigBAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQBAADg/+D/4P/g/+D/4P/g/+D/4P/g/+D/8P/w//D/8P/w//D/8P/w//D/8P8AAAAAAAAAAAAAAAAAAAAAAAAAABAAEAAQABAAEAAQABAAEAAQABAAIAAgACAAIAAgACAAIAAgACAAIAAgADAAMAAwADAAMAAwADAAMAAwADAAMAAgACAAIAAgACAAIAAgACAAEAAQABAAEAAQAAAAAAAAAAAAAAAAAAAAAAAAAPA/8P/w//D/8P/w/+D/4P/g/+D/4P/g/9D/0P/Q/9D/0P/Q/8D/wP/A/8D/wP/A/8D/wP/A/8D/wP/Q/9D/0P/Q/9D/0P/g/+D/4P/g/+D/4P/w//D/8P/w//D/8P8=" type="audio/wav">
-    </audio>
 
     <script src="js/supabase-config.js"></script>
     <script>
@@ -126,17 +113,17 @@
             let currentFilter = ['pending', 'preparing'];
             let orderChannel = null;
             let callChannel = null;
+            let timerInterval = null;
 
-            // Restore session
             if (sessionStorage.getItem("chef_auth") === "true") {
                 showDashboard();
             }
 
-            // Login
             document.getElementById("login-form").addEventListener("submit", (e) => {
                 e.preventDefault();
                 if (document.getElementById("password").value === "admin123") {
                     sessionStorage.setItem("chef_auth", "true");
+                    sessionStorage.setItem("role", "chef");
                     document.getElementById("password").value = "";
                     err.classList.add("hidden");
                     showDashboard();
@@ -145,16 +132,16 @@
                 }
             });
 
-            // Logout
             document.getElementById("logout-btn").addEventListener("click", () => {
                 sessionStorage.removeItem("chef_auth");
+                sessionStorage.removeItem("role");
                 dashboardView.classList.add("hidden");
                 loginView.classList.remove("hidden");
-                if (orderChannel) supabase.removeChannel(orderChannel);
-                if (callChannel) supabase.removeChannel(callChannel);
+                if (orderChannel) supabase?.removeChannel(orderChannel);
+                if (callChannel) supabase?.removeChannel(callChannel);
+                if (timerInterval) clearInterval(timerInterval);
             });
 
-            // Tab filters
             document.querySelectorAll('.chef-tab').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.chef-tab').forEach(b => {
@@ -169,33 +156,101 @@
                 });
             });
 
+            // Sound functions
+            function playBell(type) {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = "sine";
+                    if (type === "urgent") {
+                        osc.frequency.setValueAtTime(1200, ctx.currentTime);
+                        osc.frequency.setValueAtTime(800, ctx.currentTime + 0.1);
+                        osc.frequency.setValueAtTime(1200, ctx.currentTime + 0.2);
+                        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+                        osc.start(ctx.currentTime);
+                        osc.stop(ctx.currentTime + 0.5);
+                    } else {
+                        osc.frequency.setValueAtTime(830, ctx.currentTime);
+                        osc.frequency.setValueAtTime(1060, ctx.currentTime + 0.1);
+                        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                        osc.start(ctx.currentTime);
+                        osc.stop(ctx.currentTime + 0.4);
+                    }
+                } catch(e) {}
+            }
+
+            function showToast(msg, urgent) {
+                const toast = document.createElement("div");
+                toast.className = `notification-toast ${urgent ? "urgent" : ""}`;
+                toast.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${urgent ? "bg-red-500/20" : "bg-cafe-accent/20"}">
+                            ${urgent ? "🔔" : "📦"}
+                        </div>
+                        <div>
+                            <div class="text-cafe-text font-bold text-sm">${msg}</div>
+                            <div class="text-cafe-muted text-xs mt-0.5">Just now</div>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(toast);
+                requestAnimationFrame(() => toast.classList.add("show"));
+                setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 600); }, 5000);
+            }
+
             async function showDashboard() {
                 loginView.classList.add("hidden");
                 dashboardView.classList.remove("hidden");
                 await renderOrders();
                 await renderCalls();
 
-                // Real-time subscription for orders
+                // Live timers update every second
+                timerInterval = setInterval(() => {
+                    document.querySelectorAll('.order-timer').forEach(el => {
+                        const created = new Date(el.dataset.created);
+                        const diff = Math.floor((Date.now() - created.getTime()) / 1000);
+                        const mins = Math.floor(diff / 60);
+                        const secs = diff % 60;
+                        el.textContent = `${mins}m ${secs.toString().padStart(2, '0')}s`;
+                        // Color based on time
+                        if (mins >= 15) { el.className = 'order-timer text-red-400 font-mono text-xs font-bold'; }
+                        else if (mins >= 8) { el.className = 'order-timer text-yellow-400 font-mono text-xs font-bold'; }
+                        else { el.className = 'order-timer text-cafe-muted font-mono text-xs'; }
+                    });
+                }, 1000);
+
                 orderChannel = subscribeToOrders((payload) => {
                     renderOrders();
                     if (payload.eventType === 'INSERT') {
-                        playNotification();
+                        playBell("order");
+                        const tbl = payload.new?.table_number || '?';
+                        showToast(`New order from Table ${tbl}!`, false);
                     }
                 });
 
-                // Real-time subscription for calls
-                callChannel = subscribeToCalls(() => {
+                callChannel = subscribeToCalls((payload) => {
                     renderCalls();
-                    playNotification();
+                    if (payload.eventType === 'INSERT') {
+                        playBell("urgent");
+                        const tbl = payload.new?.table_number || '?';
+                        const type = payload.new?.type || 'waiter';
+                        showToast(`Table ${tbl} — ${type}`, true);
+                    }
                 });
             }
 
-            function playNotification() {
-                try {
-                    const audio = document.getElementById('notification-sound');
-                    audio.currentTime = 0;
-                    audio.play().catch(() => {});
-                } catch(e) {}
+            function updateKitchenLoad(count) {
+                const el = document.getElementById("kitchen-load");
+                const text = document.getElementById("kitchen-load-text");
+                el.classList.remove("free", "moderate", "busy");
+                if (count >= 8) { el.classList.add("busy"); text.textContent = "Kitchen Busy"; }
+                else if (count >= 4) { el.classList.add("moderate"); text.textContent = "Moderate Load"; }
+                else { el.classList.add("free"); text.textContent = "Kitchen Free"; }
             }
 
             window.setOrderStatus = async function(orderId, newStatus) {
@@ -219,14 +274,20 @@
             async function renderCalls() {
                 const banner = document.getElementById('calls-banner');
                 const list = document.getElementById('calls-list');
+                const notifBadge = document.getElementById('notif-badge');
+                const notifCount = document.getElementById('notif-count');
                 const calls = await fetchActiveCalls();
 
                 if (calls.length === 0) {
                     banner.classList.add('hidden');
+                    notifBadge.classList.add('hidden');
                     return;
                 }
 
                 banner.classList.remove('hidden');
+                notifBadge.classList.remove('hidden');
+                notifCount.textContent = calls.length;
+
                 list.innerHTML = calls.map(call => `
                     <div class="flex items-center gap-2 bg-red-500/20 border border-red-500/30 text-red-200 text-xs font-bold px-3 py-1.5 rounded-lg alert-flash">
                         <span>Table ${call.table_number} — ${call.type}</span>
@@ -240,8 +301,13 @@
                 const noOrders = document.getElementById("no-orders");
                 const countEl = document.getElementById("order-count");
 
+                // Fetch with ascending order (oldest first)
                 const orders = await fetchOrders(currentFilter);
                 countEl.textContent = orders.length;
+                updateKitchenLoad(orders.filter(o => o.status === 'pending' || o.status === 'preparing').length);
+
+                // Store pending count for customer-side peak indicator
+                sessionStorage.setItem("pending_orders", orders.filter(o => o.status === 'pending').length.toString());
 
                 if (orders.length === 0) {
                     container.innerHTML = "";
@@ -254,7 +320,12 @@
 
                 orders.forEach(order => {
                     const card = document.createElement("div");
-                    card.className = "bg-cafe-card rounded-2xl border border-white/[0.04] overflow-hidden flex flex-col shadow-xl hover:border-cafe-accent/20 transition-colors order-card-enter";
+                    const statusBorder = {
+                        pending: 'border-red-500/30 hover:border-red-500/50',
+                        preparing: 'border-yellow-500/30 hover:border-yellow-500/50',
+                        ready: 'border-green-500/30 hover:border-green-500/50'
+                    };
+                    card.className = `bg-cafe-card rounded-2xl border ${statusBorder[order.status] || 'border-white/[0.04]'} overflow-hidden flex flex-col shadow-xl transition-colors order-card-enter`;
 
                     const items = order.items || [];
                     const itemsHtml = items.map(item => `
@@ -265,37 +336,24 @@
                     `).join("");
 
                     const statusColors = {
-                        pending: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-                        preparing: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+                        pending: 'bg-red-500/20 text-red-400 border-red-500/30',
+                        preparing: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
                         ready: 'bg-green-500/20 text-green-400 border-green-500/30'
                     };
                     const statusClass = statusColors[order.status] || statusColors.pending;
-
-                    const time = order.created_at ? new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
                     const customerName = order.customer_name || 'Customer';
 
                     let actionBtns = '';
                     if (order.status === 'pending') {
-                        actionBtns = `
-                            <button onclick="setOrderStatus('${order.id}', 'preparing')" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold uppercase tracking-[0.1em] rounded-xl transition-all shadow-lg flex items-center gap-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                Preparing
-                            </button>
-                        `;
+                        actionBtns = `<button onclick="setOrderStatus('${order.id}', 'preparing')" class="px-4 py-2.5 bg-yellow-600 hover:bg-yellow-500 text-white text-xs font-bold uppercase tracking-[0.1em] rounded-xl transition-all shadow-lg flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Start
+                        </button>`;
                     } else if (order.status === 'preparing') {
-                        actionBtns = `
-                            <button onclick="setOrderStatus('${order.id}', 'ready')" class="px-4 py-2.5 bg-green-600 hover:bg-green-500 text-white text-xs font-bold uppercase tracking-[0.1em] rounded-xl transition-all shadow-lg flex items-center gap-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                Ready
-                            </button>
-                        `;
+                        actionBtns = `<button onclick="setOrderStatus('${order.id}', 'ready')" class="px-4 py-2.5 bg-green-600 hover:bg-green-500 text-white text-xs font-bold uppercase tracking-[0.1em] rounded-xl transition-all shadow-lg flex items-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Ready
+                        </button>`;
                     } else if (order.status === 'ready') {
-                        actionBtns = `
-                            <span class="text-green-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                Ready for pickup
-                            </span>
-                        `;
+                        actionBtns = `<span class="text-green-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">✅ Ready for pickup</span>`;
                     }
 
                     card.innerHTML = `
@@ -305,10 +363,8 @@
                                 <h3 class="text-lg font-bold text-cafe-text">${customerName}</h3>
                             </div>
                             <div class="text-right flex flex-col items-end gap-2">
-                                <span class="inline-flex px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusClass}">
-                                    ${order.status}
-                                </span>
-                                <div class="text-cafe-muted/50 font-mono text-xs">${time}</div>
+                                <span class="inline-flex px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusClass}">${order.status}</span>
+                                <div class="order-timer text-cafe-muted font-mono text-xs" data-created="${order.created_at}">...</div>
                             </div>
                         </div>
                         <div class="p-6 flex-grow">${itemsHtml}</div>

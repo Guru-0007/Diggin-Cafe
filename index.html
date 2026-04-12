@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Coffee House | Premium Artisan Café</title>
-    <meta name="description" content="Artisan coffee and curated experiences. Scan, order, and relax at The Coffee House. Browse our menu and order instantly from your table.">
+    <title>Diggin Café | Where Good Vibes Meet Great Food</title>
+    <meta name="description" content="Step into Diggin — European-style café with handcrafted Italian cuisine, stone-baked pizzas, and indulgent desserts. Scan, order, and relax at your table.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
@@ -19,9 +19,9 @@
                     },
                     colors: {
                         cafe: {
-                            bg: '#1a1714',
-                            card: '#252220',
-                            surface: '#2e2a27',
+                            bg: '#0f0f0f',
+                            card: '#1a1714',
+                            surface: '#252220',
                             text: '#faf6f1',
                             muted: '#9c9590',
                             accent: '#c8873a',
@@ -40,27 +40,24 @@
     <!-- INTRO / ENTRY EXPERIENCE                   -->
     <!-- ═══════════════════════════════════════════ -->
     <div id="intro-screen" class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden">
-        <!-- Video background -->
-        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover scale-110" style="filter: brightness(0.35) saturate(1.2);">
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover scale-110" style="filter: brightness(0.25) saturate(1.3);">
             <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-milk-into-a-cup-of-coffee-722-large.mp4" type="video/mp4">
         </video>
-        <!-- Gradient overlay -->
-        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-cafe-bg/40 to-cafe-bg"></div>
-        <!-- Grain texture overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-cafe-bg/50 to-cafe-bg"></div>
         <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22><rect width=%224%22 height=%224%22 fill=%22%23fff%22 opacity=%220.4%22/><rect width=%221%22 height=%221%22 fill=%22%23000%22 opacity=%220.3%22/></svg>'); background-repeat: repeat;"></div>
 
         <div class="relative z-10 flex flex-col items-center justify-center text-center px-6 intro-content">
-            <div class="mb-6 opacity-0 intro-line" style="animation: introFadeUp 1s 0.3s ease-out forwards;">
-                <span class="text-cafe-accent/80 text-sm font-bold uppercase tracking-[0.4em]">est. 2024</span>
+            <div class="mb-4 opacity-0 intro-line" style="animation: introFadeUp 1s 0.2s ease-out forwards;">
+                <span class="text-cafe-accent/70 text-xs font-bold uppercase tracking-[0.5em]">est. 2015 · Delhi</span>
             </div>
-            <h1 class="text-6xl sm:text-7xl md:text-9xl font-serif italic text-cafe-text mb-6 opacity-0 intro-line" style="animation: introFadeUp 1.2s 0.6s ease-out forwards; text-shadow: 0 4px 30px rgba(0,0,0,0.5);">
-                The Coffee<br>House
+            <h1 class="text-7xl sm:text-8xl md:text-[10rem] font-serif italic text-cafe-text mb-4 opacity-0 intro-line" style="animation: introLogoReveal 1.5s 0.5s ease-out forwards; animation-fill-mode: forwards;">
+                Diggin
             </h1>
-            <p class="text-cafe-text/70 text-lg md:text-xl font-light tracking-widest mb-12 opacity-0 intro-line" style="animation: introFadeUp 1s 1s ease-out forwards;">
-                Artisan coffee & curated experiences
+            <p class="text-cafe-accent text-lg md:text-xl font-light tracking-[0.25em] uppercase mb-12 opacity-0 intro-line" style="animation: introFadeUp 1s 1.2s ease-out forwards;">
+                Café & Kitchen
             </p>
-            <button id="enter-btn" class="opacity-0 intro-line group relative px-14 py-5 bg-transparent border-2 border-cafe-accent/60 text-cafe-accent text-base font-bold uppercase tracking-[0.3em] rounded-full hover:bg-cafe-accent hover:text-white hover:border-cafe-accent transition-all duration-500 hover:shadow-[0_0_50px_rgba(200,135,58,0.3)] hover:scale-105" style="animation: introFadeUp 1s 1.4s ease-out forwards;">
-                Enter
+            <button id="enter-btn" class="opacity-0 intro-line group relative px-14 py-5 bg-transparent border-2 border-cafe-accent/50 text-cafe-accent text-sm font-bold uppercase tracking-[0.3em] rounded-full hover:bg-cafe-accent hover:text-white hover:border-cafe-accent transition-all duration-500 hover:shadow-[0_0_60px_rgba(200,135,58,0.3)] hover:scale-105" style="animation: introFadeUp 1s 1.6s ease-out forwards;">
+                Enter Diggin
             </button>
         </div>
     </div>
@@ -74,18 +71,22 @@
     <nav class="fixed w-full z-40 bg-cafe-bg/85 backdrop-blur-xl border-b border-white/[0.04] transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex items-center justify-between h-20">
-                <!-- Logo -->
                 <a href="index.html" class="text-2xl md:text-3xl font-serif italic text-cafe-accent hover:text-cafe-accentHover transition-colors tracking-tight">
-                    The Coffee House
+                    Diggin
                 </a>
-                <!-- Nav Links + Cart -->
                 <div class="flex items-center gap-2 sm:gap-4">
                     <div class="hidden md:flex items-center gap-1">
                         <a href="#home" class="text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em]">Home</a>
                         <a href="menu.html" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Menu</a>
                         <a href="#about" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">About</a>
                         <a href="#outlets" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Outlets</a>
-                        <a href="#booking" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Book</a>
+                        <a href="#booking" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Reserve</a>
+                    </div>
+                    <!-- Theme Toggle -->
+                    <div class="theme-toggle" title="Toggle dark/light mode">
+                        <div class="theme-toggle-thumb">
+                            <span class="theme-toggle-icon">🌙</span>
+                        </div>
                     </div>
                     <!-- Cart Button -->
                     <button id="cart-toggle" class="relative p-3 text-cafe-muted hover:text-cafe-accent transition-colors group ml-2">
@@ -106,7 +107,7 @@
                 <a href="menu.html" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Menu</a>
                 <a href="#about" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">About</a>
                 <a href="#outlets" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Outlets</a>
-                <a href="#booking" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Book</a>
+                <a href="#booking" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Reserve</a>
             </div>
         </div>
     </nav>
@@ -115,28 +116,28 @@
     <!-- VIDEO HERO                                 -->
     <!-- ═══════════════════════════════════════════ -->
     <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
-        <!-- Video background -->
-        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0" style="filter: brightness(0.3) saturate(1.1);">
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0" style="filter: brightness(0.25) saturate(1.2);">
             <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-coffee-from-a-coffee-maker-into-a-cup-4730-large.mp4" type="video/mp4">
         </video>
-        <div class="absolute inset-0 bg-gradient-to-r from-cafe-bg via-cafe-bg/90 to-cafe-bg/50 z-[1]"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-cafe-bg via-cafe-bg/90 to-cafe-bg/40 z-[1]"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg via-transparent to-transparent z-[1]"></div>
 
         <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-32 md:py-0">
             <div class="max-w-3xl">
-                <!-- Eyebrow -->
                 <div class="flex items-center gap-3 mb-8 scroll-reveal">
                     <div class="w-10 h-px bg-cafe-accent"></div>
                     <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Digital Ordering</span>
                 </div>
-                <!-- Headline -->
                 <h1 class="text-[3.25rem] sm:text-6xl md:text-[5.5rem] leading-[1.05] font-serif mb-8 tracking-tight scroll-reveal">
                     <span class="italic text-cafe-accent">Scan.</span> Order.<br>
                     <span class="text-cafe-text">Relax.</span>
                 </h1>
 
-                <p class="text-xl md:text-2xl text-cafe-muted font-light leading-relaxed mb-14 max-w-lg scroll-reveal">
-                    Browse our curated menu and order instantly from your table. No waiting, no hassle.
+                <p class="text-xl md:text-2xl text-cafe-muted font-light leading-relaxed mb-4 max-w-lg scroll-reveal">
+                    Experience café luxury at your table.
+                </p>
+                <p id="typewriter-text" data-text="Handcrafted Italian. Stone-baked. Indulgent." class="text-lg text-cafe-accent/80 font-light mb-14 max-w-lg scroll-reveal">
+                    Handcrafted Italian. Stone-baked. Indulgent.
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-5 scroll-reveal">
@@ -150,24 +151,23 @@
             </div>
         </div>
 
-        <!-- Decorative side image (visible on large screens) -->
         <div class="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-[420px] h-[520px] z-10">
             <div class="relative w-full h-full rounded-[2rem] overflow-hidden shadow-2xl border border-white/5 rotate-3 translate-x-8">
-                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80" alt="Coffee art" class="w-full h-full object-cover" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80" alt="Diggin coffee art" class="w-full h-full object-cover" loading="lazy">
                 <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg/80 to-transparent"></div>
             </div>
         </div>
     </section>
 
     <!-- ═══════════════════════════════════════════ -->
-    <!-- FEATURED ITEMS STRIP                       -->
+    <!-- FEATURED ITEMS                             -->
     <!-- ═══════════════════════════════════════════ -->
     <section class="py-24 bg-cafe-card border-y border-white/[0.04]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex items-center justify-between mb-14 scroll-reveal">
                 <div>
                     <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mb-2">Most Loved</h2>
-                    <p class="text-cafe-muted font-light">Our customers' top picks this month.</p>
+                    <p class="text-cafe-muted font-light">What Delhi can't stop ordering.</p>
                 </div>
                 <a href="menu.html" class="hidden sm:inline-flex items-center gap-2 text-cafe-accent text-sm font-bold uppercase tracking-[0.15em] hover:gap-3 transition-all">
                     Full Menu
@@ -175,60 +175,61 @@
                 </a>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Item 1 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
                 <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80" alt="Cappuccino" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&q=80" alt="Velvet Cold Brew" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
-                        <span class="absolute top-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Popular</span>
+                        <span class="absolute top-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Chef's Pick</span>
                     </div>
                     <div class="p-5">
                         <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-cafe-text">Cappuccino</h3>
-                            <span class="font-bold text-cafe-accent">₹150</span>
+                            <h3 class="font-bold text-cafe-text">Velvet Cold Brew</h3>
+                            <span class="font-bold text-cafe-accent">₹295</span>
                         </div>
+                        <p class="text-cafe-muted text-xs mt-2 font-light">18-hour steeped, silky dark chocolate notes</p>
                     </div>
                 </div>
-                <!-- Item 2 -->
                 <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1555507036-ab1f40ce88f4?auto=format&fit=crop&q=80" alt="Cheese Croissant" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <img src="https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&q=80" alt="Margherita Classica" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
-                        <span class="absolute top-4 left-4 bg-red-500/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Best Seller</span>
+                        <span class="absolute top-4 left-4 bg-rose-500/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Trending</span>
                     </div>
                     <div class="p-5">
                         <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-cafe-text">Cheese Croissant</h3>
-                            <span class="font-bold text-cafe-accent">₹160</span>
+                            <h3 class="font-bold text-cafe-text">Margherita Classica</h3>
+                            <span class="font-bold text-cafe-accent">₹525</span>
                         </div>
+                        <p class="text-cafe-muted text-xs mt-2 font-light">Stone-baked with San Marzano & fresh basil</p>
                     </div>
                 </div>
-                <!-- Item 3 -->
                 <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba1?auto=format&fit=crop&q=80" alt="Cold Coffee" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <img src="https://images.unsplash.com/photo-1524351199432-f330e91a4dab?auto=format&fit=crop&q=80" alt="Biscoff Cheesecake" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
+                        <span class="absolute top-4 left-4 bg-violet-500/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Instagram Favorite</span>
                     </div>
                     <div class="p-5">
                         <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-cafe-text">Cold Coffee</h3>
-                            <span class="font-bold text-cafe-accent">₹200</span>
+                            <h3 class="font-bold text-cafe-text">Biscoff Cheesecake</h3>
+                            <span class="font-bold text-cafe-accent">₹345</span>
                         </div>
+                        <p class="text-cafe-muted text-xs mt-2 font-light">Creamy cheesecake on a cookie butter crust</p>
                     </div>
                 </div>
-                <!-- Item 4 -->
                 <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&q=80" alt="Chocolate Cake" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <img src="https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&q=80" alt="Spaghetti Carbonara" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
-                        <span class="absolute top-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Popular</span>
+                        <span class="absolute top-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Chef's Pick</span>
                     </div>
                     <div class="p-5">
                         <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-cafe-text">Chocolate Cake</h3>
-                            <span class="font-bold text-cafe-accent">₹220</span>
+                            <h3 class="font-bold text-cafe-text">Spaghetti Carbonara</h3>
+                            <span class="font-bold text-cafe-accent">₹475</span>
                         </div>
+                        <p class="text-cafe-muted text-xs mt-2 font-light">Creamy egg sauce with crispy pancetta</p>
                     </div>
                 </div>
             </div>
@@ -250,22 +251,22 @@
                     <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15 group-hover:bg-cafe-accent/20 transition-colors">
                         <span class="text-2xl font-serif font-bold">1</span>
                     </div>
-                    <h3 class="text-lg font-bold mb-3 text-cafe-text">Browse Menu</h3>
-                    <p class="text-cafe-muted font-light text-sm leading-relaxed">Explore our curated selection of coffee, food, and drinks from your phone.</p>
+                    <h3 class="text-lg font-bold mb-3 text-cafe-text">Scan QR Code</h3>
+                    <p class="text-cafe-muted font-light text-sm leading-relaxed">Scan the QR on your table and the menu opens instantly with your table pre-filled.</p>
                 </div>
                 <div class="text-center group scroll-reveal">
                     <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15 group-hover:bg-cafe-accent/20 transition-colors">
                         <span class="text-2xl font-serif font-bold">2</span>
                     </div>
-                    <h3 class="text-lg font-bold mb-3 text-cafe-text">Add to Order</h3>
-                    <p class="text-cafe-muted font-light text-sm leading-relaxed">Pick your favorites, customize quantity, and review your order before placing.</p>
+                    <h3 class="text-lg font-bold mb-3 text-cafe-text">Pick Your Favorites</h3>
+                    <p class="text-cafe-muted font-light text-sm leading-relaxed">Browse our curated menu, add to your order, and customize quantities effortlessly.</p>
                 </div>
                 <div class="text-center group scroll-reveal">
                     <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15 group-hover:bg-cafe-accent/20 transition-colors">
                         <span class="text-2xl font-serif font-bold">3</span>
                     </div>
                     <h3 class="text-lg font-bold mb-3 text-cafe-text">Relax & Enjoy</h3>
-                    <p class="text-cafe-muted font-light text-sm leading-relaxed">Confirm your table number and we'll bring your order fresh and hot.</p>
+                    <p class="text-cafe-muted font-light text-sm leading-relaxed">Track your order in real-time. We'll bring it fresh to your table — no waiting in line.</p>
                 </div>
             </div>
         </div>
@@ -277,43 +278,41 @@
     <section id="about" class="py-28 bg-cafe-card border-y border-white/[0.04]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <!-- Image side -->
                 <div class="relative scroll-reveal">
                     <div class="rounded-[2rem] overflow-hidden border border-white/[0.04] shadow-2xl">
-                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80" alt="Our café interior" class="w-full h-[450px] object-cover" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80" alt="Diggin Café interior" class="w-full h-[450px] object-cover" loading="lazy">
                     </div>
                     <div class="absolute -bottom-6 -right-6 bg-cafe-accent text-white p-6 rounded-2xl shadow-2xl hidden lg:block">
-                        <div class="text-3xl font-bold font-serif">8+</div>
-                        <div class="text-xs font-bold uppercase tracking-wider mt-1">Years of<br>Excellence</div>
+                        <div class="text-3xl font-bold font-serif">5+</div>
+                        <div class="text-xs font-bold uppercase tracking-wider mt-1">Outlets<br>Across Delhi</div>
                     </div>
                 </div>
-                <!-- Content side -->
                 <div class="scroll-reveal">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-10 h-px bg-cafe-accent"></div>
-                        <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Our Story</span>
+                        <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">All About Diggin</span>
                     </div>
                     <h2 class="text-4xl md:text-5xl font-serif italic text-cafe-text mb-8 leading-tight">
-                        Crafted with<br><span class="text-cafe-accent">Passion</span>
+                        Where Good Vibes<br><span class="text-cafe-accent">Meet Great Food</span>
                     </h2>
                     <p class="text-cafe-muted text-base font-light leading-relaxed mb-6">
-                        Born from a love for artisan coffee and meaningful moments, The Coffee House brings together the finest beans from around the world and pairs them with a warm, inviting atmosphere.
+                        Step into Diggin — an escape wrapped in fairy lights, lush greens, and the warmth of a European café. Every corner is made for good vibes, easy conversations, and a little magic.
                     </p>
                     <p class="text-cafe-muted text-base font-light leading-relaxed mb-10">
-                        Every cup we serve is a story — from single-origin Ethiopian pour-overs to our signature house blend. We partner with local farms and sustainable roasters to bring you coffee that's good for you and good for the planet.
+                        Our kitchen brings you comforting Italian and continental classics — handcrafted pastas, stone-baked pizzas, and indulgent desserts made to linger over. From Anand Lok to Connaught Place, each Diggin is a destination.
                     </p>
                     <div class="grid grid-cols-3 gap-6">
                         <div class="text-center p-4 bg-cafe-bg rounded-xl border border-white/[0.04]">
-                            <div class="text-2xl font-bold text-cafe-accent mb-1">15+</div>
-                            <div class="text-cafe-muted text-xs font-bold uppercase tracking-wider">Origins</div>
+                            <div class="text-2xl font-bold text-cafe-accent mb-1">5</div>
+                            <div class="text-cafe-muted text-xs font-bold uppercase tracking-wider">Locations</div>
                         </div>
                         <div class="text-center p-4 bg-cafe-bg rounded-xl border border-white/[0.04]">
-                            <div class="text-2xl font-bold text-cafe-accent mb-1">50K+</div>
-                            <div class="text-cafe-muted text-xs font-bold uppercase tracking-wider">Cups/Month</div>
+                            <div class="text-2xl font-bold text-cafe-accent mb-1">4.5★</div>
+                            <div class="text-cafe-muted text-xs font-bold uppercase tracking-wider">Zomato</div>
                         </div>
                         <div class="text-center p-4 bg-cafe-bg rounded-xl border border-white/[0.04]">
-                            <div class="text-2xl font-bold text-cafe-accent mb-1">4.8</div>
-                            <div class="text-cafe-muted text-xs font-bold uppercase tracking-wider">Rating</div>
+                            <div class="text-2xl font-bold text-cafe-accent mb-1">10Y+</div>
+                            <div class="text-cafe-muted text-xs font-bold uppercase tracking-wider">Since 2015</div>
                         </div>
                     </div>
                 </div>
@@ -328,56 +327,90 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center mb-20 scroll-reveal">
                 <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Find Us</span>
-                <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mt-4">Our Outlets</h2>
+                <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mt-4">Our Locations</h2>
+                <p class="text-cafe-muted font-light mt-3">Savor the authentic taste of Italy, right here in Delhi NCR.</p>
                 <div class="w-12 h-0.5 bg-cafe-accent mx-auto mt-6 rounded-full"></div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Outlet 1 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&q=80" alt="Connaught Place outlet" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&q=80" alt="Diggin Anand Lok" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
                         <span class="absolute bottom-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-sm">Flagship</span>
                     </div>
                     <div class="p-6">
+                        <h3 class="text-xl font-bold text-cafe-text mb-2">Anand Lok</h3>
+                        <p class="text-cafe-muted text-sm font-light mb-4">Anand Lok Shopping Centre, Opp. Gargi College, New Delhi</p>
+                        <div class="flex items-center gap-2 text-cafe-accent text-sm font-semibold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            11 AM – 11 PM
+                        </div>
+                    </div>
+                </div>
+                <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?auto=format&fit=crop&q=80" alt="Diggin Chanakyapuri" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-cafe-text mb-2">Chanakyapuri</h3>
+                        <p class="text-cafe-muted text-sm font-light mb-4">11, Santushti Shopping Complex, Race Course Road, New Delhi</p>
+                        <div class="flex items-center gap-2 text-cafe-accent text-sm font-semibold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            11 AM – 9:30 PM
+                        </div>
+                    </div>
+                </div>
+                <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1493857671505-72967e2e2760?auto=format&fit=crop&q=80" alt="Diggin Connaught Place" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
+                    </div>
+                    <div class="p-6">
                         <h3 class="text-xl font-bold text-cafe-text mb-2">Connaught Place</h3>
-                        <p class="text-cafe-muted text-sm font-light mb-4">Block A, Inner Circle, New Delhi 110001</p>
+                        <p class="text-cafe-muted text-sm font-light mb-4">M-11, Middle Circle, Connaught Place, New Delhi</p>
                         <div class="flex items-center gap-2 text-cafe-accent text-sm font-semibold">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            8 AM – 11 PM
+                            11 AM – 11 PM
                         </div>
                     </div>
                 </div>
-                <!-- Outlet 2 -->
                 <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?auto=format&fit=crop&q=80" alt="Hauz Khas outlet" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&q=80" alt="Diggin Bikaner House" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
+                        <span class="absolute bottom-4 left-4 bg-emerald-500/90 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-sm">Popular</span>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-cafe-text mb-2">Hauz Khas Village</h3>
-                        <p class="text-cafe-muted text-sm font-light mb-4">Lane 3, Hauz Khas, New Delhi 110016</p>
+                        <h3 class="text-xl font-bold text-cafe-text mb-2">Bikaner House</h3>
+                        <p class="text-cafe-muted text-sm font-light mb-4">Pandara Road, near India Gate, New Delhi</p>
                         <div class="flex items-center gap-2 text-cafe-accent text-sm font-semibold">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            9 AM – 12 AM
+                            11 AM – 11:30 PM
                         </div>
                     </div>
                 </div>
-                <!-- Outlet 3 -->
                 <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1493857671505-72967e2e2760?auto=format&fit=crop&q=80" alt="Cyber Hub outlet" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80" alt="Gardin by Diggin" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
-                        <span class="absolute bottom-4 left-4 bg-emerald-500/90 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-sm">New</span>
+                        <span class="absolute bottom-4 left-4 bg-violet-500/90 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-sm">Garden Dining</span>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-cafe-text mb-2">Cyber Hub, Gurgaon</h3>
-                        <p class="text-cafe-muted text-sm font-light mb-4">DLF Cyber City, Sector 24, Gurgaon 122002</p>
+                        <h3 class="text-xl font-bold text-cafe-text mb-2">Gardin by Diggin</h3>
+                        <p class="text-cafe-muted text-sm font-light mb-4">Anand Lok, New Delhi — An al-fresco garden experience</p>
                         <div class="flex items-center gap-2 text-cafe-accent text-sm font-semibold">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            10 AM – 11 PM
+                            11 AM – 11 PM
                         </div>
+                    </div>
+                </div>
+                <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] border-dashed hover:border-cafe-accent/20 transition-all duration-500 scroll-reveal flex items-center justify-center min-h-[320px]">
+                    <div class="text-center p-6">
+                        <div class="text-4xl mb-4 opacity-30">🏗️</div>
+                        <h3 class="text-xl font-bold text-cafe-text mb-2">Tagore Garden</h3>
+                        <p class="text-cafe-muted text-sm font-light">Coming Soon</p>
                     </div>
                 </div>
             </div>
@@ -390,63 +423,42 @@
     <section class="py-28 bg-cafe-card border-y border-white/[0.04]" id="testimonials">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center mb-20 scroll-reveal">
-                <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Customer Love</span>
-                <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mt-4">Loved by Customers</h2>
+                <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Best Rated in Delhi</span>
+                <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mt-4">What People Say</h2>
                 <div class="w-12 h-0.5 bg-cafe-accent mx-auto mt-6 rounded-full"></div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Review 1 -->
                 <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal">
-                    <div class="text-cafe-accent mb-5 flex gap-1">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                    </div>
-                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"The digital ordering system is brilliant. I sat down, browsed the menu, and my coffee arrived in 5 minutes without leaving the table!"</p>
+                    <div class="text-cafe-accent mb-5 flex gap-1">★★★★★</div>
+                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"Lucky it was raining — the green around the cafe added to a cold breeze. The ambience is perfect for dates. Ordered Oreo Shake (delicious) and Baked Penne Pasta (quite good). Can sit, eat, talk for hours."</p>
                     <div class="flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
-                        <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">SJ</div>
+                        <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">S</div>
                         <div>
-                            <h4 class="font-bold text-cafe-text text-sm">Sarah Jenkins</h4>
-                            <p class="text-cafe-muted text-xs">Regular Customer</p>
+                            <h4 class="font-bold text-cafe-text text-sm">Shashank</h4>
+                            <p class="text-cafe-muted text-xs">Google Review</p>
                         </div>
                     </div>
                 </div>
-                <!-- Review 2 -->
                 <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal">
-                    <div class="text-cafe-accent mb-5 flex gap-1">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                    </div>
-                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"Sleek and easy. It genuinely felt like a premium experience unlike any other local cafe. The UI is so clean!"</p>
+                    <div class="text-cafe-accent mb-5 flex gap-1">★★★★★</div>
+                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"The standout items were the Banta Masala — basically a mint lemonade — and the Crème Brûlée, with an amazingly fresh flavor profile with coffee and chocolate. A great closer for our meal."</p>
                     <div class="flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
-                        <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">MD</div>
+                        <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">NJ</div>
                         <div>
-                            <h4 class="font-bold text-cafe-text text-sm">Mark Davidson</h4>
-                            <p class="text-cafe-muted text-xs">First-time Visitor</p>
+                            <h4 class="font-bold text-cafe-text text-sm">Nisha James</h4>
+                            <p class="text-cafe-muted text-xs">Google Review</p>
                         </div>
                     </div>
                 </div>
-                <!-- Review 3 -->
                 <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal">
-                    <div class="text-cafe-accent mb-5 flex gap-1">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                    </div>
-                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"Love the ordering flow! Super fast, and the latte was perfect. Will be coming back every weekend."</p>
+                    <div class="text-cafe-accent mb-5 flex gap-1">★★★★★</div>
+                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"Probably the best pizzeria in town. Cocktails were okay but food was excellent — pizzas done just the way they should be. Service was quick and courteous. Definitely recommend for South Delhi."</p>
                     <div class="flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
-                        <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">ER</div>
+                        <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">AK</div>
                         <div>
-                            <h4 class="font-bold text-cafe-text text-sm">Emily Roberts</h4>
-                            <p class="text-cafe-muted text-xs">Weekend Regular</p>
+                            <h4 class="font-bold text-cafe-text text-sm">Ainkareswar K.P.</h4>
+                            <p class="text-cafe-muted text-xs">Google Review</p>
                         </div>
                     </div>
                 </div>
@@ -455,25 +467,24 @@
     </section>
 
     <!-- ═══════════════════════════════════════════ -->
-    <!-- BOOKING                                    -->
+    <!-- BOOKING / RESERVATION                      -->
     <!-- ═══════════════════════════════════════════ -->
     <section id="booking" class="py-28 bg-cafe-bg">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                <!-- Booking Form -->
                 <div class="scroll-reveal">
                     <div class="flex items-center gap-3 mb-6">
                         <div class="w-10 h-px bg-cafe-accent"></div>
                         <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Reserve a Table</span>
                     </div>
                     <h2 class="text-4xl md:text-5xl font-serif italic text-cafe-text mb-4 leading-tight">Book Your<br><span class="text-cafe-accent">Experience</span></h2>
-                    <p class="text-cafe-muted text-base font-light leading-relaxed mb-10">Reserve your spot for a premium dining experience. We ensure every visit is special.</p>
+                    <p class="text-cafe-muted text-base font-light leading-relaxed mb-10">Guarantee your spot at Diggin. Perfect for dates, celebrations, or just a perfect evening out.</p>
 
                     <form id="booking-form" class="space-y-5">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Full Name</label>
-                                <input type="text" id="book-name" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="John Doe">
+                                <input type="text" id="book-name" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="Riya Sharma">
                             </div>
                             <div>
                                 <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Phone</label>
@@ -486,8 +497,18 @@
                                 <input type="date" id="book-date" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
                             </div>
                             <div>
-                                <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Time</label>
-                                <input type="time" id="book-time" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
+                                <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Time Slot</label>
+                                <select id="book-time" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
+                                    <option value="">Select a slot</option>
+                                    <option value="11:00">11:00 AM - 12:30 PM</option>
+                                    <option value="12:30">12:30 PM - 2:00 PM</option>
+                                    <option value="14:00">2:00 PM - 3:30 PM</option>
+                                    <option value="15:30">3:30 PM - 5:00 PM</option>
+                                    <option value="17:00">5:00 PM - 6:30 PM</option>
+                                    <option value="18:30">6:30 PM - 8:00 PM</option>
+                                    <option value="20:00">8:00 PM - 9:30 PM</option>
+                                    <option value="21:30">9:30 PM - 11:00 PM</option>
+                                </select>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -505,25 +526,26 @@
                             <div>
                                 <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Outlet</label>
                                 <select id="book-outlet" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
+                                    <option value="Anand Lok">Anand Lok (Flagship)</option>
+                                    <option value="Chanakyapuri">Chanakyapuri</option>
                                     <option value="Connaught Place">Connaught Place</option>
-                                    <option value="Hauz Khas">Hauz Khas Village</option>
-                                    <option value="Cyber Hub">Cyber Hub, Gurgaon</option>
+                                    <option value="Bikaner House">Bikaner House</option>
+                                    <option value="Gardin">Gardin by Diggin</option>
                                 </select>
                             </div>
                         </div>
                         <div>
                             <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Special Requests</label>
-                            <textarea id="book-notes" rows="3" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40 resize-none" placeholder="Birthday celebration, window seat, etc."></textarea>
+                            <textarea id="book-notes" rows="3" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40 resize-none" placeholder="Birthday celebration, window seat, outdoor seating..."></textarea>
                         </div>
-                        <button type="submit" id="book-submit-btn" class="btn-press w-full py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg hover:shadow-[0_8px_30px_rgba(200,135,58,0.25)] text-sm">
+                        <button type="submit" id="book-submit-btn" class="btn-press w-full py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg hover:shadow-[0_8px_30px_rgba(200,135,58,0.25)] text-sm flex items-center justify-center gap-2">
                             Confirm Reservation
                         </button>
                     </form>
                 </div>
-                <!-- Image side -->
                 <div class="scroll-reveal hidden lg:block">
                     <div class="rounded-[2rem] overflow-hidden border border-white/[0.04] shadow-2xl relative">
-                        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&q=80" alt="Dining experience" class="w-full h-[600px] object-cover" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&q=80" alt="Diggin dining" class="w-full h-[600px] object-cover" loading="lazy">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg/60 to-transparent"></div>
                         <div class="absolute bottom-8 left-8 right-8 bg-cafe-bg/80 backdrop-blur-xl p-6 rounded-2xl border border-white/[0.06]">
                             <div class="flex items-center gap-4">
@@ -531,8 +553,8 @@
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
                                 </div>
                                 <div>
-                                    <div class="text-cafe-text font-bold text-sm">Premium Experience</div>
-                                    <div class="text-cafe-muted text-xs font-light">Every reservation includes complimentary coffee tasting</div>
+                                    <div class="text-cafe-text font-bold text-sm">Premium Dining</div>
+                                    <div class="text-cafe-muted text-xs font-light">Every reservation includes complimentary welcome drink</div>
                                 </div>
                             </div>
                         </div>
@@ -549,8 +571,11 @@
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
                 <div class="md:col-span-2">
-                    <h3 class="text-2xl font-serif italic text-cafe-accent mb-4">The Coffee House</h3>
-                    <p class="text-cafe-muted text-sm font-light leading-relaxed max-w-md">Premium artisan coffee and curated dining experiences. Order digitally, relax naturally.</p>
+                    <h3 class="text-2xl font-serif italic text-cafe-accent mb-4">Diggin</h3>
+                    <p class="text-cafe-muted text-sm font-light leading-relaxed max-w-md">An escape wrapped in fairy lights, lush greens, and the warmth of a European café. Comforting Italian and continental classics — handcrafted with love.</p>
+                    <div class="flex items-center gap-3 mt-6">
+                        <a href="tel:9090063232" class="text-cafe-muted text-sm hover:text-cafe-accent transition-colors">📞 9090063232</a>
+                    </div>
                 </div>
                 <div>
                     <h4 class="text-xs font-bold text-cafe-text uppercase tracking-[0.2em] mb-4">Quick Links</h4>
@@ -558,38 +583,69 @@
                         <a href="menu.html" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Menu</a>
                         <a href="#about" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">About Us</a>
                         <a href="#outlets" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Outlets</a>
-                        <a href="#booking" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Book a Table</a>
+                        <a href="#booking" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Reserve a Table</a>
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-xs font-bold text-cafe-text uppercase tracking-[0.2em] mb-4">Staff</h4>
+                    <h4 class="text-xs font-bold text-cafe-text uppercase tracking-[0.2em] mb-4">Staff Portal</h4>
                     <div class="space-y-3">
-                        <a href="chef.html" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Chef Dashboard</a>
-                        <a href="cashier.html" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Cashier Panel</a>
+                        <button id="staff-login-btn" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors text-left">Staff Login →</button>
+                        <a href="admin.html" class="block text-cafe-muted/40 text-xs hover:text-cafe-accent transition-colors">Admin Dashboard</a>
                     </div>
                 </div>
             </div>
             <div class="border-t border-white/[0.04] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-cafe-muted/60 text-xs font-medium uppercase tracking-[0.2em]">&copy; 2026 The Coffee House. All rights reserved.</p>
-                <div class="flex items-center gap-4">
-                    <a href="chef.html" class="text-cafe-muted/30 text-[10px] font-medium uppercase tracking-[0.2em] hover:text-cafe-accent/50 transition-colors">Staff Login</a>
+                <p class="text-cafe-muted/60 text-xs font-medium uppercase tracking-[0.2em]">&copy; 2026 Diggin Café. All rights reserved.</p>
+                <div class="flex items-center gap-4 text-cafe-muted/40 text-xs">
+                    <a href="https://diggin.co.in" target="_blank" class="hover:text-cafe-accent transition-colors">diggin.co.in</a>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- Staff Role Selector Modal -->
+    <div id="staff-modal" class="modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/85 backdrop-blur-md" id="staff-modal-bg"></div>
+        <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[2rem] p-8 sm:p-10 w-full max-w-sm shadow-2xl text-center">
+            <h3 class="text-2xl font-serif italic text-cafe-text mb-2">Staff Portal</h3>
+            <p class="text-cafe-muted text-sm font-light mb-8">Select your role to continue.</p>
+            <div class="space-y-4">
+                <a href="chef.html" class="block w-full py-4 bg-cafe-accent/10 hover:bg-cafe-accent text-cafe-accent hover:text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all border border-cafe-accent/20 hover:border-cafe-accent text-sm">
+                    👨‍🍳 Chef Dashboard
+                </a>
+                <a href="cashier.html" class="block w-full py-4 bg-emerald-500/10 hover:bg-emerald-600 text-emerald-400 hover:text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all border border-emerald-500/20 hover:border-emerald-600 text-sm">
+                    💰 Cashier Panel
+                </a>
+                <a href="admin.html" class="block w-full py-4 bg-violet-500/10 hover:bg-violet-600 text-violet-400 hover:text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all border border-violet-500/20 hover:border-violet-600 text-sm">
+                    📊 Admin Analytics
+                </a>
+            </div>
+            <button id="staff-modal-close" class="mt-6 text-cafe-muted text-sm hover:text-cafe-text transition-colors">Cancel</button>
+        </div>
+    </div>
+
     </div><!-- /main-content -->
 
-    <!-- Cart + Checkout injected by JS -->
     <script src="js/supabase-config.js"></script>
     <script src="js/script.js"></script>
     <script>
+        // Staff role modal
+        document.getElementById('staff-login-btn')?.addEventListener('click', () => {
+            document.getElementById('staff-modal').classList.add('open');
+        });
+        document.getElementById('staff-modal-bg')?.addEventListener('click', () => {
+            document.getElementById('staff-modal').classList.remove('open');
+        });
+        document.getElementById('staff-modal-close')?.addEventListener('click', () => {
+            document.getElementById('staff-modal').classList.remove('open');
+        });
+
         // Booking form handler
         document.getElementById('booking-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('book-submit-btn');
             btn.disabled = true;
-            btn.textContent = 'Reserving...';
+            btn.innerHTML = '<span class="spinner"></span> Reserving...';
 
             const bookingData = {
                 name: document.getElementById('book-name').value.trim(),
@@ -606,13 +662,13 @@
                 if (typeof insertBooking === 'function') {
                     await insertBooking(bookingData);
                 }
-                showMiniToast('Reservation confirmed! See you soon 🎉');
+                showMiniToast('Reservation confirmed! See you at Diggin 🎉');
                 e.target.reset();
             } catch (err) {
                 showMiniToast('Booking saved! We\'ll confirm via call.');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Confirm Reservation';
+                btn.innerHTML = 'Confirm Reservation';
             }
         });
     </script>
