@@ -1,0 +1,62 @@
+{
+  "coffee": [
+    {
+      "name": "Cappuccino",
+      "price": 150,
+      "description": "Espresso mixed with a roughly equal amount of steamed milk and foam.",
+      "image": "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80"
+    },
+    {
+      "name": "Latte",
+      "price": 180,
+      "description": "Smooth espresso blended with velvety steamed milk.",
+      "image": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&q=80"
+    },
+    {
+      "name": "Americano",
+      "price": 140,
+      "description": "Espresso shots topped with hot water for a light layer of crema.",
+      "image": "https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&q=80"
+    },
+    {
+      "name": "Mocha",
+      "price": 200,
+      "description": "Espresso with bittersweet mocha sauce and steamed milk.",
+      "image": "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&q=80"
+    }
+  ],
+  "snacks": [
+    {
+      "name": "Sandwich",
+      "price": 120,
+      "description": "Freshly toasted sourdough with turkey, cheese, and greens.",
+      "image": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80"
+    },
+    {
+      "name": "Croissant",
+      "price": 90,
+      "description": "Buttery, flaky, freshly baked classic French pastry.",
+      "image": "https://images.unsplash.com/photo-1555507036-ab1f40ce88f4?auto=format&fit=crop&q=80"
+    },
+    {
+      "name": "Chocolate Muffin",
+      "price": 110,
+      "description": "Rich double chocolate chunk muffin, warmed on request.",
+      "image": "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&q=80"
+    }
+  ],
+  "cold drinks": [
+    {
+      "name": "Iced Tea",
+      "price": 130,
+      "description": "Refreshing house-brewed black tea over ice with lemon.",
+      "image": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80"
+    },
+    {
+      "name": "Cold Brew",
+      "price": 160,
+      "description": "Steeped slowly for 18 hours for a super smooth, bold flavor.",
+      "image": "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba1?auto=format&fit=crop&q=80"
+    }
+  ]
+}
