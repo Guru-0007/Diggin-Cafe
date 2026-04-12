@@ -40,19 +40,32 @@ function updateCartCount() {
 function initIntro() {
     const enterBtn = document.getElementById("enter-btn");
     const introScreen = document.getElementById("intro-screen");
-    if (!enterBtn || !introScreen) return;
+    const mainContent = document.getElementById("main-content");
+
+    // If no intro (e.g. menu.html), show content immediately
+    if (!introScreen) {
+        if (mainContent) mainContent.style.opacity = "1";
+        return;
+    }
+
+    // Block scroll while intro is visible
+    document.body.style.overflow = "hidden";
 
     enterBtn.addEventListener("click", () => {
+        // Fade out intro
         introScreen.style.transition = "opacity 0.8s ease-out";
         introScreen.style.opacity = "0";
+
+        // Fade in main content
+        if (mainContent) {
+            mainContent.style.opacity = "1";
+        }
+
         setTimeout(() => {
             introScreen.style.display = "none";
             document.body.style.overflow = "";
         }, 800);
     });
-
-    // Block scroll behind intro
-    document.body.style.overflow = "hidden";
 }
 
 // ─── MOBILE MENU ─────────────────────────────
