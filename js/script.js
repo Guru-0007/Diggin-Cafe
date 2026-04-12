@@ -27,6 +27,17 @@ document.addEventListener("DOMContentLoaded", () => {
 // ─── STATE ───────────────────────────────────
 let cart = JSON.parse(localStorage.getItem("cafe_cart")) || [];
 let activeOrderId = sessionStorage.getItem("active_order_id") || null;
+let _audioCtx = null; // Reusable AudioContext
+let _pollInterval = null; // Track polling interval
+
+function getAudioCtx() {
+    if (!_audioCtx || _audioCtx.state === 'closed') {
+        try { _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        catch(e) { return null; }
+    }
+    if (_audioCtx.state === 'suspended') _audioCtx.resume();
+    return _audioCtx;
+}
 
 function saveCart() {
     localStorage.setItem("cafe_cart", JSON.stringify(cart));
@@ -53,10 +64,10 @@ function updateCartCount() {
             trayTotal.textContent = `₹${price}`;
         }
         if (total > 0) {
-            tray.classList.remove("translate-y-full", "opacity-0");
+            tray.classList.remove("translate-y-full", "opacity-0", "pointer-events-none");
             tray.classList.add("translate-y-0", "opacity-100");
         } else {
-            tray.classList.add("translate-y-full", "opacity-0");
+            tray.classList.add("translate-y-full", "opacity-0", "pointer-events-none");
             tray.classList.remove("translate-y-0", "opacity-100");
         }
     }
@@ -68,12 +79,19 @@ function initTheme() {
     if (saved === "light") {
         document.documentElement.classList.add("light");
     }
+    // Sync all toggle icons on load
+    const isLight = document.documentElement.classList.contains("light");
+    document.querySelectorAll(".theme-toggle-icon").forEach(icon => {
+        icon.textContent = isLight ? "☀️" : "🌙";
+    });
     document.querySelectorAll(".theme-toggle").forEach(toggle => {
         toggle.addEventListener("click", () => {
             document.documentElement.classList.toggle("light");
-            const isLight = document.documentElement.classList.contains("light");
-            localStorage.setItem("diggin_theme", isLight ? "light" : "dark");
-            toggle.querySelector(".theme-toggle-icon").textContent = isLight ? "☀️" : "🌙";
+            const nowLight = document.documentElement.classList.contains("light");
+            localStorage.setItem("diggin_theme", nowLight ? "light" : "dark");
+            document.querySelectorAll(".theme-toggle-icon").forEach(icon => {
+                icon.textContent = nowLight ? "☀️" : "🌙";
+            });
         });
     });
 }
@@ -131,23 +149,24 @@ function initIntro() {
 
     document.body.style.overflow = "hidden";
 
-    enterBtn.addEventListener("click", () => {
-        sessionStorage.setItem("intro_seen", "true");
-        // Blur + fade out transition
-        introScreen.style.transition = "opacity 1s ease-out, filter 1s ease-out";
-        introScreen.style.opacity = "0";
-        introScreen.style.filter = "blur(20px)";
+    if (enterBtn) {
+        enterBtn.addEventListener("click", () => {
+            sessionStorage.setItem("intro_seen", "true");
+            introScreen.style.transition = "opacity 1s ease-out, filter 1s ease-out";
+            introScreen.style.opacity = "0";
+            introScreen.style.filter = "blur(20px)";
 
-        if (mainContent) {
-            mainContent.style.transition = "opacity 1.2s ease-in";
-            mainContent.style.opacity = "1";
-        }
+            if (mainContent) {
+                mainContent.style.transition = "opacity 1.2s ease-in";
+                mainContent.style.opacity = "1";
+            }
 
-        setTimeout(() => {
-            introScreen.style.display = "none";
-            document.body.style.overflow = "";
-        }, 1000);
-    });
+            setTimeout(() => {
+                introScreen.style.display = "none";
+                document.body.style.overflow = "";
+            }, 1000);
+        });
+    }
 }
 
 // ─── MOBILE MENU ─────────────────────────────
@@ -157,6 +176,13 @@ function initMobileMenu() {
     if (!toggle || !menu) return;
     toggle.addEventListener("click", () => {
         menu.classList.toggle("hidden");
+        // Animate hamburger
+        const isOpen = !menu.classList.contains("hidden");
+        toggle.setAttribute("aria-expanded", isOpen);
+    });
+    // Close on link click
+    menu.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", () => menu.classList.add("hidden"));
     });
 }
 
@@ -171,49 +197,49 @@ function initScrollAnimations() {
         });
     }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
 
-    document.querySelectorAll(".scroll-reveal").forEach(el => observer.observe(el));
+    document.querySelectorAll(".scroll-reveal:not(.scroll-visible)").forEach(el => observer.observe(el));
 }
 
 // ─── SOUND DESIGN ────────────────────────────
 function playSound(type) {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioCtx.createOscillator();
-    const gainNode = audioCtx.createGain();
-    oscillator.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
+    const ctx = getAudioCtx();
+    if (!ctx) return;
+    try {
+        const oscillator = ctx.createOscillator();
+        const gainNode = ctx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
 
-    if (type === "order") {
-        // Soft bell — pleasant chime
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(830, audioCtx.currentTime);
-        oscillator.frequency.setValueAtTime(1060, audioCtx.currentTime + 0.1);
-        oscillator.frequency.setValueAtTime(830, audioCtx.currentTime + 0.2);
-        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.5);
-    } else if (type === "urgent") {
-        // Urgent bell — faster, higher
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime);
-        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime + 0.1);
-        oscillator.frequency.setValueAtTime(1200, audioCtx.currentTime + 0.2);
-        oscillator.frequency.setValueAtTime(800, audioCtx.currentTime + 0.3);
-        gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.6);
-    } else {
-        // Success chime
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(523, audioCtx.currentTime);
-        oscillator.frequency.setValueAtTime(659, audioCtx.currentTime + 0.15);
-        oscillator.frequency.setValueAtTime(784, audioCtx.currentTime + 0.3);
-        gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-        oscillator.start(audioCtx.currentTime);
-        oscillator.stop(audioCtx.currentTime + 0.6);
-    }
+        if (type === "order") {
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(830, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(1060, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(830, ctx.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.15, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.5);
+        } else if (type === "urgent") {
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(1200, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(800, ctx.currentTime + 0.1);
+            oscillator.frequency.setValueAtTime(1200, ctx.currentTime + 0.2);
+            oscillator.frequency.setValueAtTime(800, ctx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.6);
+        } else {
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(523, ctx.currentTime);
+            oscillator.frequency.setValueAtTime(659, ctx.currentTime + 0.15);
+            oscillator.frequency.setValueAtTime(784, ctx.currentTime + 0.3);
+            gainNode.gain.setValueAtTime(0.12, ctx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+            oscillator.start(ctx.currentTime);
+            oscillator.stop(ctx.currentTime + 0.6);
+        }
+    } catch(e) {}
 }
 
 // ─── MENU DATA ───────────────────────────────
@@ -304,29 +330,38 @@ function renderMenu(data, container) {
 
     // Category filter tabs
     const filterWrap = document.createElement("div");
-    filterWrap.className = "flex flex-wrap items-center gap-3 mb-14 scroll-reveal";
+    filterWrap.className = "flex flex-wrap items-center gap-2 sm:gap-3 mb-14 scroll-reveal";
     const categories = Object.keys(data);
     filterWrap.innerHTML = `
-        <button class="category-filter active px-5 py-2.5 rounded-full text-sm font-bold uppercase tracking-[0.1em] transition-all duration-300 bg-cafe-accent text-white" data-cat="all">All</button>
+        <button class="category-filter active px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-[0.1em] transition-all duration-300 bg-cafe-accent text-white" data-cat="all">All</button>
         ${categories.map(cat => `
-            <button class="category-filter px-5 py-2.5 rounded-full text-sm font-bold uppercase tracking-[0.1em] transition-all duration-300 bg-white/[0.04] text-cafe-muted hover:bg-cafe-accent/20 hover:text-cafe-accent border border-white/[0.06]" data-cat="${cat}">
+            <button class="category-filter px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-[0.1em] transition-all duration-300 bg-white/[0.04] text-cafe-muted hover:bg-cafe-accent/20 hover:text-cafe-accent border border-white/[0.06]" data-cat="${cat}">
                 ${categoryIcons[cat] || "🍽️"} ${categoryLabels[cat] || cat}
             </button>
         `).join("")}
     `;
     container.appendChild(filterWrap);
 
-    // Search functionality
+    // Search functionality with debounce
     const searchInput = document.getElementById("menu-search");
+    let searchTimer;
     if (searchInput) {
         searchInput.addEventListener("input", (e) => {
-            const query = e.target.value.toLowerCase().trim();
-            container.querySelectorAll(".menu-item-card").forEach(card => {
-                const name = card.dataset.name || "";
-                const desc = card.dataset.desc || "";
-                const match = !query || name.includes(query) || desc.includes(query);
-                card.style.display = match ? "" : "none";
-            });
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                const query = e.target.value.toLowerCase().trim();
+                container.querySelectorAll(".menu-item-card").forEach(card => {
+                    const name = card.dataset.name || "";
+                    const desc = card.dataset.desc || "";
+                    const match = !query || name.includes(query) || desc.includes(query);
+                    card.style.display = match ? "" : "none";
+                });
+                // Show/hide category sections that have no visible items
+                container.querySelectorAll(".menu-category-section").forEach(sec => {
+                    const visibleCards = sec.querySelectorAll('.menu-item-card:not([style*="display: none"])');
+                    sec.style.display = (query && visibleCards.length === 0) ? "none" : "";
+                });
+            }, 200);
         });
     }
 
@@ -348,6 +383,8 @@ function renderMenu(data, container) {
                     sec.classList.add("hidden");
                 }
             });
+            // Clear search when changing category
+            if (searchInput) searchInput.value = "";
         });
     });
 
@@ -360,13 +397,13 @@ function renderMenu(data, container) {
         header.className = "flex items-center gap-4 mb-10";
         header.innerHTML = `
             <span class="text-3xl">${categoryIcons[category] || "🍽️"}</span>
-            <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text capitalize">${categoryLabels[category] || category}</h2>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-serif italic text-cafe-text capitalize">${categoryLabels[category] || category}</h2>
             <div class="flex-grow h-px bg-white/[0.06] ml-4"></div>
         `;
         section.appendChild(header);
 
         const grid = document.createElement("div");
-        grid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children";
+        grid.className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 stagger-children";
 
         items.forEach(item => {
             grid.appendChild(createMenuCard(item));
@@ -403,19 +440,22 @@ function createMenuCard(item) {
         ? `<span class="absolute top-4 left-4 ${tagClass} text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm shadow-lg z-10">${item.tag}</span>`
         : "";
 
+    // Sanitize item name for onclick
+    const safeName = item.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
     card.innerHTML = `
-        <div class="relative h-52 sm:h-56 w-full overflow-hidden">
+        <div class="relative h-48 sm:h-52 md:h-56 w-full overflow-hidden">
             ${badgeHTML}
             <img src="${item.image}" alt="${item.name}" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg via-cafe-bg/20 to-transparent"></div>
         </div>
-        <div class="p-6 sm:p-7 flex-grow flex flex-col">
+        <div class="p-5 sm:p-6 md:p-7 flex-grow flex flex-col">
             <div class="flex justify-between items-start mb-3">
-                <h3 class="text-lg font-bold text-cafe-text tracking-tight leading-snug pr-3">${item.name}</h3>
-                <span class="text-xl font-bold text-cafe-accent whitespace-nowrap">₹${item.price}</span>
+                <h3 class="text-base sm:text-lg font-bold text-cafe-text tracking-tight leading-snug pr-3">${item.name}</h3>
+                <span class="text-lg sm:text-xl font-bold text-cafe-accent whitespace-nowrap">₹${item.price}</span>
             </div>
-            <p class="text-cafe-muted text-sm font-light leading-relaxed mb-6 flex-grow">${item.description}</p>
-            <button onclick="addToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price}, this)" class="btn-press w-full py-3.5 bg-white/[0.04] hover:bg-cafe-accent text-center text-[13px] font-bold tracking-[0.12em] uppercase rounded-xl transition-all duration-300 border border-white/[0.06] hover:border-transparent text-cafe-text hover:text-white mt-auto flex items-center justify-center gap-2.5 shadow-sm hover:shadow-[0_4px_20px_rgba(200,135,58,0.25)]">
+            <p class="text-cafe-muted text-sm font-light leading-relaxed mb-5 sm:mb-6 flex-grow">${item.description}</p>
+            <button onclick="addToCart('${item.id}', '${safeName}', ${item.price}, this)" class="btn-press w-full py-3 sm:py-3.5 bg-white/[0.04] hover:bg-cafe-accent text-center text-[12px] sm:text-[13px] font-bold tracking-[0.12em] uppercase rounded-xl transition-all duration-300 border border-white/[0.06] hover:border-transparent text-cafe-text hover:text-white mt-auto flex items-center justify-center gap-2 shadow-sm hover:shadow-[0_4px_20px_rgba(200,135,58,0.25)]">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                 Add to Order
             </button>
@@ -436,7 +476,6 @@ function renderRecommendations(menuData, container) {
         });
     }
 
-    // Pick 3 random items not in cart
     const shuffled = allItems.sort(() => 0.5 - Math.random()).slice(0, 3);
     if (shuffled.length === 0) return;
 
@@ -448,8 +487,10 @@ function renderRecommendations(menuData, container) {
             <h3 class="text-xl font-serif italic text-cafe-text">People also ordered</h3>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            ${shuffled.map(item => `
-                <div class="reco-card" onclick="addToCart('${item.id}', '${item.name.replace(/'/g, "\\'")}', ${item.price})">
+            ${shuffled.map(item => {
+                const safeName = item.name.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                return `
+                <div class="reco-card" onclick="addToCart('${item.id}', '${safeName}', ${item.price})">
                     <img src="${item.image}" alt="${item.name}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0" loading="lazy">
                     <div class="flex-grow min-w-0">
                         <div class="text-cafe-text font-bold text-sm truncate">${item.name}</div>
@@ -457,7 +498,7 @@ function renderRecommendations(menuData, container) {
                     </div>
                     <svg class="w-5 h-5 text-cafe-accent flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                 </div>
-            `).join("")}
+            `}).join("")}
         </div>
     `;
     container.appendChild(recoSection);
@@ -605,15 +646,15 @@ function renderCartItems() {
 function injectOrderTray() {
     const tray = document.createElement("div");
     tray.id = "order-tray";
-    tray.className = "fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] bg-cafe-card/95 backdrop-blur-xl border border-cafe-accent/30 rounded-2xl px-6 py-4 shadow-[0_8px_40px_rgba(0,0,0,0.5)] flex items-center gap-5 transition-all duration-500 translate-y-full opacity-0 cursor-pointer hover:border-cafe-accent/60 hover:shadow-[0_12px_50px_rgba(200,135,58,0.15)]";
+    tray.className = "fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] bg-cafe-card/95 backdrop-blur-xl border border-cafe-accent/30 rounded-2xl px-5 sm:px-6 py-3 sm:py-4 shadow-[0_8px_40px_rgba(0,0,0,0.5)] flex items-center gap-4 sm:gap-5 transition-all duration-500 translate-y-full opacity-0 pointer-events-none cursor-pointer hover:border-cafe-accent/60 hover:shadow-[0_12px_50px_rgba(200,135,58,0.15)]";
     tray.innerHTML = `
         <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-cafe-accent/15 rounded-xl flex items-center justify-center border border-cafe-accent/20">
-                <svg class="w-5 h-5 text-cafe-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <div class="w-9 h-9 sm:w-10 sm:h-10 bg-cafe-accent/15 rounded-xl flex items-center justify-center border border-cafe-accent/20">
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-cafe-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
             </div>
             <div>
                 <div class="text-cafe-text font-bold text-sm"><span id="tray-count">0</span> items</div>
-                <div class="text-cafe-accent font-bold text-lg" id="tray-total">₹0</div>
+                <div class="text-cafe-accent font-bold text-base sm:text-lg" id="tray-total">₹0</div>
             </div>
         </div>
         <div class="w-px h-10 bg-white/[0.08]"></div>
@@ -639,19 +680,19 @@ function injectCartDrawer() {
     wrapper.innerHTML = `
         <div id="cart-backdrop" class="cart-backdrop fixed inset-0 z-40 bg-black/70 backdrop-blur-sm cursor-pointer"></div>
         <div id="cart-slider" class="cart-slider fixed top-0 right-0 h-full w-full sm:w-[420px] bg-cafe-bg z-50 shadow-2xl flex flex-col border-l border-white/[0.06]">
-            <div class="px-7 py-6 border-b border-white/[0.04] flex justify-between items-center bg-cafe-bg">
-                <h2 class="text-2xl font-serif italic text-cafe-text">Your Order</h2>
+            <div class="px-6 sm:px-7 py-5 sm:py-6 border-b border-white/[0.04] flex justify-between items-center bg-cafe-bg">
+                <h2 class="text-xl sm:text-2xl font-serif italic text-cafe-text">Your Order</h2>
                 <button id="close-cart" class="p-2 text-cafe-muted hover:text-cafe-text bg-white/[0.04] hover:bg-white/[0.08] rounded-full transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
-            <div class="px-7 py-6 flex-grow overflow-y-auto" id="cart-items-container"></div>
-            <div class="px-7 py-6 border-t border-white/[0.04] bg-cafe-card">
-                <div class="flex justify-between items-center mb-6">
+            <div class="px-6 sm:px-7 py-5 sm:py-6 flex-grow overflow-y-auto" id="cart-items-container"></div>
+            <div class="px-6 sm:px-7 py-5 sm:py-6 border-t border-white/[0.04] bg-cafe-card">
+                <div class="flex justify-between items-center mb-5 sm:mb-6">
                     <span class="text-cafe-muted text-xs font-bold uppercase tracking-[0.2em]">Estimated Total</span>
-                    <span id="cart-total" class="text-3xl font-bold text-cafe-accent tracking-tight">₹0</span>
+                    <span id="cart-total" class="text-2xl sm:text-3xl font-bold text-cafe-accent tracking-tight">₹0</span>
                 </div>
-                <button id="checkout-btn" class="btn-press w-full py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg hover:shadow-[0_8px_30px_rgba(200,135,58,0.25)] flex justify-center items-center gap-2.5 text-sm">
+                <button id="checkout-btn" class="btn-press w-full py-3.5 sm:py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg hover:shadow-[0_8px_30px_rgba(200,135,58,0.25)] flex justify-center items-center gap-2.5 text-sm">
                     Place Order
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </button>
@@ -689,33 +730,33 @@ function injectCheckoutModal() {
     const qrTable = getQRTable();
     const wrapper = document.createElement("div");
     wrapper.innerHTML = `
-        <div id="checkout-overlay" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-6">
+        <div id="checkout-overlay" class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
             <div class="absolute inset-0 bg-black/85 backdrop-blur-md" id="checkout-bg"></div>
-            <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[2rem] p-8 sm:p-10 w-full max-w-md shadow-2xl">
-                <button id="close-checkout" class="absolute top-6 right-6 p-2 text-cafe-muted hover:text-cafe-text bg-white/[0.04] hover:bg-white/[0.08] rounded-full transition-colors">
+            <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto">
+                <button id="close-checkout" class="absolute top-4 sm:top-6 right-4 sm:right-6 p-2 text-cafe-muted hover:text-cafe-text bg-white/[0.04] hover:bg-white/[0.08] rounded-full transition-colors z-10">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
                 <div class="flex items-center gap-3 mb-2">
                     <div class="w-8 h-px bg-cafe-accent"></div>
                     <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Checkout</span>
                 </div>
-                <h2 class="text-3xl font-serif italic text-cafe-text mb-2">Almost There</h2>
-                <p class="text-cafe-muted text-sm font-light mb-8">Just your name and table number.</p>
+                <h2 class="text-2xl sm:text-3xl font-serif italic text-cafe-text mb-2">Almost There</h2>
+                <p class="text-cafe-muted text-sm font-light mb-6 sm:mb-8">Just your name and table number.</p>
                 <div id="checkout-summary" class="mb-6 p-4 bg-cafe-card rounded-xl border border-white/[0.04] max-h-32 overflow-y-auto"></div>
-                <form id="checkout-form" class="space-y-6">
+                <form id="checkout-form" class="space-y-5 sm:space-y-6">
                     <div>
                         <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Your Name</label>
-                        <input type="text" id="cust-name" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="e.g. Riya">
+                        <input type="text" id="cust-name" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-3.5 sm:py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="e.g. Riya">
                     </div>
                     <div>
                         <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Table Number ${qrTable ? '<span class="text-cafe-accent normal-case">(auto-filled via QR)</span>' : ''}</label>
-                        <input type="number" id="table-number" min="1" max="99" required value="${qrTable}" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="e.g. 5">
+                        <input type="number" id="table-number" min="1" max="99" required value="${qrTable}" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-3.5 sm:py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="e.g. 5">
                     </div>
                     <div class="flex justify-between items-center p-4 bg-cafe-accent/10 rounded-xl border border-cafe-accent/20">
                         <span class="text-cafe-muted text-sm font-bold uppercase tracking-wider">Total</span>
-                        <span id="checkout-total" class="text-2xl font-bold text-cafe-accent">₹0</span>
+                        <span id="checkout-total" class="text-xl sm:text-2xl font-bold text-cafe-accent">₹0</span>
                     </div>
-                    <button type="submit" id="submit-order-btn" class="btn-press w-full py-4 mt-2 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg hover:shadow-[0_8px_30px_rgba(200,135,58,0.25)] text-sm flex items-center justify-center gap-2">
+                    <button type="submit" id="submit-order-btn" class="btn-press w-full py-3.5 sm:py-4 mt-2 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg hover:shadow-[0_8px_30px_rgba(200,135,58,0.25)] text-sm flex items-center justify-center gap-2">
                         Confirm Order
                     </button>
                 </form>
@@ -723,9 +764,9 @@ function injectCheckoutModal() {
         </div>
 
         <!-- Success Screen -->
-        <div id="success-screen" class="modal-overlay fixed inset-0 z-[60] flex items-center justify-center p-6">
+        <div id="success-screen" class="modal-overlay fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6">
             <div class="absolute inset-0 bg-black/90 backdrop-blur-lg"></div>
-            <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[2rem] p-10 w-full max-w-sm shadow-2xl text-center">
+            <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[1.5rem] sm:rounded-[2rem] p-8 sm:p-10 w-full max-w-sm shadow-2xl text-center">
                 <div class="success-check w-20 h-20 mx-auto bg-green-500/15 rounded-full flex items-center justify-center mb-6 border-2 border-green-500/30">
                     <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                 </div>
@@ -769,6 +810,8 @@ function injectCheckoutModal() {
 
     document.getElementById("close-success")?.addEventListener("click", () => {
         successScreen.classList.remove("open");
+        // Clean up polling
+        if (_pollInterval) { clearInterval(_pollInterval); _pollInterval = null; }
     });
 
     document.getElementById("checkout-form").addEventListener("submit", async (e) => {
@@ -846,7 +889,8 @@ function injectCheckoutModal() {
             }
             successScreen.classList.add("open");
 
-            // Start polling for order status
+            // Start polling for order status (clear any existing)
+            if (_pollInterval) clearInterval(_pollInterval);
             if (activeOrderId) {
                 pollOrderStatus(activeOrderId);
             }
@@ -858,6 +902,9 @@ function injectCheckoutModal() {
             btn.disabled = false;
             btn.innerHTML = `Confirm Order`;
             e.target.reset();
+            // Restore QR table value
+            const qr = getQRTable();
+            if (qr) document.getElementById("table-number").value = qr;
         }
     });
 }
@@ -865,14 +912,14 @@ function injectCheckoutModal() {
 // ─── ORDER STATUS POLLING ────────────────────
 function pollOrderStatus(orderId) {
     if (!orderId || typeof fetchOrders !== "function") return;
-    const interval = setInterval(async () => {
+    _pollInterval = setInterval(async () => {
         try {
             const orders = await fetchOrders(null);
             const order = orders.find(o => o.id === orderId);
-            if (!order) { clearInterval(interval); return; }
+            if (!order) { clearInterval(_pollInterval); _pollInterval = null; return; }
 
             const tracker = document.getElementById("success-tracker");
-            if (!tracker) { clearInterval(interval); return; }
+            if (!tracker) { clearInterval(_pollInterval); _pollInterval = null; return; }
 
             const steps = tracker.querySelectorAll(".status-tracker-step");
             if (steps.length < 3) return;
@@ -889,7 +936,8 @@ function pollOrderStatus(orderId) {
                 steps[0].classList.add("completed");
                 steps[1].classList.add("completed");
                 steps[2].classList.add("active");
-                clearInterval(interval);
+                clearInterval(_pollInterval);
+                _pollInterval = null;
                 playSound("success");
                 showMiniToast("Your order is ready! 🎉");
             }
@@ -902,10 +950,9 @@ function pollOrderStatus(orderId) {
 // ─── ORDER TRACKER WIDGET ────────────────────
 function injectOrderTracker() {
     if (!activeOrderId) return;
-    // Small floating tracker on bottom-left
     const tracker = document.createElement("div");
     tracker.id = "floating-tracker";
-    tracker.className = "fixed bottom-6 left-6 z-[85] bg-cafe-card/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl px-5 py-4 shadow-[0_8px_32px_rgba(0,0,0,0.4)] cursor-pointer hover:border-cafe-accent/30 transition-all max-w-[200px]";
+    tracker.className = "fixed bottom-6 left-6 z-[85] bg-cafe-card/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl px-4 sm:px-5 py-3 sm:py-4 shadow-[0_8px_32px_rgba(0,0,0,0.4)] cursor-pointer hover:border-cafe-accent/30 transition-all max-w-[200px]";
     tracker.innerHTML = `
         <div class="text-[10px] font-bold text-cafe-accent uppercase tracking-[0.2em] mb-1">Live Order</div>
         <div class="text-cafe-text text-sm font-bold" id="floating-status">Pending...</div>
@@ -918,14 +965,26 @@ function injectOrderTracker() {
 
     // Poll and update
     if (typeof fetchOrders === "function") {
-        setInterval(async () => {
+        const trackerPoll = setInterval(async () => {
             try {
                 const orders = await fetchOrders(null);
                 const order = orders.find(o => o.id === activeOrderId);
                 const statusEl = document.getElementById("floating-status");
                 if (order && statusEl) {
-                    const labels = { pending: "⏳ Pending...", preparing: "👨‍🍳 Preparing...", ready: "✅ Ready!" };
+                    const labels = { pending: "⏳ Pending...", preparing: "👨‍🍳 Preparing...", ready: "✅ Ready!", paid: "✅ Done" };
                     statusEl.textContent = labels[order.status] || order.status;
+                    if (order.status === "ready" || order.status === "paid") {
+                        clearInterval(trackerPoll);
+                        // Auto-hide after 30s when done
+                        setTimeout(() => {
+                            tracker.style.transition = "opacity 0.5s, transform 0.5s";
+                            tracker.style.opacity = "0";
+                            tracker.style.transform = "translateY(20px)";
+                            setTimeout(() => tracker.remove(), 500);
+                        }, 30000);
+                    }
+                } else if (!order) {
+                    clearInterval(trackerPoll);
                 }
             } catch (e) {}
         }, 5000);
@@ -936,32 +995,33 @@ function injectOrderTracker() {
 function injectCallWaiterBtn() {
     const btn = document.createElement("button");
     btn.id = "call-waiter-btn";
-    btn.className = "fixed bottom-6 right-6 z-[80] w-14 h-14 bg-cafe-accent hover:bg-cafe-accentHover text-white rounded-full shadow-[0_8px_30px_rgba(200,135,58,0.3)] flex items-center justify-center transition-all duration-300 hover:scale-110 group";
+    btn.className = "fixed bottom-6 right-6 z-[80] w-12 h-12 sm:w-14 sm:h-14 bg-cafe-accent hover:bg-cafe-accentHover text-white rounded-full shadow-[0_8px_30px_rgba(200,135,58,0.3)] flex items-center justify-center transition-all duration-300 hover:scale-110 group";
     btn.title = "Call Waiter";
-    btn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>`;
+    btn.setAttribute("aria-label", "Call waiter");
+    btn.innerHTML = `<svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>`;
     document.body.appendChild(btn);
 
     const modal = document.createElement("div");
     modal.id = "call-waiter-modal";
-    modal.className = "modal-overlay fixed inset-0 z-[95] flex items-center justify-center p-6";
+    modal.className = "modal-overlay fixed inset-0 z-[95] flex items-center justify-center p-4 sm:p-6";
     const qrTable = getQRTable();
     modal.innerHTML = `
         <div class="absolute inset-0 bg-black/85 backdrop-blur-md call-waiter-bg"></div>
-        <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[2rem] p-8 sm:p-10 w-full max-w-sm shadow-2xl text-center">
-            <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+        <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-10 w-full max-w-sm shadow-2xl text-center">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-5 sm:mb-6 border border-cafe-accent/15">
+                <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
             </div>
-            <h3 class="text-2xl font-serif italic text-cafe-text mb-2">Need Assistance?</h3>
-            <p class="text-cafe-muted text-sm font-light mb-6">We'll send someone to your table right away.</p>
+            <h3 class="text-xl sm:text-2xl font-serif italic text-cafe-text mb-2">Need Assistance?</h3>
+            <p class="text-cafe-muted text-sm font-light mb-5 sm:mb-6">We'll send someone to your table right away.</p>
             <form id="call-waiter-form" class="space-y-4">
-                <input type="number" id="call-table" min="1" max="99" required value="${qrTable}" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-center text-lg focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="Table #">
-                <select id="call-type" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
+                <input type="number" id="call-table" min="1" max="99" required value="${qrTable}" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-3.5 sm:py-4 text-cafe-text text-center text-lg focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="Table #">
+                <select id="call-type" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-3.5 sm:py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
                     <option value="waiter">Call Waiter</option>
                     <option value="water">Need Water</option>
                     <option value="bill">Request Bill</option>
                     <option value="help">Need Help</option>
                 </select>
-                <button type="submit" id="call-submit-btn" class="btn-press w-full py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg text-sm flex items-center justify-center gap-2">
+                <button type="submit" id="call-submit-btn" class="btn-press w-full py-3.5 sm:py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg text-sm flex items-center justify-center gap-2">
                     Send Request
                 </button>
             </form>
@@ -976,7 +1036,8 @@ function injectCallWaiterBtn() {
 
     document.getElementById("call-waiter-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-        const table = document.getElementById("call-table").value.trim();
+        const tableInput = document.getElementById("call-table");
+        const table = tableInput.value.trim();
         const type = document.getElementById("call-type").value;
         const submitBtn = document.getElementById("call-submit-btn");
 
@@ -1004,7 +1065,8 @@ function injectCallWaiterBtn() {
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerHTML = `Send Request`;
-            e.target.reset();
+            // Only reset the select, keep the table number
+            document.getElementById("call-type").value = "waiter";
         }
     });
 }

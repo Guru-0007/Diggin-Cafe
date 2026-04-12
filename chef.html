@@ -157,9 +157,20 @@
             });
 
             // Sound functions
+            let _chefAudioCtx = null;
+            function getChefAudioCtx() {
+                if (!_chefAudioCtx || _chefAudioCtx.state === 'closed') {
+                    try { _chefAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+                    catch(e) { return null; }
+                }
+                if (_chefAudioCtx.state === 'suspended') _chefAudioCtx.resume();
+                return _chefAudioCtx;
+            }
+
             function playBell(type) {
                 try {
-                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const ctx = getChefAudioCtx();
+                    if (!ctx) return;
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.connect(gain);

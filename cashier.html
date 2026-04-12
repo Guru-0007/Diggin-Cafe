@@ -206,7 +206,8 @@
                 } catch (e) { console.error('Failed to mark paid:', e); }
             };
 
-            window.showBill = function(table, tableOrders) {
+            window.showBill = function(table, encodedOrders) {
+                const tableOrders = typeof encodedOrders === 'string' ? JSON.parse(decodeURIComponent(encodedOrders)) : encodedOrders;
                 const modal = document.getElementById('bill-modal');
                 const content = document.getElementById('bill-content');
                 const tableTotal = tableOrders.reduce((sum, o) => sum + (o.total || 0), 0);
@@ -364,7 +365,7 @@
                         <div class="p-6 flex-grow">${ordersHtml}</div>
                         ${hasReadyOrders ? `
                             <div class="p-4 bg-cafe-bg border-t border-white/[0.04]">
-                                <button onclick='showBill("${table}", ${JSON.stringify(tableOrders).replace(/'/g, "\\'")})' class="w-full py-3 bg-white/[0.04] border border-white/[0.06] text-cafe-text font-bold uppercase tracking-[0.12em] rounded-xl text-sm hover:bg-emerald-500/10 hover:border-emerald-500/20 hover:text-emerald-400 transition-all flex items-center justify-center gap-2">
+                                <button onclick="showBill('${table}', '${encodeURIComponent(JSON.stringify(tableOrders))}')" class="w-full py-3 bg-white/[0.04] border border-white/[0.06] text-cafe-text font-bold uppercase tracking-[0.12em] rounded-xl text-sm hover:bg-emerald-500/10 hover:border-emerald-500/20 hover:text-emerald-400 transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
                                     🧾 Generate Bill
                                 </button>
                             </div>

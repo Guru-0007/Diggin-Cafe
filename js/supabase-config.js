@@ -12,6 +12,33 @@ try {
     console.warn('Supabase client init failed. Orders will use localStorage fallback.', e);
 }
 
+/* ─── CHANNEL REGISTRY (prevent duplicates) ── */
+const _activeChannels = new Map();
+
+function _getOrCreateChannel(name, table, callback) {
+    // Remove existing channel to prevent duplicates
+    if (_activeChannels.has(name)) {
+        try { supabase.removeChannel(_activeChannels.get(name)); } catch(e) {}
+        _activeChannels.delete(name);
+    }
+    if (!supabase) return null;
+    const channel = supabase
+        .channel(name)
+        .on('postgres_changes', { event: '*', schema: 'public', table }, (payload) => {
+            callback(payload);
+        })
+        .subscribe();
+    _activeChannels.set(name, channel);
+    return channel;
+}
+
+function removeAllChannels() {
+    _activeChannels.forEach((channel, name) => {
+        try { supabase?.removeChannel(channel); } catch(e) {}
+    });
+    _activeChannels.clear();
+}
+
 /* ─── ORDER HELPERS ───────────────────────── */
 
 async function insertOrder(orderData) {
@@ -125,8 +152,47 @@ async function dismissCall(callId) {
 
 /* ─── BOOKING / RESERVATION HELPERS ──────── */
 
+async function checkDoubleBooking(date, time, outlet) {
+    if (!supabase) return false;
+    const { data, error } = await supabase
+        .from('bookings')
+        .select('id, guests')
+        .eq('date', date)
+        .eq('time', time)
+        .eq('outlet', outlet)
+        .eq('status', 'confirmed');
+    if (error) return false;
+    // Allow max 5 bookings per slot per outlet
+    return (data || []).length >= 5;
+}
+
+async function suggestAlternativeSlots(date, outlet) {
+    if (!supabase) return [];
+    const allSlots = ['11:00','12:30','14:00','15:30','17:00','18:30','20:00','21:30'];
+    const { data, error } = await supabase
+        .from('bookings')
+        .select('time')
+        .eq('date', date)
+        .eq('outlet', outlet)
+        .eq('status', 'confirmed');
+    if (error) return allSlots;
+    const booked = {};
+    (data || []).forEach(b => { booked[b.time] = (booked[b.time] || 0) + 1; });
+    return allSlots.filter(slot => (booked[slot] || 0) < 5);
+}
+
 async function insertBooking(bookingData) {
     if (!supabase) throw new Error('Supabase not configured');
+
+    // Check for double booking
+    const isFull = await checkDoubleBooking(bookingData.date, bookingData.time, bookingData.outlet);
+    if (isFull) {
+        const available = await suggestAlternativeSlots(bookingData.date, bookingData.outlet);
+        const err = new Error('SLOT_FULL');
+        err.availableSlots = available;
+        throw err;
+    }
+
     const { data, error } = await supabase
         .from('bookings')
         .insert([bookingData])
@@ -220,21 +286,9 @@ async function fetchWeeklyRevenue() {
 /* ─── REALTIME SUBSCRIPTIONS ──────────────── */
 
 function subscribeToOrders(callback) {
-    if (!supabase) return null;
-    return supabase
-        .channel('orders-realtime')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
-            callback(payload);
-        })
-        .subscribe();
+    return _getOrCreateChannel('orders-realtime', 'orders', callback);
 }
 
 function subscribeToCalls(callback) {
-    if (!supabase) return null;
-    return supabase
-        .channel('calls-realtime')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'calls' }, (payload) => {
-            callback(payload);
-        })
-        .subscribe();
+    return _getOrCreateChannel('calls-realtime', 'calls', callback);
 }

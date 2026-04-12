@@ -484,13 +484,65 @@ html.light .theme-toggle-thumb { transform: translateX(20px); }
     }
 }
 
+/* ─── SELECT & INPUT STYLING ─────────────── */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239c9590' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+}
+select option {
+    background: #1a1714;
+    color: #faf6f1;
+}
+html.light select option {
+    background: #ffffff;
+    color: #1a1714;
+}
+input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 0 3px rgba(200, 135, 58, 0.1);
+}
+
 /* ─── RESPONSIVE TWEAKS ──────────────────── */
 @media (max-width: 640px) {
     .notification-toast {
-        left: 1rem;
-        right: 1rem;
+        left: 0.75rem;
+        right: 0.75rem;
         max-width: none;
-        top: 1rem;
+        top: 0.75rem;
+    }
+    /* Chef/Cashier navbar: stack on mobile */
+    nav .flex.items-center.gap-4 {
+        gap: 0.5rem;
+    }
+    .kitchen-load {
+        font-size: 9px;
+        padding: 4px 10px;
+        gap: 4px;
+    }
+    .chef-tab, .cashier-tab {
+        padding: 0.5rem 0.75rem;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .kitchen-load span:last-child {
+        display: none;
+    }
+    .kitchen-load {
+        padding: 6px;
+    }
+}
+
+/* Safe area insets for notched phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    #order-tray,
+    #call-waiter-btn,
+    #floating-tracker {
+        margin-bottom: env(safe-area-inset-bottom);
     }
 }
 
@@ -517,3 +569,27 @@ html.light .theme-toggle-thumb { transform: translateX(20px); }
     border-radius: var(--radius-lg);
     padding: 1.5rem;
 }
+
+/* ─── FOCUS VISIBLE (Accessibility) ──────── */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ─── REDUCED MOTION ─────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .scroll-reveal { opacity: 1; transform: none; }
+}
+
+/* ─── LIGHT MODE OVERRIDES ───────────────── */
+html.light .bg-cafe-bg { background-color: var(--bg-primary); }
+html.light .bg-cafe-card { background-color: var(--bg-card); }
+html.light .text-cafe-text { color: var(--text-primary); }
+html.light .text-cafe-muted { color: var(--text-muted); }
+html.light .border-white\/\[0\.04\] { border-color: var(--border); }
+html.light .border-white\/\[0\.06\] { border-color: var(--glass-border); }

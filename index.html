@@ -641,15 +641,28 @@
         });
 
         // Booking form handler
+        const bookDate = document.getElementById('book-date');
+        if (bookDate) {
+            const today = new Date().toISOString().split('T')[0];
+            bookDate.setAttribute('min', today);
+        }
+
         document.getElementById('booking-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('book-submit-btn');
+            const phone = document.getElementById('book-phone').value.trim();
+
+            if (phone.length < 10) {
+                showMiniToast('Please enter a valid 10-digit phone number');
+                return;
+            }
+
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> Reserving...';
 
             const bookingData = {
                 name: document.getElementById('book-name').value.trim(),
-                phone: document.getElementById('book-phone').value.trim(),
+                phone: phone,
                 date: document.getElementById('book-date').value,
                 time: document.getElementById('book-time').value,
                 guests: document.getElementById('book-guests').value,
@@ -665,7 +678,15 @@
                 showMiniToast('Reservation confirmed! See you at Diggin 🎉');
                 e.target.reset();
             } catch (err) {
-                showMiniToast('Booking saved! We\'ll confirm via call.');
+                if (err.message === 'SLOT_FULL') {
+                    const alt = err.availableSlots && err.availableSlots.length > 0
+                        ? 'Try: ' + err.availableSlots.slice(0, 2).join(' or ')
+                        : 'Please pick another date/outlet.';
+                    showMiniToast('Slot unavailable! ' + alt);
+                } else {
+                    showMiniToast('Booking saved locally! We\'ll confirm via call.');
+                    e.target.reset();
+                }
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = 'Confirm Reservation';
