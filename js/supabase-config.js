@@ -12,8 +12,8 @@
 
 const SUPABASE_URL = 'https://gjylrvqhvjpdodhqdweg.supabase.co';
 
-// ⚠️ REPLACE THIS with your actual Supabase anon key from Dashboard → Settings → API
-const SUPABASE_ANON_KEY = 'YOUR_ANON_KEY_HERE';
+// ⚠️ Using the publishable key provided
+const SUPABASE_ANON_KEY = 'sb_publishable_J6YFy9g_h4S0jfctuQc8Dw_0EBYPZ3h';
 
 let supabase;
 try {
