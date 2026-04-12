@@ -4,7 +4,8 @@
       "name": "Cappuccino",
       "price": 150,
       "description": "Espresso mixed with a roughly equal amount of steamed milk and foam.",
-      "image": "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80"
+      "image": "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80",
+      "popular": true
     },
     {
       "name": "Latte",
@@ -22,7 +23,8 @@
       "name": "Mocha",
       "price": 200,
       "description": "Espresso with bittersweet mocha sauce and steamed milk.",
-      "image": "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&q=80"
+      "image": "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?auto=format&fit=crop&q=80",
+      "popular": true
     }
   ],
   "snacks": [
@@ -30,7 +32,8 @@
       "name": "Sandwich",
       "price": 120,
       "description": "Freshly toasted sourdough with turkey, cheese, and greens.",
-      "image": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80"
+      "image": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80",
+      "popular": true
     },
     {
       "name": "Croissant",
@@ -56,7 +59,8 @@
       "name": "Cold Brew",
       "price": 160,
       "description": "Steeped slowly for 18 hours for a super smooth, bold flavor.",
-      "image": "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba1?auto=format&fit=crop&q=80"
+      "image": "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba1?auto=format&fit=crop&q=80",
+      "popular": true
     }
   ]
 }
