@@ -1,38 +1,83 @@
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 10px; }
-::-webkit-scrollbar-track { background: #292524; } /* stone-800 */
-::-webkit-scrollbar-thumb { background: #57534e; border-radius: 5px; } /* stone-600 */
-::-webkit-scrollbar-thumb:hover { background: #d97706; } /* amber-600 */
+/* ═══════════════════════════════════════════
+   THE COFFEE HOUSE — Custom Styles
+   ═══════════════════════════════════════════ */
 
-/* Slide over cart */
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #1a1714; }
+::-webkit-scrollbar-thumb { background: #3d342c; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #c8873a; }
+
+/* Intro animations */
+@keyframes introFadeUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+.intro-line { opacity: 0; }
+
+/* Cart slide-in */
 .cart-slider {
     transform: translateX(100%);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.45s cubic-bezier(0.32, 0.72, 0, 1);
 }
 .cart-slider.open {
     transform: translateX(0);
 }
+
+/* Backdrop */
 .cart-backdrop {
-    opacity: 0; visibility: hidden;
+    opacity: 0;
+    visibility: hidden;
     transition: opacity 0.4s, visibility 0.4s;
 }
 .cart-backdrop.open {
-    opacity: 1; visibility: visible;
+    opacity: 1;
+    visibility: visible;
 }
 
-/* Modal fade */
-.modal {
-    opacity: 0; visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
+/* Modal */
+.modal-overlay {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s, visibility 0.35s;
 }
-.modal.open {
-    opacity: 1; visibility: visible;
+.modal-overlay.open {
+    opacity: 1;
+    visibility: visible;
 }
 
-/* Smooth zoom for images */
-.hover-zoom img {
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+/* Toast slide-in */
+.toast {
+    opacity: 0;
+    transform: translateY(-20px);
+    visibility: hidden;
+    transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1);
 }
-.hover-zoom:hover img {
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* Image hover zoom */
+.img-zoom img {
+    transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.img-zoom:hover img {
     transform: scale(1.08);
+}
+
+/* Button press micro-animation */
+.btn-press:active {
+    transform: scale(0.97);
+}
+
+/* Pulse for cart badge when items added */
+@keyframes badgePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+.badge-pulse {
+    animation: badgePulse 0.35s ease-out;
 }

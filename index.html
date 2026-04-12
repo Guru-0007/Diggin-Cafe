@@ -4,25 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Coffee House | Premium Artisan Cafe</title>
+    <meta name="description" content="Artisan coffee and curated experiences. Browse our menu and order instantly from your table.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { 
+                    fontFamily: {
                         sans: ['Outfit', 'sans-serif'],
                         serif: ['Playfair Display', 'serif']
                     },
                     colors: {
                         cafe: {
-                            bg: '#1c1917',     // Deepest dark/brown (stone-900)
-                            card: '#292524',   // Dark beige/brown (stone-800)
-                            text: '#fefce8',   // Warm off-white
-                            muted: '#a8a29e',  // stone-400
-                            accent: '#d97706', // amber-600
-                            accentHover: '#b45309',
+                            bg: '#1a1714',
+                            card: '#252220',
+                            surface: '#2e2a27',
+                            text: '#faf6f1',
+                            muted: '#9c9590',
+                            accent: '#c8873a',
+                            accentHover: '#a66e2a',
+                            warm: '#3d342c',
                         }
                     }
                 }
@@ -30,132 +33,323 @@
         }
     </script>
 </head>
-<body class="bg-cafe-bg text-cafe-text font-sans antialiased flex flex-col min-h-screen selection:bg-cafe-accent selection:text-white">
+<body class="bg-cafe-bg text-cafe-text font-sans antialiased selection:bg-cafe-accent selection:text-white overflow-x-hidden">
 
-    <!-- Interactive Video Entry Experience -->
-    <div id="intro-screen" class="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden transition-opacity duration-1000">
-        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover opacity-50">
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-espresso-coffee-machine-in-a-cafe-39875-large.mp4" type="video/mp4">
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- INTRO / ENTRY EXPERIENCE                   -->
+    <!-- ═══════════════════════════════════════════ -->
+    <div id="intro-screen" class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden">
+        <!-- Video background -->
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover scale-110" style="filter: brightness(0.35) saturate(1.2);">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-milk-into-a-cup-of-coffee-722-large.mp4" type="video/mp4">
         </video>
-        <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-black/40"></div>
-        <div class="relative z-10 flex flex-col items-center justify-center p-10 md:p-16 text-center bg-cafe-bg/40 backdrop-blur-md rounded-[2rem] border border-white/10 shadow-2xl">
-            <h1 class="text-6xl md:text-8xl font-bold text-cafe-accent tracking-tighter mb-4 font-serif italic">The Coffee House</h1>
-            <p class="text-cafe-text text-xl mb-10 font-light tracking-wide">Artisan coffee & curated experiences.</p>
-            <button id="enter-btn" class="px-12 py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white text-lg font-bold uppercase tracking-widest rounded-full transition-transform duration-300 hover:scale-105 shadow-[0_0_40px_rgba(217,119,6,0.4)]">
-                Enter Cafe
+        <!-- Gradient overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/60 via-cafe-bg/40 to-cafe-bg"></div>
+        <!-- Grain texture overlay -->
+        <div class="absolute inset-0 opacity-[0.03]" style="background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%224%22 height=%224%22><rect width=%224%22 height=%224%22 fill=%22%23fff%22 opacity=%220.4%22/><rect width=%221%22 height=%221%22 fill=%22%23000%22 opacity=%220.3%22/></svg>'); background-repeat: repeat;"></div>
+
+        <div class="relative z-10 flex flex-col items-center justify-center text-center px-6 intro-content">
+            <div class="mb-6 opacity-0 intro-line" style="animation: introFadeUp 1s 0.3s ease-out forwards;">
+                <span class="text-cafe-accent/80 text-sm font-bold uppercase tracking-[0.4em]">est. 2024</span>
+            </div>
+            <h1 class="text-6xl sm:text-7xl md:text-9xl font-serif italic text-cafe-text mb-6 opacity-0 intro-line" style="animation: introFadeUp 1.2s 0.6s ease-out forwards; text-shadow: 0 4px 30px rgba(0,0,0,0.5);">
+                The Coffee<br>House
+            </h1>
+            <p class="text-cafe-text/70 text-lg md:text-xl font-light tracking-widest mb-12 opacity-0 intro-line" style="animation: introFadeUp 1s 1s ease-out forwards;">
+                Artisan coffee & curated experiences
+            </p>
+            <button id="enter-btn" class="opacity-0 intro-line group relative px-14 py-5 bg-transparent border-2 border-cafe-accent/60 text-cafe-accent text-base font-bold uppercase tracking-[0.3em] rounded-full hover:bg-cafe-accent hover:text-white hover:border-cafe-accent transition-all duration-500 hover:shadow-[0_0_50px_rgba(200,135,58,0.3)] hover:scale-105" style="animation: introFadeUp 1s 1.4s ease-out forwards;">
+                Enter
             </button>
         </div>
     </div>
 
-    <!-- Sticky Navbar -->
-    <nav class="fixed w-full z-40 bg-cafe-bg/90 backdrop-blur-lg border-b border-white/5 py-2 transition-all">
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- NAVBAR                                     -->
+    <!-- ═══════════════════════════════════════════ -->
+    <nav class="fixed w-full z-40 bg-cafe-bg/85 backdrop-blur-xl border-b border-white/[0.04] transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0">
-                    <a href="index.html" class="text-3xl font-serif font-bold tracking-tighter text-cafe-accent hover:text-cafe-accentHover transition-colors flex items-center gap-2">
-                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"></path></svg>
-                        The Coffee House
-                    </a>
-                </div>
-                <div class="flex items-center space-x-6">
-                    <div class="hidden md:flex space-x-10 mr-6">
-                        <a href="index.html" class="text-cafe-accent px-3 py-2 text-sm font-bold uppercase tracking-widest transition-colors">Home</a>
-                        <a href="menu.html" class="hover:text-cafe-accent px-3 py-2 text-sm font-bold uppercase tracking-widest transition-colors">Menu</a>
-                        <a href="#testimonials" class="hover:text-cafe-accent px-3 py-2 text-sm font-bold uppercase tracking-widest transition-colors">Reviews</a>
+                <!-- Logo -->
+                <a href="index.html" class="text-2xl md:text-3xl font-serif italic text-cafe-accent hover:text-cafe-accentHover transition-colors tracking-tight">
+                    The Coffee House
+                </a>
+                <!-- Nav Links + Cart -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <div class="hidden md:flex items-center gap-1">
+                        <a href="index.html" class="text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em]">Home</a>
+                        <a href="menu.html" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Menu</a>
+                        <a href="#testimonials" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Reviews</a>
                     </div>
                     <!-- Cart Button -->
-                    <button id="cart-toggle" class="relative p-2 text-white hover:text-cafe-accent transition-colors flex items-center gap-2 group">
-                        <div class="p-3 bg-white/5 rounded-full group-hover:bg-cafe-accent/10 transition-colors">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <button id="cart-toggle" class="relative p-3 text-cafe-muted hover:text-cafe-accent transition-colors group ml-2">
+                        <div class="p-2.5 bg-white/[0.04] rounded-full group-hover:bg-cafe-accent/10 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         </div>
-                        <span id="cart-count" class="absolute top-1 right-1 bg-cafe-accent text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow-lg border-2 border-cafe-bg">0</span>
+                        <span id="cart-count" class="absolute top-2 right-2 bg-cafe-accent text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-lg border-2 border-cafe-bg">0</span>
+                    </button>
+                    <!-- Mobile hamburger -->
+                    <button id="mobile-menu-toggle" class="md:hidden p-3 text-cafe-muted hover:text-cafe-accent transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                 </div>
+            </div>
+            <!-- Mobile Nav -->
+            <div id="mobile-menu" class="hidden md:hidden pb-6 border-t border-white/5 mt-2 pt-4">
+                <a href="index.html" class="block py-3 text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em]">Home</a>
+                <a href="menu.html" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Menu</a>
+                <a href="#testimonials" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Reviews</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative pt-40 pb-32 md:pt-56 md:pb-40 overflow-hidden flex-grow flex items-center">
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- HERO                                       -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="relative min-h-screen flex items-center overflow-hidden">
+        <!-- Background image -->
         <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?auto=format&fit=crop&q=80" alt="Cafe Background" class="w-full h-full object-cover opacity-[0.15]">
-            <div class="absolute inset-0 bg-gradient-to-r from-cafe-bg via-cafe-bg/90 to-transparent"></div>
+            <img src="https://images.unsplash.com/photo-1447933601403-56dc2df4e4e6?auto=format&fit=crop&q=80" alt="" class="w-full h-full object-cover opacity-[0.12]" loading="lazy">
+            <div class="absolute inset-0 bg-gradient-to-r from-cafe-bg via-cafe-bg/95 to-cafe-bg/70"></div>
         </div>
-        
-        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full">
-            <h1 class="text-6xl md:text-8xl font-serif italic text-cafe-accent mb-4">Scan. Order.</h1>
-            <h2 class="text-5xl md:text-8xl font-bold tracking-tight mb-8 leading-tight">Relax.</h2>
-            
-            <p class="mt-4 max-w-2xl text-xl md:text-3xl text-cafe-text opacity-90 mb-14 font-light leading-relaxed border-l-4 border-cafe-accent pl-6">
-                Browse our curated menu and order instantly directly to your table. No waiting.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-6">
-                <a href="menu.html" class="inline-flex justify-center items-center px-10 py-5 text-lg font-bold uppercase tracking-widest rounded-full text-white bg-cafe-accent hover:bg-cafe-accentHover transition-transform hover:scale-105 shadow-[0_10px_30px_rgba(217,119,6,0.3)] border border-cafe-accent/50">
-                    Order Now
-                </a>
-                <a href="menu.html" class="inline-flex justify-center items-center px-10 py-5 text-lg font-bold uppercase tracking-widest rounded-full text-cafe-text hover:bg-white/5 transition-colors border border-white/20 hover:border-cafe-accent">
-                    View Menu
-                </a>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-32 md:py-0">
+            <div class="max-w-3xl">
+                <!-- Eyebrow -->
+                <div class="flex items-center gap-3 mb-8">
+                    <div class="w-10 h-px bg-cafe-accent"></div>
+                    <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Digital Ordering</span>
+                </div>
+                <!-- Headline -->
+                <h1 class="text-[3.25rem] sm:text-6xl md:text-[5.5rem] leading-[1.05] font-serif mb-8 tracking-tight">
+                    <span class="italic text-cafe-accent">Scan.</span> Order.<br>
+                    <span class="text-cafe-text">Relax.</span>
+                </h1>
+
+                <p class="text-xl md:text-2xl text-cafe-muted font-light leading-relaxed mb-14 max-w-lg">
+                    Browse our curated menu and order instantly from your table. No waiting, no hassle.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-5">
+                    <a href="menu.html" id="hero-order" class="inline-flex justify-center items-center px-10 py-4 text-base font-bold uppercase tracking-[0.15em] rounded-full text-white bg-cafe-accent hover:bg-cafe-accentHover transition-all duration-300 hover:scale-[1.03] shadow-[0_8px_30px_rgba(200,135,58,0.25)]">
+                        Order Now
+                    </a>
+                    <a href="menu.html" class="inline-flex justify-center items-center px-10 py-4 text-base font-bold uppercase tracking-[0.15em] rounded-full text-cafe-text border border-white/15 hover:border-cafe-accent/50 hover:bg-white/[0.03] transition-all duration-300">
+                        View Menu
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decorative side image (visible on large screens) -->
+        <div class="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-[420px] h-[520px] z-10">
+            <div class="relative w-full h-full rounded-[2rem] overflow-hidden shadow-2xl border border-white/5 rotate-3 translate-x-8">
+                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80" alt="Coffee art" class="w-full h-full object-cover" loading="lazy">
+                <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg/80 to-transparent"></div>
             </div>
         </div>
     </section>
 
-    <!-- Social Proof / Testimonials -->
-    <section class="py-32 bg-cafe-card" id="testimonials">
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- FEATURED ITEMS STRIP                       -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="py-24 bg-cafe-card border-y border-white/[0.04]">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="flex items-center justify-between mb-14">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mb-2">Most Loved</h2>
+                    <p class="text-cafe-muted font-light">Our customers' top picks this month.</p>
+                </div>
+                <a href="menu.html" class="hidden sm:inline-flex items-center gap-2 text-cafe-accent text-sm font-bold uppercase tracking-[0.15em] hover:gap-3 transition-all">
+                    Full Menu
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Item 1 -->
+                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80" alt="Cappuccino" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
+                        <span class="absolute top-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Popular</span>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-cafe-text">Cappuccino</h3>
+                            <span class="font-bold text-cafe-accent">₹150</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 2 -->
+                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1555507036-ab1f40ce88f4?auto=format&fit=crop&q=80" alt="Cheese Croissant" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
+                        <span class="absolute top-4 left-4 bg-red-500/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Best Seller</span>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-cafe-text">Cheese Croissant</h3>
+                            <span class="font-bold text-cafe-accent">₹160</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 3 -->
+                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba1?auto=format&fit=crop&q=80" alt="Cold Coffee" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-cafe-text">Cold Coffee</h3>
+                            <span class="font-bold text-cafe-accent">₹200</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Item 4 -->
+                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+                    <div class="relative h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&q=80" alt="Chocolate Cake" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
+                        <span class="absolute top-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Popular</span>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start">
+                            <h3 class="font-bold text-cafe-text">Chocolate Cake</h3>
+                            <span class="font-bold text-cafe-accent">₹220</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- HOW IT WORKS                               -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="py-28 bg-cafe-bg">
+        <div class="max-w-5xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-20">
+                <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Seamless Experience</span>
+                <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mt-4">How It Works</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15 group-hover:bg-cafe-accent/20 transition-colors">
+                        <span class="text-2xl font-serif font-bold">1</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-3 text-cafe-text">Browse Menu</h3>
+                    <p class="text-cafe-muted font-light text-sm leading-relaxed">Explore our curated selection of coffee, food, and drinks from your phone.</p>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15 group-hover:bg-cafe-accent/20 transition-colors">
+                        <span class="text-2xl font-serif font-bold">2</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-3 text-cafe-text">Add to Cart</h3>
+                    <p class="text-cafe-muted font-light text-sm leading-relaxed">Pick your favorites, customize quantity, and review your order before placing.</p>
+                </div>
+                <div class="text-center group">
+                    <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15 group-hover:bg-cafe-accent/20 transition-colors">
+                        <span class="text-2xl font-serif font-bold">3</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-3 text-cafe-text">Relax & Enjoy</h3>
+                    <p class="text-cafe-muted font-light text-sm leading-relaxed">Confirm your table number and we'll bring your order fresh and hot.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- TESTIMONIALS                               -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section class="py-28 bg-cafe-card border-y border-white/[0.04]" id="testimonials">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center mb-20">
-                <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight font-serif italic">Loved by Customers</h2>
-                <div class="w-20 h-1 bg-cafe-accent mx-auto mt-8 rounded-full"></div>
+                <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Customer Love</span>
+                <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mt-4">Loved by Customers</h2>
+                <div class="w-12 h-0.5 bg-cafe-accent mx-auto mt-6 rounded-full"></div>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <!-- Testimonial 1 -->
-                <div class="bg-cafe-bg p-10 rounded-[2rem] shadow-2xl border border-white/5 flex flex-col hover:border-cafe-accent/40 transition-colors">
-                    <div class="text-cafe-accent mb-6 flex">
-                        <svg class="w-6 h-6 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-6 h-6 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-6 h-6 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-6 h-6 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                        <svg class="w-6 h-6 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Review 1 -->
+                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group">
+                    <div class="text-cafe-accent mb-5 flex gap-1">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                     </div>
-                    <p class="text-cafe-text mb-8 text-lg font-light italic leading-relaxed">"The digital ordering system is brilliant. I sat down, browsed the menu, and my coffee was here in 5 minutes without ever leaving the table!"</p>
-                    <div class="mt-auto mb-2">
-                        <h4 class="font-bold text-white uppercase tracking-widest text-sm">— Sarah Jenkins</h4>
-                    </div>
-                </div>
-                <!-- Testimonial 2 -->
-                <div class="bg-cafe-bg p-10 rounded-[2rem] shadow-2xl border border-white/5 flex flex-col hover:border-cafe-accent/40 transition-colors">
-                    <div class="text-cafe-accent mb-6 flex">
-                        <svg class="w-6 h-6 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c..."></path></svg><!-- Assuming stars here too -->
-                    </div>
-                    <p class="text-cafe-text mb-8 text-lg font-light italic leading-relaxed">"Sleek and easy. It genuinely felt like a premium experience unlike any other local cafe."</p>
-                    <div class="mt-auto mb-2">
-                        <h4 class="font-bold text-white uppercase tracking-widest text-sm">— Mark D.</h4>
+                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"The digital ordering system is brilliant. I sat down, browsed the menu, and my coffee arrived in 5 minutes without leaving the table!"</p>
+                    <div class="flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
+                        <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">SJ</div>
+                        <div>
+                            <h4 class="font-bold text-cafe-text text-sm">Sarah Jenkins</h4>
+                            <p class="text-cafe-muted text-xs">Regular Customer</p>
+                        </div>
                     </div>
                 </div>
-                <!-- Testimonial 3 -->
-                <div class="bg-cafe-bg p-10 rounded-[2rem] shadow-2xl border border-white/5 flex flex-col hover:border-cafe-accent/40 transition-colors">
-                    <div class="text-cafe-accent mb-6 flex">
-                        <svg class="w-6 h-6 mr-1" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.92..."></path></svg>
+                <!-- Review 2 -->
+                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group">
+                    <div class="text-cafe-accent mb-5 flex gap-1">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                     </div>
-                    <p class="text-cafe-text mb-8 text-lg font-light italic leading-relaxed">"Love the UI! It's so fast. I ordered a latte and got a beautiful notification right away."</p>
-                    <div class="mt-auto mb-2">
-                        <h4 class="font-bold text-white uppercase tracking-widest text-sm">— Emily R.</h4>
+                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"Sleek and easy. It genuinely felt like a premium experience unlike any other local cafe. The UI is so clean!"</p>
+                    <div class="flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
+                        <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">MD</div>
+                        <div>
+                            <h4 class="font-bold text-cafe-text text-sm">Mark Davidson</h4>
+                            <p class="text-cafe-muted text-xs">First-time Visitor</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Review 3 -->
+                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group">
+                    <div class="text-cafe-accent mb-5 flex gap-1">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                    </div>
+                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"Love the ordering flow! Super fast, and the latte was perfect. Will be coming back every weekend."</p>
+                    <div class="flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
+                        <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">ER</div>
+                        <div>
+                            <h4 class="font-bold text-cafe-text text-sm">Emily Roberts</h4>
+                            <p class="text-cafe-muted text-xs">Weekend Regular</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-black border-t border-white/10 pt-16 pb-12">
-        <div class="max-w-7xl mx-auto px-6 lg:px-12 text-center">
-            <h1 class="text-3xl font-bold font-serif italic text-cafe-accent mb-6">The Coffee House</h1>
-            <p class="text-cafe-muted text-sm font-light mb-8 max-w-sm mx-auto">Premium coffee, baked goods, and a cozy atmosphere directly from your smartphone.</p>
-            <p class="text-white/30 text-xs font-bold tracking-[0.2em] uppercase">&copy; 2026 Premium Digital Ordering.</p>
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- FOOTER                                     -->
+    <!-- ═══════════════════════════════════════════ -->
+    <footer class="bg-cafe-bg border-t border-white/[0.04] py-16">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+                <div class="text-center md:text-left">
+                    <h3 class="text-2xl font-serif italic text-cafe-accent mb-2">The Coffee House</h3>
+                    <p class="text-cafe-muted text-sm font-light">Premium coffee & digital ordering experience.</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <p class="text-cafe-muted/60 text-xs font-medium uppercase tracking-[0.2em]">&copy; 2026 The Coffee House. All rights reserved.</p>
+                </div>
+            </div>
         </div>
     </footer>
 
+    <!-- Cart + Checkout injected by JS -->
     <script src="js/script.js"></script>
 </body>
 </html>

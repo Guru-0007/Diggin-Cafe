@@ -4,20 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Coffee House | Menu</title>
+    <meta name="description" content="Browse our full menu of artisan coffee, snacks, desserts, and beverages. Order directly from your table.">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { 
+                    fontFamily: {
                         sans: ['Outfit', 'sans-serif'],
                         serif: ['Playfair Display', 'serif']
                     },
                     colors: {
                         cafe: {
-                            bg: '#1c1917', card: '#292524', text: '#fefce8', muted: '#a8a29e', accent: '#d97706', accentHover: '#b45309',
+                            bg: '#1a1714',
+                            card: '#252220',
+                            surface: '#2e2a27',
+                            text: '#faf6f1',
+                            muted: '#9c9590',
+                            accent: '#c8873a',
+                            accentHover: '#a66e2a',
+                            warm: '#3d342c',
                         }
                     }
                 }
@@ -25,54 +33,72 @@
         }
     </script>
 </head>
-<body class="bg-cafe-bg text-cafe-text font-sans antialiased flex flex-col min-h-screen selection:bg-cafe-accent selection:text-white">
+<body class="bg-cafe-card text-cafe-text font-sans antialiased flex flex-col min-h-screen selection:bg-cafe-accent selection:text-white overflow-x-hidden">
 
-    <!-- Sticky Navbar -->
-    <nav class="fixed w-full z-40 bg-cafe-bg/90 backdrop-blur-lg border-b border-white/5 py-2 transition-all">
+    <!-- Navbar -->
+    <nav class="fixed w-full z-40 bg-cafe-bg/85 backdrop-blur-xl border-b border-white/[0.04] transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex items-center justify-between h-20">
-                <div class="flex-shrink-0">
-                    <a href="index.html" class="text-3xl font-serif font-bold tracking-tighter text-cafe-accent hover:text-cafe-accentHover transition-colors">
-                        The Coffee House
-                    </a>
-                </div>
-                <div class="flex items-center space-x-6">
-                    <div class="hidden md:flex space-x-10 mr-6">
-                        <a href="index.html" class="hover:text-cafe-accent px-3 py-2 text-sm font-bold uppercase tracking-widest transition-colors">Home</a>
-                        <a href="menu.html" class="text-cafe-accent px-3 py-2 text-sm font-bold uppercase tracking-widest transition-colors">Menu</a>
+                <a href="index.html" class="text-2xl md:text-3xl font-serif italic text-cafe-accent hover:text-cafe-accentHover transition-colors tracking-tight">
+                    The Coffee House
+                </a>
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <div class="hidden md:flex items-center gap-1">
+                        <a href="index.html" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Home</a>
+                        <a href="menu.html" class="text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em]">Menu</a>
                     </div>
-                    <!-- Cart Button -->
-                    <button id="cart-toggle" class="relative p-2 text-white hover:text-cafe-accent transition-colors flex items-center gap-2 group">
-                        <div class="p-3 bg-white/5 rounded-full group-hover:bg-cafe-accent/10 transition-colors">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <button id="cart-toggle" class="relative p-3 text-cafe-muted hover:text-cafe-accent transition-colors group ml-2">
+                        <div class="p-2.5 bg-white/[0.04] rounded-full group-hover:bg-cafe-accent/10 transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         </div>
-                        <span id="cart-count" class="absolute top-1 right-1 bg-cafe-accent text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow-lg border-2 border-cafe-bg">0</span>
+                        <span id="cart-count" class="absolute top-2 right-2 bg-cafe-accent text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-lg border-2 border-cafe-bg">0</span>
+                    </button>
+                    <button id="mobile-menu-toggle" class="md:hidden p-3 text-cafe-muted hover:text-cafe-accent transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                     </button>
                 </div>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden pb-6 border-t border-white/5 mt-2 pt-4">
+                <a href="index.html" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Home</a>
+                <a href="menu.html" class="block py-3 text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em]">Menu</a>
             </div>
         </div>
     </nav>
 
     <!-- Menu Header -->
-    <div class="pt-36 pb-16 bg-cafe-bg text-center border-b border-white/5">
+    <div class="pt-28 pb-14 bg-cafe-bg text-center border-b border-white/[0.04]">
         <div class="max-w-4xl mx-auto px-6">
-            <h1 class="text-5xl md:text-7xl font-serif italic text-white mb-6">Our Menu</h1>
-            <p class="text-cafe-muted text-xl font-light">Explore our premium selection and add to your cart to order.</p>
+            <div class="flex items-center justify-center gap-3 mb-6">
+                <div class="w-8 h-px bg-cafe-accent"></div>
+                <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Fresh & Curated</span>
+                <div class="w-8 h-px bg-cafe-accent"></div>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-serif italic text-cafe-text mb-5">Our Menu</h1>
+            <p class="text-cafe-muted text-lg font-light max-w-md mx-auto">Tap any item to add it to your order. We'll bring it to your table.</p>
         </div>
     </div>
 
-    <!-- Menu Content -->
-    <main class="flex-grow py-20 bg-cafe-card">
+    <!-- Menu Content (dynamic from menu.json) -->
+    <main class="flex-grow py-16 md:py-24">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
-            <div id="loading-state" class="text-center py-20"><div class="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-cafe-accent mb-4"></div></div>
-            <div id="error-state" class="hidden text-center py-20 text-red-400"><p>Oops! Couldn't load the menu.</p></div>
-            <div id="menu-container" class="space-y-32 hidden"></div>
+            <!-- Loading -->
+            <div id="loading-state" class="text-center py-24">
+                <div class="inline-block animate-spin rounded-full h-10 w-10 border-2 border-cafe-accent border-t-transparent mb-6"></div>
+                <p class="text-cafe-muted font-light">Loading our menu...</p>
+            </div>
+            <!-- Error -->
+            <div id="error-state" class="hidden text-center py-24">
+                <p class="text-red-400/80 font-light">Couldn't load the menu. Please refresh.</p>
+            </div>
+            <!-- Menu Container (JS injects categories here) -->
+            <div id="menu-container" class="space-y-24 hidden"></div>
         </div>
     </main>
 
-    <footer class="bg-black border-t border-white/10 pt-16 pb-12 mt-auto">
-        <div class="max-w-7xl mx-auto px-6 text-center text-white/30 text-xs font-bold tracking-[0.2em] uppercase">
-            <p>&copy; 2026 Premium Digital Ordering.</p>
+    <!-- Footer -->
+    <footer class="bg-cafe-bg border-t border-white/[0.04] py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-cafe-muted/50 text-xs font-medium uppercase tracking-[0.2em]">&copy; 2026 The Coffee House</p>
         </div>
     </footer>
 
