@@ -65,25 +65,47 @@ function initMobileMenu() {
     });
 }
 
+// ─── FALLBACK MENU (always works even if fetch fails) ──
+const fallbackMenu = {
+    coffee: [
+        { id: "c1", name: "Cappuccino", price: 150, description: "Espresso with steamed milk and foam.", image: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80", tag: "Popular" },
+        { id: "c2", name: "Latte", price: 180, description: "Smooth espresso blended with velvety steamed milk.", image: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&q=80" },
+        { id: "c3", name: "Espresso", price: 120, description: "A single shot of intense, rich espresso.", image: "https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&q=80" }
+    ],
+    snacks: [
+        { id: "s1", name: "Grilled Sandwich", price: 140, description: "Freshly toasted sourdough with hearty fillings.", image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&q=80" },
+        { id: "s2", name: "Cheese Croissant", price: 160, description: "Buttery, flaky pastry filled with melted cheese.", image: "https://images.unsplash.com/photo-1555507036-ab1f40ce88f4?auto=format&fit=crop&q=80", tag: "Best Seller" }
+    ],
+    desserts: [
+        { id: "d1", name: "Chocolate Cake", price: 220, description: "Rich double chocolate cake slice with a smooth glaze.", image: "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&q=80" },
+        { id: "d2", name: "Brownie", price: 180, description: "Fudgy warm brownie with dark chocolate chunks.", image: "https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&q=80" }
+    ],
+    beverages: [
+        { id: "b1", name: "Cold Coffee", price: 200, description: "Thick, blended chilled coffee with a hint of vanilla.", image: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba1?auto=format&fit=crop&q=80" },
+        { id: "b2", name: "Iced Latte", price: 210, description: "Chilled espresso poured over creamy milk and ice.", image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80" }
+    ]
+};
+
 // ─── MENU FETCHING & RENDERING ───────────────
 async function fetchMenuData() {
     const loading = document.getElementById("loading-state");
     const error = document.getElementById("error-state");
     const container = document.getElementById("menu-container");
 
+    let data;
     try {
         const res = await fetch("data/menu.json");
         if (!res.ok) throw new Error("Failed");
-        const data = await res.json();
-
-        loading.classList.add("hidden");
-        container.classList.remove("hidden");
-        renderMenu(data, container);
+        data = await res.json();
     } catch (e) {
-        console.error("Menu load failed:", e);
-        loading.classList.add("hidden");
-        error.classList.remove("hidden");
+        console.warn("Fetch failed, using fallback menu:", e);
+        data = fallbackMenu;
     }
+
+    loading.classList.add("hidden");
+    if (error) error.classList.add("hidden");
+    container.classList.remove("hidden");
+    renderMenu(data, container);
 }
 
 function renderMenu(data, container) {
@@ -345,6 +367,25 @@ function injectCheckoutModal() {
 
     document.getElementById("checkout-form").addEventListener("submit", (e) => {
         e.preventDefault();
+
+        const custName = document.getElementById("cust-name").value.trim();
+        const tableNum = document.getElementById("table-number").value.trim();
+        const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+
+        // Save order to localStorage for chef dashboard
+        const order = {
+            id: Date.now().toString(),
+            customer: custName,
+            table: tableNum,
+            items: cart.map(i => ({ name: i.name, price: i.price, quantity: i.quantity })),
+            total: total,
+            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            status: "pending"
+        };
+
+        const orders = JSON.parse(localStorage.getItem("cafe_orders")) || [];
+        orders.push(order);
+        localStorage.setItem("cafe_orders", JSON.stringify(orders));
 
         // Clear cart
         cart = [];
