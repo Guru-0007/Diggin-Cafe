@@ -2,7 +2,7 @@
    DIGGIN CAFÉ — Premium Design System
    ═══════════════════════════════════════════ */
 
-/* ─── CSS VARIABLES (DARK/LIGHT) ─────────── */
+/* ─── CSS VARIABLES (DARK MODE DEFAULT) ──── */
 :root {
     --bg-primary: #0f0f0f;
     --bg-card: #1a1714;
@@ -24,9 +24,12 @@
     --radius-md: 1rem;
     --radius-lg: 1.5rem;
     --radius-xl: 2rem;
+    --invert-text: #ffffff;
+    --review-bg: #1e1b18;
     color-scheme: dark;
 }
 
+/* ─── LIGHT MODE OVERRIDES ───────────────── */
 html.light {
     --bg-primary: #f8f5f0;
     --bg-card: #ffffff;
@@ -38,13 +41,165 @@ html.light {
     --accent: #b07830;
     --accent-hover: #8a5e20;
     --accent-glow: rgba(176, 120, 48, 0.2);
-    --border: rgba(0, 0, 0, 0.06);
+    --border: rgba(0, 0, 0, 0.08);
     --border-hover: rgba(176, 120, 48, 0.25);
-    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-bg: rgba(255, 255, 255, 0.85);
     --glass-border: rgba(0, 0, 0, 0.08);
     --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08);
     --shadow-glow: 0 0 40px rgba(176, 120, 48, 0.08);
+    --invert-text: #1a1714;
+    --review-bg: #f5f0eb;
     color-scheme: light;
+}
+
+/* ─── GLOBAL LIGHT-MODE FORCE OVERRIDES ──── */
+/* These override Tailwind's hardcoded colors */
+html.light body {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+}
+html.light .bg-cafe-bg { background-color: var(--bg-primary) !important; }
+html.light .bg-cafe-card { background-color: var(--bg-card) !important; }
+html.light .bg-cafe-surface { background-color: var(--bg-surface) !important; }
+html.light .text-cafe-text { color: var(--text-primary) !important; }
+html.light .text-cafe-muted { color: var(--text-muted) !important; }
+html.light .text-cafe-accent { color: var(--accent) !important; }
+html.light .bg-cafe-accent { background-color: var(--accent) !important; }
+html.light .hover\:bg-cafe-accent:hover { background-color: var(--accent) !important; }
+html.light .bg-cafe-accentHover { background-color: var(--accent-hover) !important; }
+html.light .hover\:bg-cafe-accentHover:hover { background-color: var(--accent-hover) !important; }
+html.light .border-cafe-accent { border-color: var(--accent) !important; }
+
+/* Light mode: fix white/alpha classes that are invisible on light bg */
+html.light .border-white\/\[0\.04\],
+html.light .border-white\/\[0\.06\],
+html.light .border-white\/5 {
+    border-color: var(--border) !important;
+}
+html.light .border-white\/\[0\.08\] {
+    border-color: var(--glass-border) !important;
+}
+html.light .bg-white\/\[0\.04\],
+html.light .hover\:bg-white\/\[0\.03\]:hover,
+html.light .hover\:bg-white\/\[0\.08\]:hover,
+html.light .hover\:bg-white\/5:hover {
+    background-color: var(--bg-surface) !important;
+}
+html.light .bg-white\/\[0\.03\] {
+    background-color: rgba(0, 0, 0, 0.02) !important;
+}
+html.light .text-white {
+    color: #ffffff !important; /* keep white text on accent buttons */
+}
+
+/* Light mode text opacity fix */
+html.light .text-cafe-text\/80 { color: var(--text-primary) !important; opacity: 0.85; }
+html.light .text-cafe-muted\/40 { color: var(--text-muted) !important; opacity: 0.55; }
+html.light .text-cafe-muted\/50 { color: var(--text-muted) !important; opacity: 0.65; }
+html.light .text-cafe-muted\/60 { color: var(--text-muted) !important; opacity: 0.7; }
+
+/* Light mode: navbar */
+html.light nav.bg-cafe-bg\/85,
+html.light .bg-cafe-bg\/85 {
+    background-color: rgba(248, 245, 240, 0.9) !important;
+}
+html.light .bg-cafe-bg\/80 {
+    background-color: rgba(248, 245, 240, 0.85) !important;
+}
+html.light .bg-cafe-card\/95 {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Light mode: hero gradients */
+html.light .from-cafe-bg { --tw-gradient-from: var(--bg-primary) !important; }
+html.light .via-cafe-bg\/90 { --tw-gradient-via: rgba(248, 245, 240, 0.9) !important; }
+html.light .to-cafe-bg\/40 { --tw-gradient-to: rgba(248, 245, 240, 0.4) !important; }
+html.light .from-cafe-bg\/80 { --tw-gradient-from: rgba(248, 245, 240, 0.8) !important; }
+html.light .from-cafe-bg\/60 { --tw-gradient-from: rgba(248, 245, 240, 0.6) !important; }
+html.light .from-cafe-card { --tw-gradient-from: var(--bg-card) !important; }
+
+/* Light mode: reviews section */
+html.light .review-card,
+html.light #testimonials .bg-cafe-bg {
+    background-color: var(--review-bg) !important;
+    border-color: var(--border) !important;
+}
+html.light #testimonials .text-cafe-text\/80 {
+    color: #2a2520 !important;
+    opacity: 1;
+}
+
+/* Light mode: about stats */
+html.light #about .bg-cafe-bg {
+    background-color: var(--bg-surface) !important;
+}
+
+/* Light mode: footer */
+html.light footer.bg-cafe-card {
+    background-color: var(--bg-surface) !important;
+}
+
+/* Light mode: glass cards */
+html.light .glass-card {
+    background: var(--glass-bg) !important;
+    border-color: var(--glass-border) !important;
+}
+
+/* Light mode: inputs & selects */
+html.light input,
+html.light select,
+html.light textarea {
+    background-color: var(--bg-surface) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+}
+html.light input::placeholder,
+html.light textarea::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.5;
+}
+
+/* Light mode: scrollbar */
+html.light ::-webkit-scrollbar-track { background: var(--bg-primary); }
+html.light ::-webkit-scrollbar-thumb { background: var(--bg-elevated); }
+
+/* Light mode: cart drawer & modals */
+html.light .cart-slider { background-color: var(--bg-primary) !important; border-color: var(--border) !important; }
+html.light .modal-overlay .bg-cafe-bg { background-color: var(--bg-primary) !important; }
+html.light #mini-toast {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(176, 120, 48, 0.3) !important;
+}
+
+/* Light mode: notification toast */
+html.light .notification-toast {
+    background: var(--glass-bg) !important;
+    border-color: var(--glass-border) !important;
+}
+
+/* Light mode: accent bg opacity classes */
+html.light .bg-cafe-accent\/10 { background-color: rgba(176, 120, 48, 0.1) !important; }
+html.light .bg-cafe-accent\/15 { background-color: rgba(176, 120, 48, 0.15) !important; }
+html.light .bg-cafe-accent\/20 { background-color: rgba(176, 120, 48, 0.2) !important; }
+html.light .border-cafe-accent\/15 { border-color: rgba(176, 120, 48, 0.15) !important; }
+html.light .border-cafe-accent\/20 { border-color: rgba(176, 120, 48, 0.2) !important; }
+html.light .border-cafe-accent\/30 { border-color: rgba(176, 120, 48, 0.3) !important; }
+
+/* Light mode: intro screen stays dark */
+html.light #intro-screen { color: #faf6f1 !important; }
+html.light #intro-screen * { color: inherit; }
+html.light #intro-screen .text-cafe-accent,
+html.light #intro-screen .text-cafe-accent\/70 { color: #c8873a !important; }
+
+/* Light mode: staff modal */
+html.light #staff-modal .bg-cafe-bg {
+    background-color: var(--bg-card) !important;
+}
+
+/* Light mode: booking image overlay */
+html.light .bg-gradient-to-t.from-cafe-bg\/60 {
+    --tw-gradient-from: rgba(248, 245, 240, 0.6) !important;
 }
 
 /* ─── SCROLLBAR ──────────────────────────── */
@@ -231,7 +386,6 @@ html { scroll-behavior: smooth; }
 }
 .status-pulse { animation: statusPulse 2s ease-in-out infinite; }
 
-/* Status colors */
 .status-pending { color: #ef4444; }
 .status-preparing { color: #eab308; }
 .status-ready { color: #22c55e; }
@@ -469,21 +623,6 @@ html.light .theme-toggle-thumb { transform: translateX(20px); }
     box-shadow: var(--shadow-card);
 }
 
-/* ─── BILL PRINT STYLES ─────────────────── */
-@media print {
-    body * { visibility: hidden; }
-    .bill-printable, .bill-printable * { visibility: visible; }
-    .bill-printable {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 80mm;
-        background: white;
-        color: black;
-        padding: 20px;
-    }
-}
-
 /* ─── SELECT & INPUT STYLING ─────────────── */
 select {
     appearance: none;
@@ -505,6 +644,21 @@ input:focus, select:focus, textarea:focus {
     box-shadow: 0 0 0 3px rgba(200, 135, 58, 0.1);
 }
 
+/* ─── BILL PRINT STYLES ─────────────────── */
+@media print {
+    body * { visibility: hidden; }
+    .bill-printable, .bill-printable * { visibility: visible; }
+    .bill-printable {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 80mm;
+        background: white;
+        color: black;
+        padding: 20px;
+    }
+}
+
 /* ─── RESPONSIVE TWEAKS ──────────────────── */
 @media (max-width: 640px) {
     .notification-toast {
@@ -513,7 +667,6 @@ input:focus, select:focus, textarea:focus {
         max-width: none;
         top: 0.75rem;
     }
-    /* Chef/Cashier navbar: stack on mobile */
     nav .flex.items-center.gap-4 {
         gap: 0.5rem;
     }
@@ -585,11 +738,3 @@ input:focus, select:focus, textarea:focus {
     }
     .scroll-reveal { opacity: 1; transform: none; }
 }
-
-/* ─── LIGHT MODE OVERRIDES ───────────────── */
-html.light .bg-cafe-bg { background-color: var(--bg-primary); }
-html.light .bg-cafe-card { background-color: var(--bg-card); }
-html.light .text-cafe-text { color: var(--text-primary); }
-html.light .text-cafe-muted { color: var(--text-muted); }
-html.light .border-white\/\[0\.04\] { border-color: var(--border); }
-html.light .border-white\/\[0\.06\] { border-color: var(--glass-border); }

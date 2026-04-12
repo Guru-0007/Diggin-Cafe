@@ -650,7 +650,7 @@ function injectOrderTray() {
     tray.innerHTML = `
         <div class="flex items-center gap-3">
             <div class="w-9 h-9 sm:w-10 sm:h-10 bg-cafe-accent/15 rounded-xl flex items-center justify-center border border-cafe-accent/20">
-                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-cafe-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-cafe-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3C7.03 3 3 5.69 3 9h18c0-3.31-4.03-6-9-6z"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 9v1a1 1 0 001 1h16a1 1 0 001-1V9"/><path stroke-linecap="round" stroke-linejoin="round" d="M5 11v6a2 2 0 002 2h10a2 2 0 002-2v-6"/><line x1="12" y1="1" x2="12" y2="3" stroke-linecap="round"/></svg>
             </div>
             <div>
                 <div class="text-cafe-text font-bold text-sm"><span id="tray-count">0</span> items</div>
