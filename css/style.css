@@ -15,6 +15,17 @@
 }
 .intro-line { opacity: 0; }
 
+/* Scroll reveal animations */
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.scroll-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 /* Cart slide-in */
 .cart-slider {
     transform: translateX(100%);
@@ -80,4 +91,91 @@
 }
 .badge-pulse {
     animation: badgePulse 0.35s ease-out;
+}
+
+/* Shimmer loading effect */
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.shimmer {
+    background: linear-gradient(90deg, #252220 25%, #3d342c 50%, #252220 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Status badge animations */
+@keyframes statusPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+.status-pulse {
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+/* Glass card effect */
+.glass-card {
+    background: rgba(37, 34, 32, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Grain texture overlay */
+.grain-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="4" height="4" fill="%23fff" opacity="0.4"/><rect width="1" height="1" fill="%23000" opacity="0.3"/></svg>');
+    background-repeat: repeat;
+    pointer-events: none;
+}
+
+/* Dashboard specific */
+.order-card-enter {
+    animation: cardSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes cardSlideIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Status colors */
+.status-pending { color: #f59e0b; }
+.status-preparing { color: #3b82f6; }
+.status-ready { color: #22c55e; }
+.status-paid { color: #9ca3af; }
+
+.status-bg-pending { background-color: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
+.status-bg-preparing { background-color: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); }
+.status-bg-ready { background-color: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.2); }
+.status-bg-paid { background-color: rgba(156, 163, 175, 0.1); border-color: rgba(156, 163, 175, 0.2); }
+
+/* Call alert flash */
+@keyframes alertFlash {
+    0%, 100% { border-color: rgba(239, 68, 68, 0.2); }
+    50% { border-color: rgba(239, 68, 68, 0.6); box-shadow: 0 0 20px rgba(239, 68, 68, 0.15); }
+}
+.alert-flash {
+    animation: alertFlash 1.5s ease-in-out infinite;
+}
+
+/* Number input hide spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* Smooth page transitions */
+.page-transition {
+    animation: pageIn 0.5s ease-out;
+}
+@keyframes pageIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }

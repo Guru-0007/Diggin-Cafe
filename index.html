@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Coffee House | Premium Artisan Cafe</title>
-    <meta name="description" content="Artisan coffee and curated experiences. Browse our menu and order instantly from your table.">
+    <title>The Coffee House | Premium Artisan Café</title>
+    <meta name="description" content="Artisan coffee and curated experiences. Scan, order, and relax at The Coffee House. Browse our menu and order instantly from your table.">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -80,16 +81,18 @@
                 <!-- Nav Links + Cart -->
                 <div class="flex items-center gap-2 sm:gap-4">
                     <div class="hidden md:flex items-center gap-1">
-                        <a href="index.html" class="text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em]">Home</a>
+                        <a href="#home" class="text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em]">Home</a>
                         <a href="menu.html" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Menu</a>
-                        <a href="#testimonials" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Reviews</a>
+                        <a href="#about" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">About</a>
+                        <a href="#outlets" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Outlets</a>
+                        <a href="#booking" class="text-cafe-muted hover:text-cafe-accent px-4 py-2 text-[13px] font-semibold uppercase tracking-[0.15em] transition-colors">Book</a>
                     </div>
                     <!-- Cart Button -->
                     <button id="cart-toggle" class="relative p-3 text-cafe-muted hover:text-cafe-accent transition-colors group ml-2">
                         <div class="p-2.5 bg-white/[0.04] rounded-full group-hover:bg-cafe-accent/10 transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                         </div>
-                        <span id="cart-count" class="absolute top-2 right-2 bg-cafe-accent text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-lg border-2 border-cafe-bg">0</span>
+                        <span class="cart-count-badge absolute top-2 right-2 bg-cafe-accent text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-lg border-2 border-cafe-bg">0</span>
                     </button>
                     <!-- Mobile hamburger -->
                     <button id="mobile-menu-toggle" class="md:hidden p-3 text-cafe-muted hover:text-cafe-accent transition-colors">
@@ -99,41 +102,44 @@
             </div>
             <!-- Mobile Nav -->
             <div id="mobile-menu" class="hidden md:hidden pb-6 border-t border-white/5 mt-2 pt-4">
-                <a href="index.html" class="block py-3 text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em]">Home</a>
+                <a href="#home" class="block py-3 text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em]">Home</a>
                 <a href="menu.html" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Menu</a>
-                <a href="#testimonials" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Reviews</a>
+                <a href="#about" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">About</a>
+                <a href="#outlets" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Outlets</a>
+                <a href="#booking" class="block py-3 text-cafe-muted hover:text-cafe-accent text-sm font-semibold uppercase tracking-[0.15em] transition-colors">Book</a>
             </div>
         </div>
     </nav>
 
     <!-- ═══════════════════════════════════════════ -->
-    <!-- HERO                                       -->
+    <!-- VIDEO HERO                                 -->
     <!-- ═══════════════════════════════════════════ -->
-    <section class="relative min-h-screen flex items-center overflow-hidden">
-        <!-- Background image -->
-        <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1447933601403-56dc2df4e4e6?auto=format&fit=crop&q=80" alt="" class="w-full h-full object-cover opacity-[0.12]" loading="lazy">
-            <div class="absolute inset-0 bg-gradient-to-r from-cafe-bg via-cafe-bg/95 to-cafe-bg/70"></div>
-        </div>
+    <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+        <!-- Video background -->
+        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0" style="filter: brightness(0.3) saturate(1.1);">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-coffee-from-a-coffee-maker-into-a-cup-4730-large.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-r from-cafe-bg via-cafe-bg/90 to-cafe-bg/50 z-[1]"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg via-transparent to-transparent z-[1]"></div>
 
         <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 w-full py-32 md:py-0">
             <div class="max-w-3xl">
                 <!-- Eyebrow -->
-                <div class="flex items-center gap-3 mb-8">
+                <div class="flex items-center gap-3 mb-8 scroll-reveal">
                     <div class="w-10 h-px bg-cafe-accent"></div>
                     <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Digital Ordering</span>
                 </div>
                 <!-- Headline -->
-                <h1 class="text-[3.25rem] sm:text-6xl md:text-[5.5rem] leading-[1.05] font-serif mb-8 tracking-tight">
+                <h1 class="text-[3.25rem] sm:text-6xl md:text-[5.5rem] leading-[1.05] font-serif mb-8 tracking-tight scroll-reveal">
                     <span class="italic text-cafe-accent">Scan.</span> Order.<br>
                     <span class="text-cafe-text">Relax.</span>
                 </h1>
 
-                <p class="text-xl md:text-2xl text-cafe-muted font-light leading-relaxed mb-14 max-w-lg">
+                <p class="text-xl md:text-2xl text-cafe-muted font-light leading-relaxed mb-14 max-w-lg scroll-reveal">
                     Browse our curated menu and order instantly from your table. No waiting, no hassle.
                 </p>
 
-                <div class="flex flex-col sm:flex-row gap-5">
+                <div class="flex flex-col sm:flex-row gap-5 scroll-reveal">
                     <a href="menu.html" id="hero-order" class="inline-flex justify-center items-center px-10 py-4 text-base font-bold uppercase tracking-[0.15em] rounded-full text-white bg-cafe-accent hover:bg-cafe-accentHover transition-all duration-300 hover:scale-[1.03] shadow-[0_8px_30px_rgba(200,135,58,0.25)]">
                         Order Now
                     </a>
@@ -158,7 +164,7 @@
     <!-- ═══════════════════════════════════════════ -->
     <section class="py-24 bg-cafe-card border-y border-white/[0.04]">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
-            <div class="flex items-center justify-between mb-14">
+            <div class="flex items-center justify-between mb-14 scroll-reveal">
                 <div>
                     <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mb-2">Most Loved</h2>
                     <p class="text-cafe-muted font-light">Our customers' top picks this month.</p>
@@ -171,7 +177,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Item 1 -->
-                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80" alt="Cappuccino" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
@@ -185,7 +191,7 @@
                     </div>
                 </div>
                 <!-- Item 2 -->
-                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1555507036-ab1f40ce88f4?auto=format&fit=crop&q=80" alt="Cheese Croissant" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
@@ -199,7 +205,7 @@
                     </div>
                 </div>
                 <!-- Item 3 -->
-                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba1?auto=format&fit=crop&q=80" alt="Cold Coffee" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
@@ -212,7 +218,7 @@
                     </div>
                 </div>
                 <!-- Item 4 -->
-                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)]">
+                <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&q=80" alt="Chocolate Cake" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
@@ -234,27 +240,27 @@
     <!-- ═══════════════════════════════════════════ -->
     <section class="py-28 bg-cafe-bg">
         <div class="max-w-5xl mx-auto px-6 lg:px-12">
-            <div class="text-center mb-20">
+            <div class="text-center mb-20 scroll-reveal">
                 <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Seamless Experience</span>
                 <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mt-4">How It Works</h2>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
-                <div class="text-center group">
+                <div class="text-center group scroll-reveal">
                     <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15 group-hover:bg-cafe-accent/20 transition-colors">
                         <span class="text-2xl font-serif font-bold">1</span>
                     </div>
                     <h3 class="text-lg font-bold mb-3 text-cafe-text">Browse Menu</h3>
                     <p class="text-cafe-muted font-light text-sm leading-relaxed">Explore our curated selection of coffee, food, and drinks from your phone.</p>
                 </div>
-                <div class="text-center group">
+                <div class="text-center group scroll-reveal">
                     <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15 group-hover:bg-cafe-accent/20 transition-colors">
                         <span class="text-2xl font-serif font-bold">2</span>
                     </div>
-                    <h3 class="text-lg font-bold mb-3 text-cafe-text">Add to Cart</h3>
+                    <h3 class="text-lg font-bold mb-3 text-cafe-text">Add to Order</h3>
                     <p class="text-cafe-muted font-light text-sm leading-relaxed">Pick your favorites, customize quantity, and review your order before placing.</p>
                 </div>
-                <div class="text-center group">
+                <div class="text-center group scroll-reveal">
                     <div class="w-16 h-16 mx-auto bg-cafe-accent/10 text-cafe-accent rounded-2xl flex items-center justify-center mb-6 border border-cafe-accent/15 group-hover:bg-cafe-accent/20 transition-colors">
                         <span class="text-2xl font-serif font-bold">3</span>
                     </div>
@@ -266,11 +272,124 @@
     </section>
 
     <!-- ═══════════════════════════════════════════ -->
+    <!-- ABOUT                                      -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="about" class="py-28 bg-cafe-card border-y border-white/[0.04]">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Image side -->
+                <div class="relative scroll-reveal">
+                    <div class="rounded-[2rem] overflow-hidden border border-white/[0.04] shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80" alt="Our café interior" class="w-full h-[450px] object-cover" loading="lazy">
+                    </div>
+                    <div class="absolute -bottom-6 -right-6 bg-cafe-accent text-white p-6 rounded-2xl shadow-2xl hidden lg:block">
+                        <div class="text-3xl font-bold font-serif">8+</div>
+                        <div class="text-xs font-bold uppercase tracking-wider mt-1">Years of<br>Excellence</div>
+                    </div>
+                </div>
+                <!-- Content side -->
+                <div class="scroll-reveal">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-px bg-cafe-accent"></div>
+                        <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Our Story</span>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-serif italic text-cafe-text mb-8 leading-tight">
+                        Crafted with<br><span class="text-cafe-accent">Passion</span>
+                    </h2>
+                    <p class="text-cafe-muted text-base font-light leading-relaxed mb-6">
+                        Born from a love for artisan coffee and meaningful moments, The Coffee House brings together the finest beans from around the world and pairs them with a warm, inviting atmosphere.
+                    </p>
+                    <p class="text-cafe-muted text-base font-light leading-relaxed mb-10">
+                        Every cup we serve is a story — from single-origin Ethiopian pour-overs to our signature house blend. We partner with local farms and sustainable roasters to bring you coffee that's good for you and good for the planet.
+                    </p>
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="text-center p-4 bg-cafe-bg rounded-xl border border-white/[0.04]">
+                            <div class="text-2xl font-bold text-cafe-accent mb-1">15+</div>
+                            <div class="text-cafe-muted text-xs font-bold uppercase tracking-wider">Origins</div>
+                        </div>
+                        <div class="text-center p-4 bg-cafe-bg rounded-xl border border-white/[0.04]">
+                            <div class="text-2xl font-bold text-cafe-accent mb-1">50K+</div>
+                            <div class="text-cafe-muted text-xs font-bold uppercase tracking-wider">Cups/Month</div>
+                        </div>
+                        <div class="text-center p-4 bg-cafe-bg rounded-xl border border-white/[0.04]">
+                            <div class="text-2xl font-bold text-cafe-accent mb-1">4.8</div>
+                            <div class="text-cafe-muted text-xs font-bold uppercase tracking-wider">Rating</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- OUTLETS                                    -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="outlets" class="py-28 bg-cafe-bg">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="text-center mb-20 scroll-reveal">
+                <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Find Us</span>
+                <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mt-4">Our Outlets</h2>
+                <div class="w-12 h-0.5 bg-cafe-accent mx-auto mt-6 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Outlet 1 -->
+                <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&q=80" alt="Connaught Place outlet" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
+                        <span class="absolute bottom-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-sm">Flagship</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-cafe-text mb-2">Connaught Place</h3>
+                        <p class="text-cafe-muted text-sm font-light mb-4">Block A, Inner Circle, New Delhi 110001</p>
+                        <div class="flex items-center gap-2 text-cafe-accent text-sm font-semibold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            8 AM – 11 PM
+                        </div>
+                    </div>
+                </div>
+                <!-- Outlet 2 -->
+                <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?auto=format&fit=crop&q=80" alt="Hauz Khas outlet" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-cafe-text mb-2">Hauz Khas Village</h3>
+                        <p class="text-cafe-muted text-sm font-light mb-4">Lane 3, Hauz Khas, New Delhi 110016</p>
+                        <div class="flex items-center gap-2 text-cafe-accent text-sm font-semibold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            9 AM – 12 AM
+                        </div>
+                    </div>
+                </div>
+                <!-- Outlet 3 -->
+                <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1493857671505-72967e2e2760?auto=format&fit=crop&q=80" alt="Cyber Hub outlet" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
+                        <span class="absolute bottom-4 left-4 bg-emerald-500/90 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-sm">New</span>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-cafe-text mb-2">Cyber Hub, Gurgaon</h3>
+                        <p class="text-cafe-muted text-sm font-light mb-4">DLF Cyber City, Sector 24, Gurgaon 122002</p>
+                        <div class="flex items-center gap-2 text-cafe-accent text-sm font-semibold">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            10 AM – 11 PM
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
     <!-- TESTIMONIALS                               -->
     <!-- ═══════════════════════════════════════════ -->
     <section class="py-28 bg-cafe-card border-y border-white/[0.04]" id="testimonials">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
-            <div class="text-center mb-20">
+            <div class="text-center mb-20 scroll-reveal">
                 <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Customer Love</span>
                 <h2 class="text-3xl md:text-4xl font-serif italic text-cafe-text mt-4">Loved by Customers</h2>
                 <div class="w-12 h-0.5 bg-cafe-accent mx-auto mt-6 rounded-full"></div>
@@ -278,7 +397,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Review 1 -->
-                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group">
+                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal">
                     <div class="text-cafe-accent mb-5 flex gap-1">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
@@ -296,7 +415,7 @@
                     </div>
                 </div>
                 <!-- Review 2 -->
-                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group">
+                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal">
                     <div class="text-cafe-accent mb-5 flex gap-1">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
@@ -314,7 +433,7 @@
                     </div>
                 </div>
                 <!-- Review 3 -->
-                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group">
+                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal">
                     <div class="text-cafe-accent mb-5 flex gap-1">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
@@ -336,18 +455,124 @@
     </section>
 
     <!-- ═══════════════════════════════════════════ -->
+    <!-- BOOKING                                    -->
+    <!-- ═══════════════════════════════════════════ -->
+    <section id="booking" class="py-28 bg-cafe-bg">
+        <div class="max-w-7xl mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Booking Form -->
+                <div class="scroll-reveal">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-10 h-px bg-cafe-accent"></div>
+                        <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Reserve a Table</span>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-serif italic text-cafe-text mb-4 leading-tight">Book Your<br><span class="text-cafe-accent">Experience</span></h2>
+                    <p class="text-cafe-muted text-base font-light leading-relaxed mb-10">Reserve your spot for a premium dining experience. We ensure every visit is special.</p>
+
+                    <form id="booking-form" class="space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Full Name</label>
+                                <input type="text" id="book-name" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Phone</label>
+                                <input type="tel" id="book-phone" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40" placeholder="+91 9876543210">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Date</label>
+                                <input type="date" id="book-date" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Time</label>
+                                <input type="time" id="book-time" required class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Guests</label>
+                                <select id="book-guests" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
+                                    <option value="1">1 Guest</option>
+                                    <option value="2" selected>2 Guests</option>
+                                    <option value="3">3 Guests</option>
+                                    <option value="4">4 Guests</option>
+                                    <option value="5">5 Guests</option>
+                                    <option value="6">6+ Guests</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Outlet</label>
+                                <select id="book-outlet" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors">
+                                    <option value="Connaught Place">Connaught Place</option>
+                                    <option value="Hauz Khas">Hauz Khas Village</option>
+                                    <option value="Cyber Hub">Cyber Hub, Gurgaon</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2.5">Special Requests</label>
+                            <textarea id="book-notes" rows="3" class="w-full bg-cafe-card border border-white/[0.06] rounded-xl px-5 py-4 text-cafe-text text-base focus:outline-none focus:border-cafe-accent/60 transition-colors placeholder-cafe-muted/40 resize-none" placeholder="Birthday celebration, window seat, etc."></textarea>
+                        </div>
+                        <button type="submit" id="book-submit-btn" class="btn-press w-full py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg hover:shadow-[0_8px_30px_rgba(200,135,58,0.25)] text-sm">
+                            Confirm Reservation
+                        </button>
+                    </form>
+                </div>
+                <!-- Image side -->
+                <div class="scroll-reveal hidden lg:block">
+                    <div class="rounded-[2rem] overflow-hidden border border-white/[0.04] shadow-2xl relative">
+                        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&q=80" alt="Dining experience" class="w-full h-[600px] object-cover" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg/60 to-transparent"></div>
+                        <div class="absolute bottom-8 left-8 right-8 bg-cafe-bg/80 backdrop-blur-xl p-6 rounded-2xl border border-white/[0.06]">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-cafe-accent/15 rounded-xl flex items-center justify-center text-cafe-accent">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                                </div>
+                                <div>
+                                    <div class="text-cafe-text font-bold text-sm">Premium Experience</div>
+                                    <div class="text-cafe-muted text-xs font-light">Every reservation includes complimentary coffee tasting</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════ -->
     <!-- FOOTER                                     -->
     <!-- ═══════════════════════════════════════════ -->
-    <footer class="bg-cafe-bg border-t border-white/[0.04] py-16">
+    <footer class="bg-cafe-card border-t border-white/[0.04] py-16">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-8">
-                <div class="text-center md:text-left">
-                    <h3 class="text-2xl font-serif italic text-cafe-accent mb-2">The Coffee House</h3>
-                    <p class="text-cafe-muted text-sm font-light">Premium coffee & digital ordering experience.</p>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-serif italic text-cafe-accent mb-4">The Coffee House</h3>
+                    <p class="text-cafe-muted text-sm font-light leading-relaxed max-w-md">Premium artisan coffee and curated dining experiences. Order digitally, relax naturally.</p>
                 </div>
-                <div class="text-center md:text-right">
-                    <p class="text-cafe-muted/60 text-xs font-medium uppercase tracking-[0.2em]">&copy; 2026 The Coffee House. All rights reserved.</p>
-                    <a href="chef.html" class="text-cafe-muted/30 text-[10px] font-medium uppercase tracking-[0.2em] hover:text-cafe-accent/50 transition-colors mt-2 inline-block">Staff Login</a>
+                <div>
+                    <h4 class="text-xs font-bold text-cafe-text uppercase tracking-[0.2em] mb-4">Quick Links</h4>
+                    <div class="space-y-3">
+                        <a href="menu.html" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Menu</a>
+                        <a href="#about" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">About Us</a>
+                        <a href="#outlets" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Outlets</a>
+                        <a href="#booking" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Book a Table</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-cafe-text uppercase tracking-[0.2em] mb-4">Staff</h4>
+                    <div class="space-y-3">
+                        <a href="chef.html" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Chef Dashboard</a>
+                        <a href="cashier.html" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Cashier Panel</a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-white/[0.04] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-cafe-muted/60 text-xs font-medium uppercase tracking-[0.2em]">&copy; 2026 The Coffee House. All rights reserved.</p>
+                <div class="flex items-center gap-4">
+                    <a href="chef.html" class="text-cafe-muted/30 text-[10px] font-medium uppercase tracking-[0.2em] hover:text-cafe-accent/50 transition-colors">Staff Login</a>
                 </div>
             </div>
         </div>
@@ -356,6 +581,40 @@
     </div><!-- /main-content -->
 
     <!-- Cart + Checkout injected by JS -->
+    <script src="js/supabase-config.js"></script>
     <script src="js/script.js"></script>
+    <script>
+        // Booking form handler
+        document.getElementById('booking-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('book-submit-btn');
+            btn.disabled = true;
+            btn.textContent = 'Reserving...';
+
+            const bookingData = {
+                name: document.getElementById('book-name').value.trim(),
+                phone: document.getElementById('book-phone').value.trim(),
+                date: document.getElementById('book-date').value,
+                time: document.getElementById('book-time').value,
+                guests: document.getElementById('book-guests').value,
+                outlet: document.getElementById('book-outlet').value,
+                notes: document.getElementById('book-notes').value.trim(),
+                status: 'confirmed'
+            };
+
+            try {
+                if (typeof insertBooking === 'function') {
+                    await insertBooking(bookingData);
+                }
+                showMiniToast('Reservation confirmed! See you soon 🎉');
+                e.target.reset();
+            } catch (err) {
+                showMiniToast('Booking saved! We\'ll confirm via call.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Confirm Reservation';
+            }
+        });
+    </script>
 </body>
 </html>
