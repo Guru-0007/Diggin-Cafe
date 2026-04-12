@@ -1,21 +1,50 @@
-/* 
-   Keep it minimal since we use Tailwind. 
-   Custom styles for specific elements not easily handled by utility classes.
-*/
+/* Custom scrollbar and animations */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #1c1917; }
+::-webkit-scrollbar-thumb { background: #44403c; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #d97706; }
 
-::-webkit-scrollbar {
-    width: 8px;
+/* Intro Loader */
+.intro-loader {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #1c1917;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 1s ease-out, visibility 1s;
+}
+.intro-loader.fade-out {
+    opacity: 0; visibility: hidden;
+}
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-out forwards;
+}
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
-::-webkit-scrollbar-track {
-    background: #1c1917; /* stone-900 */
+/* Slide over cart */
+.cart-slider {
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cart-slider.open {
+    transform: translateX(0);
+}
+.cart-backdrop {
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s;
+}
+.cart-backdrop.open {
+    opacity: 1; visibility: visible;
 }
 
-::-webkit-scrollbar-thumb {
-    background: #44403c; /* stone-700 */
-    border-radius: 4px;
+/* Modal fade */
+.modal {
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
 }
-
-::-webkit-scrollbar-thumb:hover {
-    background: #d97706; /* amber-600 */
+.modal.open {
+    opacity: 1; visibility: visible;
 }
