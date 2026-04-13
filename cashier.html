@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cashier Panel | Diggin Café</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
@@ -36,11 +38,16 @@
     </div>
 
     <!-- Dashboard -->
-    <div id="dashboard-view" class="hidden min-h-screen flex flex-col">
-        <nav class="bg-cafe-card border-b border-white/[0.04] px-6 py-4 flex justify-between items-center sticky top-0 z-30">
+    <div id="dashboard-view" class="hidden min-h-screen flex flex-col page-transition">
+        <nav class="bg-cafe-card border-b border-white/[0.04] px-6 py-4 flex flex-wrap justify-between items-center sticky top-0 z-30 gap-3">
             <div class="flex items-center gap-4">
                 <h1 class="text-xl font-serif italic text-emerald-400">Diggin Cashier</h1>
-                <a href="chef.html" class="text-cafe-muted text-xs font-bold uppercase tracking-[0.12em] hover:text-cafe-accent transition-colors px-3 py-1.5 border border-white/[0.06] rounded-lg hover:border-cafe-accent/30">← Kitchen</a>
+                <div class="admin-nav">
+                    <a href="index.html" class="admin-nav-link">🏠 Home</a>
+                    <a href="admin.html" class="admin-nav-link">📊 Analytics</a>
+                    <a href="chef.html" class="admin-nav-link">👨‍🍳 Kitchen</a>
+                    <a href="cashier.html" class="admin-nav-link active">💰 Cashier</a>
+                </div>
             </div>
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2">
@@ -107,6 +114,10 @@
                 <p class="text-cafe-muted/40 text-sm font-light">No orders match this filter right now.</p>
             </div>
         </main>
+
+        <div class="admin-footer">
+            <p>&copy; 2026 Diggin Café · Cashier Panel</p>
+        </div>
     </div>
 
     <!-- Bill Modal -->
@@ -206,7 +217,8 @@
                 } catch (e) { console.error('Failed to mark paid:', e); }
             };
 
-            window.showBill = function(table, tableOrders) {
+            window.showBill = function(table, encodedOrders) {
+                const tableOrders = typeof encodedOrders === 'string' ? JSON.parse(decodeURIComponent(encodedOrders)) : encodedOrders;
                 const modal = document.getElementById('bill-modal');
                 const content = document.getElementById('bill-content');
                 const tableTotal = tableOrders.reduce((sum, o) => sum + (o.total || 0), 0);
@@ -364,7 +376,7 @@
                         <div class="p-6 flex-grow">${ordersHtml}</div>
                         ${hasReadyOrders ? `
                             <div class="p-4 bg-cafe-bg border-t border-white/[0.04]">
-                                <button onclick='showBill("${table}", ${JSON.stringify(tableOrders).replace(/'/g, "\\'")})' class="w-full py-3 bg-white/[0.04] border border-white/[0.06] text-cafe-text font-bold uppercase tracking-[0.12em] rounded-xl text-sm hover:bg-emerald-500/10 hover:border-emerald-500/20 hover:text-emerald-400 transition-all flex items-center justify-center gap-2">
+                                <button onclick="showBill('${table}', '${encodeURIComponent(JSON.stringify(tableOrders))}')" class="w-full py-3 bg-white/[0.04] border border-white/[0.06] text-cafe-text font-bold uppercase tracking-[0.12em] rounded-xl text-sm hover:bg-emerald-500/10 hover:border-emerald-500/20 hover:text-emerald-400 transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
                                     🧾 Generate Bill
                                 </button>
                             </div>

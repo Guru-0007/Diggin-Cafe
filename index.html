@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Diggin Café | Where Good Vibes Meet Great Food</title>
     <meta name="description" content="Step into Diggin — European-style café with handcrafted Italian cuisine, stone-baked pizzas, and indulgent desserts. Scan, order, and relax at your table.">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
@@ -40,7 +42,7 @@
     <!-- INTRO / ENTRY EXPERIENCE                   -->
     <!-- ═══════════════════════════════════════════ -->
     <div id="intro-screen" class="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden">
-        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover scale-110" style="filter: brightness(0.25) saturate(1.3);">
+        <video autoplay loop muted playsinline preload="auto" class="absolute inset-0 w-full h-full object-cover scale-110" style="filter: brightness(0.25) saturate(1.3);">
             <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-milk-into-a-cup-of-coffee-722-large.mp4" type="video/mp4">
         </video>
         <div class="absolute inset-0 bg-gradient-to-b from-black/70 via-cafe-bg/50 to-cafe-bg"></div>
@@ -68,7 +70,7 @@
     <!-- ═══════════════════════════════════════════ -->
     <!-- NAVBAR                                     -->
     <!-- ═══════════════════════════════════════════ -->
-    <nav class="fixed w-full z-40 bg-cafe-bg/85 backdrop-blur-xl border-b border-white/[0.04] transition-all duration-300">
+    <nav id="main-nav" class="fixed w-full z-40 bg-cafe-bg/85 backdrop-blur-xl border-b border-white/[0.04] transition-all duration-300">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="flex items-center justify-between h-20">
                 <a href="index.html" class="text-2xl md:text-3xl font-serif italic text-cafe-accent hover:text-cafe-accentHover transition-colors tracking-tight">
@@ -88,10 +90,10 @@
                             <span class="theme-toggle-icon">🌙</span>
                         </div>
                     </div>
-                    <!-- Cart Button -->
-                    <button id="cart-toggle" class="relative p-3 text-cafe-muted hover:text-cafe-accent transition-colors group ml-2">
+                    <!-- Order Tray Button -->
+                    <button id="cart-toggle" class="relative p-3 text-cafe-muted hover:text-cafe-accent transition-colors group ml-2" aria-label="View order tray">
                         <div class="p-2.5 bg-white/[0.04] rounded-full group-hover:bg-cafe-accent/10 transition-colors">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3C7.03 3 3 5.69 3 9h18c0-3.31-4.03-6-9-6z"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 9v1a1 1 0 001 1h16a1 1 0 001-1V9"/><path stroke-linecap="round" stroke-linejoin="round" d="M5 11v6a2 2 0 002 2h10a2 2 0 002-2v-6"/><line x1="12" y1="1" x2="12" y2="3" stroke-linecap="round"/></svg>
                         </div>
                         <span class="cart-count-badge absolute top-2 right-2 bg-cafe-accent text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-lg border-2 border-cafe-bg">0</span>
                     </button>
@@ -116,7 +118,7 @@
     <!-- VIDEO HERO                                 -->
     <!-- ═══════════════════════════════════════════ -->
     <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
-        <video autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0" style="filter: brightness(0.25) saturate(1.2);">
+        <video autoplay loop muted playsinline preload="metadata" class="absolute inset-0 w-full h-full object-cover z-0" style="filter: brightness(0.25) saturate(1.2);">
             <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-coffee-from-a-coffee-maker-into-a-cup-4730-large.mp4" type="video/mp4">
         </video>
         <div class="absolute inset-0 bg-gradient-to-r from-cafe-bg via-cafe-bg/90 to-cafe-bg/40 z-[1]"></div>
@@ -151,9 +153,9 @@
             </div>
         </div>
 
-        <div class="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-[420px] h-[520px] z-10">
+        <div class="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-[420px] h-[520px] z-10 parallax-wrap">
             <div class="relative w-full h-full rounded-[2rem] overflow-hidden shadow-2xl border border-white/5 rotate-3 translate-x-8">
-                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80" alt="Diggin coffee art" class="w-full h-full object-cover" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=800" alt="Diggin coffee art" class="w-full h-full object-cover parallax-img" loading="lazy">
                 <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg/80 to-transparent"></div>
             </div>
         </div>
@@ -178,7 +180,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
                 <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&q=80" alt="Velvet Cold Brew" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&q=80&w=600" alt="Velvet Cold Brew" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-full\'>☕</div>'">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
                         <span class="absolute top-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Chef's Pick</span>
                     </div>
@@ -192,7 +194,7 @@
                 </div>
                 <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&q=80" alt="Margherita Classica" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <img src="https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&q=80&w=600" alt="Margherita Classica" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-full\'>🍕</div>'">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
                         <span class="absolute top-4 left-4 bg-rose-500/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Trending</span>
                     </div>
@@ -206,7 +208,7 @@
                 </div>
                 <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1524351199432-f330e91a4dab?auto=format&fit=crop&q=80" alt="Biscoff Cheesecake" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <img src="https://images.unsplash.com/photo-1524351199432-f330e91a4dab?auto=format&fit=crop&q=80&w=600" alt="Biscoff Cheesecake" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-full\'>🍰</div>'">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
                         <span class="absolute top-4 left-4 bg-violet-500/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Instagram Favorite</span>
                     </div>
@@ -220,7 +222,7 @@
                 </div>
                 <div class="group bg-cafe-bg rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-48 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&q=80" alt="Spaghetti Carbonara" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <img src="https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&q=80&w=600" alt="Spaghetti Carbonara" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-full\'>🍝</div>'">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg to-transparent opacity-60"></div>
                         <span class="absolute top-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest backdrop-blur-sm">Chef's Pick</span>
                     </div>
@@ -273,14 +275,14 @@
     </section>
 
     <!-- ═══════════════════════════════════════════ -->
-    <!-- ABOUT                                      -->
+    <!-- ABOUT (with background visual)             -->
     <!-- ═══════════════════════════════════════════ -->
-    <section id="about" class="py-28 bg-cafe-card border-y border-white/[0.04]">
+    <section id="about" class="py-28 bg-cafe-card border-y border-white/[0.04] section-bg section-bg-about">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="relative scroll-reveal">
                     <div class="rounded-[2rem] overflow-hidden border border-white/[0.04] shadow-2xl">
-                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80" alt="Diggin Café interior" class="w-full h-[450px] object-cover" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=800" alt="Diggin Café interior" class="w-full h-[450px] object-cover" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-[450px]\'>🏡</div>'">
                     </div>
                     <div class="absolute -bottom-6 -right-6 bg-cafe-accent text-white p-6 rounded-2xl shadow-2xl hidden lg:block">
                         <div class="text-3xl font-bold font-serif">5+</div>
@@ -335,7 +337,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&q=80" alt="Diggin Anand Lok" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?auto=format&fit=crop&q=80&w=600" alt="Diggin Anand Lok" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-full\'>🏡</div>'">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
                         <span class="absolute bottom-4 left-4 bg-cafe-accent/90 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-sm">Flagship</span>
                     </div>
@@ -350,7 +352,7 @@
                 </div>
                 <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?auto=format&fit=crop&q=80" alt="Diggin Chanakyapuri" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?auto=format&fit=crop&q=80&w=600" alt="Diggin Chanakyapuri" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-full\'>🏡</div>'">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
                     </div>
                     <div class="p-6">
@@ -364,7 +366,7 @@
                 </div>
                 <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1493857671505-72967e2e2760?auto=format&fit=crop&q=80" alt="Diggin Connaught Place" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1493857671505-72967e2e2760?auto=format&fit=crop&q=80&w=600" alt="Diggin Connaught Place" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-full\'>🏡</div>'">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
                     </div>
                     <div class="p-6">
@@ -378,7 +380,7 @@
                 </div>
                 <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&q=80" alt="Diggin Bikaner House" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&q=80&w=600" alt="Diggin Bikaner House" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-full\'>🏡</div>'">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
                         <span class="absolute bottom-4 left-4 bg-emerald-500/90 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-sm">Popular</span>
                     </div>
@@ -393,7 +395,7 @@
                 </div>
                 <div class="group bg-cafe-card rounded-2xl overflow-hidden border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_50px_rgba(0,0,0,0.3)] scroll-reveal">
                     <div class="relative h-56 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80" alt="Gardin by Diggin" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=600" alt="Gardin by Diggin" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-full\'>🌿</div>'">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-card to-transparent opacity-80"></div>
                         <span class="absolute bottom-4 left-4 bg-violet-500/90 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest backdrop-blur-sm">Garden Dining</span>
                     </div>
@@ -418,9 +420,9 @@
     </section>
 
     <!-- ═══════════════════════════════════════════ -->
-    <!-- TESTIMONIALS                               -->
+    <!-- TESTIMONIALS (with background visual)      -->
     <!-- ═══════════════════════════════════════════ -->
-    <section class="py-28 bg-cafe-card border-y border-white/[0.04]" id="testimonials">
+    <section class="py-28 bg-cafe-card border-y border-white/[0.04] section-bg section-bg-reviews" id="testimonials">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="text-center mb-20 scroll-reveal">
                 <span class="text-cafe-accent text-xs font-bold uppercase tracking-[0.3em]">Best Rated in Delhi</span>
@@ -467,9 +469,9 @@
     </section>
 
     <!-- ═══════════════════════════════════════════ -->
-    <!-- BOOKING / RESERVATION                      -->
+    <!-- BOOKING / RESERVATION (with background)    -->
     <!-- ═══════════════════════════════════════════ -->
-    <section id="booking" class="py-28 bg-cafe-bg">
+    <section id="booking" class="py-28 bg-cafe-bg section-bg section-bg-booking">
         <div class="max-w-7xl mx-auto px-6 lg:px-12">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div class="scroll-reveal">
@@ -545,7 +547,7 @@
                 </div>
                 <div class="scroll-reveal hidden lg:block">
                     <div class="rounded-[2rem] overflow-hidden border border-white/[0.04] shadow-2xl relative">
-                        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&q=80" alt="Diggin dining" class="w-full h-[600px] object-cover" loading="lazy">
+                        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&fit=crop&q=80&w=800" alt="Diggin dining" class="w-full h-[600px] object-cover" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\'img-fallback w-full h-[600px]\'>🍽️</div>'">
                         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg/60 to-transparent"></div>
                         <div class="absolute bottom-8 left-8 right-8 bg-cafe-bg/80 backdrop-blur-xl p-6 rounded-2xl border border-white/[0.06]">
                             <div class="flex items-center gap-4">
@@ -641,15 +643,28 @@
         });
 
         // Booking form handler
+        const bookDate = document.getElementById('book-date');
+        if (bookDate) {
+            const today = new Date().toISOString().split('T')[0];
+            bookDate.setAttribute('min', today);
+        }
+
         document.getElementById('booking-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('book-submit-btn');
+            const phone = document.getElementById('book-phone').value.trim();
+
+            if (phone.length < 10) {
+                showMiniToast('Please enter a valid 10-digit phone number');
+                return;
+            }
+
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> Reserving...';
 
             const bookingData = {
                 name: document.getElementById('book-name').value.trim(),
-                phone: document.getElementById('book-phone').value.trim(),
+                phone: phone,
                 date: document.getElementById('book-date').value,
                 time: document.getElementById('book-time').value,
                 guests: document.getElementById('book-guests').value,
@@ -665,7 +680,15 @@
                 showMiniToast('Reservation confirmed! See you at Diggin 🎉');
                 e.target.reset();
             } catch (err) {
-                showMiniToast('Booking saved! We\'ll confirm via call.');
+                if (err.message === 'SLOT_FULL') {
+                    const alt = err.availableSlots && err.availableSlots.length > 0
+                        ? 'Try: ' + err.availableSlots.slice(0, 2).join(' or ')
+                        : 'Please pick another date/outlet.';
+                    showMiniToast('Slot unavailable! ' + alt);
+                } else {
+                    showMiniToast('Booking saved locally! We\'ll confirm via call.');
+                    e.target.reset();
+                }
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = 'Confirm Reservation';

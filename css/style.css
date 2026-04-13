@@ -1,8 +1,9 @@
 /* ═══════════════════════════════════════════
-   DIGGIN CAFÉ — Premium Design System
+   DIGGIN CAFÉ — Premium Design System v2.0
+   Production-grade · Premium Polish
    ═══════════════════════════════════════════ */
 
-/* ─── CSS VARIABLES (DARK/LIGHT) ─────────── */
+/* ─── CSS VARIABLES (DARK MODE DEFAULT) ──── */
 :root {
     --bg-primary: #0f0f0f;
     --bg-card: #1a1714;
@@ -20,35 +21,310 @@
     --glass-border: rgba(255, 255, 255, 0.06);
     --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.4);
     --shadow-glow: 0 0 40px rgba(200, 135, 58, 0.12);
+    --shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.5);
     --radius-sm: 0.75rem;
     --radius-md: 1rem;
     --radius-lg: 1.5rem;
     --radius-xl: 2rem;
+    --invert-text: #ffffff;
+    --review-bg: #1e1b18;
     color-scheme: dark;
 }
 
+/* ─── PREMIUM LIGHT MODE ────────────────── */
+/* A completely separate warm, cream-toned theme */
 html.light {
-    --bg-primary: #f8f5f0;
-    --bg-card: #ffffff;
-    --bg-surface: #f0ebe4;
-    --bg-elevated: #e8e2d9;
-    --text-primary: #1a1714;
-    --text-secondary: #4a4540;
-    --text-muted: #7a7570;
-    --accent: #b07830;
-    --accent-hover: #8a5e20;
-    --accent-glow: rgba(176, 120, 48, 0.2);
-    --border: rgba(0, 0, 0, 0.06);
+    --bg-primary: #FBF8F3;
+    --bg-card: #FFFFFF;
+    --bg-surface: #F5EFE6;
+    --bg-elevated: #EDE5D8;
+    --text-primary: #2C2418;
+    --text-secondary: #57503F;
+    --text-muted: #8A7E6B;
+    --accent: #B07830;
+    --accent-hover: #8A5E20;
+    --accent-glow: rgba(176, 120, 48, 0.18);
+    --border: rgba(44, 36, 24, 0.08);
     --border-hover: rgba(176, 120, 48, 0.25);
-    --glass-bg: rgba(255, 255, 255, 0.8);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08);
-    --shadow-glow: 0 0 40px rgba(176, 120, 48, 0.08);
+    --glass-bg: rgba(255, 255, 255, 0.88);
+    --glass-border: rgba(44, 36, 24, 0.08);
+    --shadow-card: 0 4px 24px rgba(44, 36, 24, 0.06);
+    --shadow-glow: 0 0 30px rgba(176, 120, 48, 0.06);
+    --shadow-hover: 0 12px 40px rgba(44, 36, 24, 0.1);
+    --invert-text: #2C2418;
+    --review-bg: #F8F3EC;
     color-scheme: light;
 }
 
+/* ─── GLOBAL LIGHT-MODE FORCE OVERRIDES ──── */
+html.light body {
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+}
+html.light .bg-cafe-bg { background-color: var(--bg-primary) !important; }
+html.light .bg-cafe-card { background-color: var(--bg-card) !important; }
+html.light .bg-cafe-surface { background-color: var(--bg-surface) !important; }
+html.light .text-cafe-text { color: var(--text-primary) !important; }
+html.light .text-cafe-muted { color: var(--text-muted) !important; }
+html.light .text-cafe-accent { color: var(--accent) !important; }
+html.light .bg-cafe-accent { background-color: var(--accent) !important; }
+html.light .hover\:bg-cafe-accent:hover { background-color: var(--accent) !important; }
+html.light .bg-cafe-accentHover { background-color: var(--accent-hover) !important; }
+html.light .hover\:bg-cafe-accentHover:hover { background-color: var(--accent-hover) !important; }
+html.light .border-cafe-accent { border-color: var(--accent) !important; }
+
+/* Light mode: white/alpha borders */
+html.light .border-white\/\[0\.04\],
+html.light .border-white\/\[0\.06\],
+html.light .border-white\/5 {
+    border-color: var(--border) !important;
+}
+html.light .border-white\/\[0\.08\] {
+    border-color: var(--glass-border) !important;
+}
+
+/* Light mode: white/alpha backgrounds */
+html.light .bg-white\/\[0\.04\],
+html.light .hover\:bg-white\/\[0\.03\]:hover,
+html.light .hover\:bg-white\/\[0\.08\]:hover,
+html.light .hover\:bg-white\/5:hover {
+    background-color: var(--bg-surface) !important;
+}
+html.light .bg-white\/\[0\.03\] {
+    background-color: rgba(44, 36, 24, 0.02) !important;
+}
+html.light .hover\:bg-white\/\[0\.04\]:hover {
+    background-color: var(--bg-surface) !important;
+}
+
+/* Keep white text on accent-bg buttons */
+html.light .bg-cafe-accent .text-white,
+html.light .bg-cafe-accent.text-white,
+html.light button.bg-cafe-accent,
+html.light a.bg-cafe-accent {
+    color: #ffffff !important;
+}
+html.light .text-white { color: #ffffff !important; }
+
+/* Light mode text opacity fix */
+html.light .text-cafe-text\/80 { color: var(--text-primary) !important; opacity: 0.88; }
+html.light .text-cafe-muted\/40 { color: var(--text-muted) !important; opacity: 0.55; }
+html.light .text-cafe-muted\/50 { color: var(--text-muted) !important; opacity: 0.65; }
+html.light .text-cafe-muted\/60 { color: var(--text-muted) !important; opacity: 0.72; }
+
+/* Light mode: navbar */
+html.light nav.bg-cafe-bg\/85,
+html.light .bg-cafe-bg\/85 {
+    background-color: rgba(251, 248, 243, 0.92) !important;
+    border-bottom-color: rgba(44, 36, 24, 0.06) !important;
+}
+html.light .bg-cafe-bg\/80 {
+    background-color: rgba(251, 248, 243, 0.88) !important;
+}
+html.light .bg-cafe-card\/95 {
+    background-color: rgba(255, 255, 255, 0.96) !important;
+}
+
+/* Light mode: hero gradients */
+html.light .from-cafe-bg { --tw-gradient-from: var(--bg-primary) !important; }
+html.light .via-cafe-bg\/90 { --tw-gradient-via: rgba(251, 248, 243, 0.9) !important; }
+html.light .to-cafe-bg\/40 { --tw-gradient-to: rgba(251, 248, 243, 0.4) !important; }
+html.light .from-cafe-bg\/80 { --tw-gradient-from: rgba(251, 248, 243, 0.8) !important; }
+html.light .from-cafe-bg\/60 { --tw-gradient-from: rgba(251, 248, 243, 0.6) !important; }
+html.light .from-cafe-card { --tw-gradient-from: var(--bg-card) !important; }
+
+/* Light mode: reviews section - warm off-white cards */
+html.light .review-card,
+html.light #testimonials .bg-cafe-bg {
+    background-color: var(--review-bg) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 2px 12px rgba(44, 36, 24, 0.04) !important;
+}
+html.light #testimonials .text-cafe-text\/80 {
+    color: #3D3526 !important;
+    opacity: 1;
+}
+html.light #testimonials {
+    background-color: var(--bg-card) !important;
+}
+
+/* Light mode: about stats */
+html.light #about .bg-cafe-bg {
+    background-color: var(--bg-surface) !important;
+}
+html.light #about {
+    background-color: var(--bg-card) !important;
+}
+
+/* Light mode: footer - warm tone */
+html.light footer.bg-cafe-card,
+html.light footer.bg-cafe-bg {
+    background-color: #EDE5D8 !important;
+}
+
+/* Light mode: glass cards */
+html.light .glass-card {
+    background: var(--glass-bg) !important;
+    border-color: var(--glass-border) !important;
+    box-shadow: var(--shadow-card) !important;
+}
+
+/* Light mode: inputs & selects */
+html.light input,
+html.light select,
+html.light textarea {
+    background-color: var(--bg-surface) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+}
+html.light input::placeholder,
+html.light textarea::placeholder {
+    color: var(--text-muted) !important;
+    opacity: 0.55;
+}
+html.light input:focus,
+html.light select:focus,
+html.light textarea:focus {
+    border-color: rgba(176, 120, 48, 0.5) !important;
+    box-shadow: 0 0 0 3px rgba(176, 120, 48, 0.08) !important;
+}
+
+/* Light mode: scrollbar */
+html.light ::-webkit-scrollbar-track { background: var(--bg-primary); }
+html.light ::-webkit-scrollbar-thumb { background: #D5CBBF; }
+html.light ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* Light mode: cart drawer & modals */
+html.light .cart-slider {
+    background-color: var(--bg-primary) !important;
+    border-color: var(--border) !important;
+}
+html.light .modal-overlay .bg-cafe-bg {
+    background-color: var(--bg-primary) !important;
+}
+html.light #mini-toast {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(176, 120, 48, 0.25) !important;
+    box-shadow: 0 8px 32px rgba(44, 36, 24, 0.1) !important;
+}
+
+/* Light mode: notification toast */
+html.light .notification-toast {
+    background: var(--glass-bg) !important;
+    border-color: var(--glass-border) !important;
+    box-shadow: var(--shadow-card) !important;
+}
+
+/* Light mode: accent bg opacity classes */
+html.light .bg-cafe-accent\/10 { background-color: rgba(176, 120, 48, 0.08) !important; }
+html.light .bg-cafe-accent\/15 { background-color: rgba(176, 120, 48, 0.12) !important; }
+html.light .bg-cafe-accent\/20 { background-color: rgba(176, 120, 48, 0.16) !important; }
+html.light .border-cafe-accent\/15 { border-color: rgba(176, 120, 48, 0.12) !important; }
+html.light .border-cafe-accent\/20 { border-color: rgba(176, 120, 48, 0.18) !important; }
+html.light .border-cafe-accent\/30 { border-color: rgba(176, 120, 48, 0.25) !important; }
+html.light .border-cafe-accent\/50 { border-color: rgba(176, 120, 48, 0.4) !important; }
+
+/* Light mode: intro screen stays dark always */
+html.light #intro-screen { color: #faf6f1 !important; }
+html.light #intro-screen * { color: inherit; }
+html.light #intro-screen .text-cafe-accent,
+html.light #intro-screen .text-cafe-accent\/70 { color: #c8873a !important; }
+
+/* Light mode: staff modal */
+html.light #staff-modal .bg-cafe-bg {
+    background-color: var(--bg-card) !important;
+}
+
+/* Light mode: booking section */
+html.light .bg-gradient-to-t.from-cafe-bg\/60 {
+    --tw-gradient-from: rgba(251, 248, 243, 0.6) !important;
+}
+
+/* Light mode: featured cards - warm shadow */
+html.light .group.bg-cafe-bg {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border) !important;
+}
+html.light .group:hover {
+    box-shadow: var(--shadow-hover) !important;
+}
+
+/* Light mode: menu card overlays */
+html.light .bg-gradient-to-t.from-cafe-bg {
+    --tw-gradient-from: var(--bg-card) !important;
+}
+html.light .via-cafe-bg\/20 {
+    --tw-gradient-via: rgba(251, 248, 243, 0.2) !important;
+}
+
+/* Light mode: order tray */
+html.light #order-tray {
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    border-color: rgba(176, 120, 48, 0.25) !important;
+    box-shadow: 0 8px 40px rgba(44, 36, 24, 0.12) !important;
+}
+
+/* Light mode: floating tracker */
+html.light #floating-tracker {
+    background-color: rgba(255, 255, 255, 0.96) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 4px 20px rgba(44, 36, 24, 0.08) !important;
+}
+
+/* Light mode: call waiter button */
+html.light #call-waiter-btn {
+    box-shadow: 0 8px 30px rgba(176, 120, 48, 0.2) !important;
+}
+
+/* Light mode: hero video keep dark overlay for contrast */
+html.light #home video {
+    filter: brightness(0.3) saturate(1.1) !important;
+}
+
+/* Light mode: section backgrounds */
+html.light .section-bg::before {
+    opacity: 0.06 !important;
+}
+
+/* Light mode: outlets section */
+html.light #outlets {
+    background-color: var(--bg-primary) !important;
+}
+html.light #outlets .bg-cafe-card {
+    box-shadow: 0 2px 16px rgba(44, 36, 24, 0.05) !important;
+}
+
+/* Light mode: admin/chef/cashier pages */
+html.light .bg-cafe-card.rounded-xl,
+html.light .bg-cafe-card.rounded-2xl {
+    box-shadow: 0 1px 8px rgba(44, 36, 24, 0.04) !important;
+}
+
+/* Light mode: chart container */
+html.light .chart-container {
+    background: var(--bg-card) !important;
+    border-color: var(--border) !important;
+}
+
+/* Light mode: progress bar */
+html.light .progress-bar-track {
+    background: var(--bg-surface) !important;
+}
+
+/* Light mode: category filter active state */
+html.light .category-filter.active {
+    background-color: var(--accent) !important;
+    color: #fff !important;
+}
+
+/* Light mode: how it works section */
+html.light section.bg-cafe-bg:not(#home):not(#outlets):not(#booking) {
+    background-color: var(--bg-primary) !important;
+}
+
 /* ─── SCROLLBAR ──────────────────────────── */
-::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
@@ -91,6 +367,7 @@ html { scroll-behavior: smooth; }
     opacity: 0;
     transform: translateY(30px);
     transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
 }
 .scroll-visible {
     opacity: 1;
@@ -180,9 +457,23 @@ html { scroll-behavior: smooth; }
     transform: scale(1.08);
 }
 
-/* ─── BUTTON PRESS ───────────────────────── */
-.btn-press { transition: transform 0.15s ease; }
+/* ─── BUTTON PRESS + HOVER GLOW ──────────── */
+.btn-press {
+    transition: transform 0.15s ease, box-shadow 0.3s ease;
+}
 .btn-press:active { transform: scale(0.96); }
+.btn-press:hover {
+    box-shadow: 0 4px 20px var(--accent-glow);
+}
+
+/* Interactive card lift */
+.card-lift {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+.card-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
 
 /* ─── CART BADGE PULSE ───────────────────── */
 @keyframes badgePulse {
@@ -231,7 +522,6 @@ html { scroll-behavior: smooth; }
 }
 .status-pulse { animation: statusPulse 2s ease-in-out infinite; }
 
-/* Status colors */
 .status-pending { color: #ef4444; }
 .status-preparing { color: #eab308; }
 .status-ready { color: #22c55e; }
@@ -311,10 +601,66 @@ html { scroll-behavior: smooth; }
     border-top-color: var(--accent);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
+    display: inline-block;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ─── ORDER STATUS TRACKER ───────────────── */
+/* ═══════════════════════════════════════════
+   ORDER PROGRESS TRACKER — Premium Animated
+   ═══════════════════════════════════════════ */
+.progress-tracker {
+    position: relative;
+    padding: 0 0 8px;
+}
+
+/* Progress bar track */
+.progress-bar-track {
+    position: absolute;
+    top: 18px;
+    left: 14%;
+    right: 14%;
+    height: 3px;
+    background: var(--bg-surface);
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 0;
+}
+
+/* Animated fill bar */
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #d4a24c);
+    border-radius: 4px;
+    transition: width 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    position: relative;
+}
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -2px;
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent-glow);
+    animation: progressGlow 1.5s ease-in-out infinite;
+}
+@keyframes progressGlow {
+    0%, 100% { box-shadow: 0 0 8px var(--accent-glow); transform: scale(1); }
+    50% { box-shadow: 0 0 20px var(--accent-glow); transform: scale(1.3); }
+}
+
+/* Steps */
+.progress-tracker .status-tracker {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
 .status-tracker {
     display: flex;
     align-items: center;
@@ -338,7 +684,10 @@ html { scroll-behavior: smooth; }
 }
 .status-tracker-step:first-child::before { left: 50%; }
 .status-tracker-step:last-child::before { right: 50%; }
-.status-tracker-step.active::before { background: var(--accent); }
+.status-tracker-step.active::before,
+.status-tracker-step.completed::before {
+    background: var(--accent);
+}
 .status-tracker-dot {
     width: 28px;
     height: 28px;
@@ -351,18 +700,24 @@ html { scroll-behavior: smooth; }
     position: relative;
     z-index: 1;
     font-size: 12px;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .status-tracker-step.active .status-tracker-dot {
     background: var(--accent);
     border-color: var(--accent);
     color: white;
     box-shadow: 0 0 15px var(--accent-glow);
+    animation: activeDotPulse 2s ease-in-out infinite;
+}
+@keyframes activeDotPulse {
+    0%, 100% { box-shadow: 0 0 10px var(--accent-glow); }
+    50% { box-shadow: 0 0 25px var(--accent-glow), 0 0 50px rgba(200, 135, 58, 0.1); }
 }
 .status-tracker-step.completed .status-tracker-dot {
     background: #22c55e;
     border-color: #22c55e;
     color: white;
+    transform: scale(1);
 }
 .status-tracker-label {
     display: block;
@@ -372,6 +727,7 @@ html { scroll-behavior: smooth; }
     letter-spacing: 0.1em;
     margin-top: 8px;
     color: var(--text-muted);
+    transition: color 0.3s ease;
 }
 .status-tracker-step.active .status-tracker-label,
 .status-tracker-step.completed .status-tracker-label {
@@ -420,8 +776,11 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] { -moz-appearance: textfield; }
 
 /* ─── PAGE TRANSITION ────────────────────── */
-.page-transition { animation: pageIn 0.5s ease-out; }
-@keyframes pageIn { from { opacity: 0; } to { opacity: 1; } }
+.page-transition { animation: pageIn 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes pageIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 /* ─── DARK/LIGHT MODE TOGGLE ─────────────── */
 .theme-toggle {
@@ -437,18 +796,24 @@ input[type="number"] { -moz-appearance: textfield; }
     align-items: center;
     padding: 2px;
 }
+.theme-toggle:hover {
+    border-color: var(--border-hover);
+}
 .theme-toggle-thumb {
     width: 18px;
     height: 18px;
     border-radius: 50%;
     background: var(--accent);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 10px;
 }
 html.light .theme-toggle-thumb { transform: translateX(20px); }
+html.light .theme-toggle {
+    background: var(--bg-surface);
+}
 
 /* ─── RECOMMENDATION CARD ────────────────── */
 .reco-card {
@@ -469,6 +834,130 @@ html.light .theme-toggle-thumb { transform: translateX(20px); }
     box-shadow: var(--shadow-card);
 }
 
+/* ─── SELECT & INPUT STYLING ─────────────── */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239c9590' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+}
+select option {
+    background: #1a1714;
+    color: #faf6f1;
+}
+html.light select option {
+    background: #ffffff;
+    color: #2C2418;
+}
+input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 0 3px rgba(200, 135, 58, 0.1);
+}
+
+/* ─── SECTION BACKGROUND SYSTEM ──────────── */
+.section-bg {
+    position: relative;
+    overflow: hidden;
+}
+.section-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.08;
+    z-index: 0;
+    pointer-events: none;
+}
+.section-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--bg-card) 0%, transparent 30%, transparent 70%, var(--bg-card) 100%);
+    z-index: 0;
+    pointer-events: none;
+}
+.section-bg > * {
+    position: relative;
+    z-index: 1;
+}
+.section-bg-about::before {
+    background-image: url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&w=1920&q=30');
+}
+.section-bg-reviews::before {
+    background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&w=1920&q=30');
+    filter: blur(2px);
+}
+.section-bg-booking::before {
+    background-image: url('https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&w=1920&q=30');
+    opacity: 0.06;
+}
+
+/* ─── ADMIN NAV SYSTEM ──────────────────── */
+.admin-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.admin-nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    white-space: nowrap;
+}
+.admin-nav-link:hover {
+    color: var(--accent);
+    border-color: var(--border-hover);
+    background: rgba(200, 135, 58, 0.05);
+}
+.admin-nav-link.active {
+    color: white;
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.admin-nav-link.active:hover {
+    background: var(--accent-hover);
+}
+
+/* ─── COMPACT FOOTER ─────────────────────── */
+.admin-footer {
+    padding: 1.5rem 1.5rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    margin-top: auto;
+}
+.admin-footer p {
+    font-size: 11px;
+    color: var(--text-muted);
+    opacity: 0.5;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+/* ─── IMAGE FALLBACK ─────────────────────── */
+.img-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--bg-surface), var(--bg-elevated));
+    color: var(--text-muted);
+    font-size: 2.5rem;
+    opacity: 0.4;
+}
+
 /* ─── BILL PRINT STYLES ─────────────────── */
 @media print {
     body * { visibility: hidden; }
@@ -487,10 +976,48 @@ html.light .theme-toggle-thumb { transform: translateX(20px); }
 /* ─── RESPONSIVE TWEAKS ──────────────────── */
 @media (max-width: 640px) {
     .notification-toast {
-        left: 1rem;
-        right: 1rem;
+        left: 0.75rem;
+        right: 0.75rem;
         max-width: none;
-        top: 1rem;
+        top: 0.75rem;
+    }
+    nav .flex.items-center.gap-4 {
+        gap: 0.5rem;
+    }
+    .kitchen-load {
+        font-size: 9px;
+        padding: 4px 10px;
+        gap: 4px;
+    }
+    .chef-tab, .cashier-tab {
+        padding: 0.5rem 0.75rem;
+        font-size: 11px;
+    }
+    .admin-nav {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+    .admin-nav-link {
+        padding: 0.375rem 0.5rem;
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 480px) {
+    .kitchen-load span:last-child {
+        display: none;
+    }
+    .kitchen-load {
+        padding: 6px;
+    }
+}
+
+/* Safe area insets for notched phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    #order-tray,
+    #call-waiter-btn,
+    #floating-tracker {
+        margin-bottom: env(safe-area-inset-bottom);
     }
 }
 
@@ -516,4 +1043,48 @@ html.light .theme-toggle-thumb { transform: translateX(20px); }
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: 1.5rem;
+}
+
+/* ─── FOCUS VISIBLE (Accessibility) ──────── */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* ─── COUNTER ANIMATION ─────────────────── */
+@keyframes countUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.count-animate {
+    animation: countUp 0.5s ease-out forwards;
+}
+
+/* ─── NAVBAR SCROLL STATE ────────────────── */
+nav.scrolled {
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+}
+html.light nav.scrolled {
+    box-shadow: 0 2px 20px rgba(44, 36, 24, 0.06) !important;
+}
+
+/* ─── PARALLAX HELPER ────────────────────── */
+.parallax-wrap {
+    overflow: hidden;
+}
+.parallax-img {
+    transition: transform 0.1s linear;
+    will-change: transform;
+}
+
+/* ─── REDUCED MOTION ─────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .scroll-reveal { opacity: 1; transform: none; }
+    .progress-bar-fill { transition: none; }
+    .progress-bar-fill::after { animation: none; }
 }

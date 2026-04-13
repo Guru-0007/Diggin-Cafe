@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Diggin Café</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <script>
@@ -22,7 +24,7 @@
 
     <!-- Login Gate -->
     <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center bg-cafe-bg p-6">
-        <div class="bg-cafe-card p-10 rounded-[2rem] border border-white/[0.06] shadow-2xl w-full max-w-sm text-center">
+        <div class="bg-cafe-card p-10 rounded-[2rem] border border-white/[0.06] shadow-2xl w-full max-w-sm text-center page-transition">
             <div class="w-14 h-14 mx-auto bg-violet-500/10 text-violet-400 rounded-2xl flex items-center justify-center mb-6 border border-violet-500/15">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
             </div>
@@ -37,13 +39,16 @@
     </div>
 
     <!-- Dashboard -->
-    <div id="dashboard-view" class="hidden min-h-screen flex flex-col">
+    <div id="dashboard-view" class="hidden min-h-screen flex flex-col page-transition">
         <nav class="bg-cafe-card border-b border-white/[0.04] px-6 py-4 flex justify-between items-center sticky top-0 z-30">
             <div class="flex items-center gap-4">
                 <h1 class="text-xl font-serif italic text-violet-400">Diggin Analytics</h1>
-                <a href="index.html" class="text-cafe-muted text-xs font-bold uppercase tracking-[0.12em] hover:text-cafe-accent transition-colors px-3 py-1.5 border border-white/[0.06] rounded-lg">← Home</a>
-                <a href="chef.html" class="text-cafe-muted text-xs font-bold uppercase tracking-[0.12em] hover:text-cafe-accent transition-colors px-3 py-1.5 border border-white/[0.06] rounded-lg">Kitchen</a>
-                <a href="cashier.html" class="text-cafe-muted text-xs font-bold uppercase tracking-[0.12em] hover:text-cafe-accent transition-colors px-3 py-1.5 border border-white/[0.06] rounded-lg">Cashier</a>
+                <div class="admin-nav">
+                    <a href="index.html" class="admin-nav-link">🏠 Home</a>
+                    <a href="admin.html" class="admin-nav-link active">📊 Analytics</a>
+                    <a href="chef.html" class="admin-nav-link">👨‍🍳 Kitchen</a>
+                    <a href="cashier.html" class="admin-nav-link">💰 Cashier</a>
+                </div>
             </div>
             <button id="logout-btn" class="px-4 py-2 border border-white/[0.06] hover:bg-white/[0.04] rounded-lg text-xs font-bold text-cafe-muted hover:text-cafe-text transition-colors uppercase tracking-[0.12em]">Logout</button>
         </nav>
@@ -105,6 +110,10 @@
                 </div>
             </div>
         </main>
+
+        <div class="admin-footer">
+            <p>&copy; 2026 Diggin Café · Admin Dashboard</p>
+        </div>
     </div>
 
     <script src="js/supabase-config.js"></script>

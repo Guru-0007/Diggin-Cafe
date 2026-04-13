@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chef Dashboard | Diggin Café</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
@@ -36,11 +38,16 @@
     </div>
 
     <!-- Dashboard -->
-    <div id="dashboard-view" class="hidden min-h-screen flex flex-col">
-        <nav class="bg-cafe-card border-b border-white/[0.04] px-6 py-4 flex justify-between items-center sticky top-0 z-30">
+    <div id="dashboard-view" class="hidden min-h-screen flex flex-col page-transition">
+        <nav class="bg-cafe-card border-b border-white/[0.04] px-6 py-4 flex flex-wrap justify-between items-center sticky top-0 z-30 gap-3">
             <div class="flex items-center gap-4">
                 <h1 class="text-xl font-serif italic text-cafe-accent">Diggin Kitchen</h1>
-                <a href="cashier.html" class="text-cafe-muted text-xs font-bold uppercase tracking-[0.12em] hover:text-cafe-accent transition-colors px-3 py-1.5 border border-white/[0.06] rounded-lg hover:border-cafe-accent/30">Cashier →</a>
+                <div class="admin-nav">
+                    <a href="index.html" class="admin-nav-link">🏠 Home</a>
+                    <a href="admin.html" class="admin-nav-link">📊 Analytics</a>
+                    <a href="chef.html" class="admin-nav-link active">👨‍🍳 Kitchen</a>
+                    <a href="cashier.html" class="admin-nav-link">💰 Cashier</a>
+                </div>
             </div>
             <div class="flex items-center gap-4">
                 <!-- Kitchen Load Indicator -->
@@ -102,6 +109,10 @@
                 <p class="text-cafe-muted/40 text-sm font-light">Waiting for customers to place an order...</p>
             </div>
         </main>
+
+        <div class="admin-footer">
+            <p>&copy; 2026 Diggin Café · Kitchen Dashboard</p>
+        </div>
     </div>
 
     <script src="js/supabase-config.js"></script>
@@ -157,9 +168,20 @@
             });
 
             // Sound functions
+            let _chefAudioCtx = null;
+            function getChefAudioCtx() {
+                if (!_chefAudioCtx || _chefAudioCtx.state === 'closed') {
+                    try { _chefAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+                    catch(e) { return null; }
+                }
+                if (_chefAudioCtx.state === 'suspended') _chefAudioCtx.resume();
+                return _chefAudioCtx;
+            }
+
             function playBell(type) {
                 try {
-                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const ctx = getChefAudioCtx();
+                    if (!ctx) return;
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.connect(gain);
