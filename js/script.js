@@ -665,7 +665,7 @@ let _lastCartRender = 0;
 
 function renderCartItems() {
     const now = Date.now();
-    if (now - _lastCartRender < 300) return; // Throttle to 300ms
+    if (now - _lastCartRender < 1000) return; // Throttle to 1000ms
     _lastCartRender = now;
 
     const container = document.getElementById("cart-items-container");
@@ -948,6 +948,7 @@ function injectCheckoutModal() {
 
     document.getElementById("close-success")?.addEventListener("click", () => {
         successScreen.classList.remove("open");
+        overlay.classList.remove("open"); // NUCLEAR: Close parent overlay to remove invisible wall
         // Don't kill polling here if an order is active — we need it for the cart tracker!
         if (!activeOrderId && _pollInterval) { 
             clearInterval(_pollInterval); 

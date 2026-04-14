@@ -856,15 +856,14 @@ html.light #intro-screen .intro-bg-image {
     text-align: center;
     position: relative;
 }
-/* NUCLEAR FIX: Completely suppress ALL legacy pseudo-element lines in progress trackers */
-[class*="progress-tracker"] .status-tracker-step::before,
-[class*="progress-tracker"] .status-tracker-step.active::before,
-[class*="progress-tracker"] .status-tracker-step.completed::before,
-.progress-tracker .status-tracker-step::before {
+/* NUCLEAR KILL: Completely suppress ALL legacy pseudo-element lines to fix the double-track glitch */
+[class*="status-tracker"]::before, 
+[class*="status-tracker-step"]::before,
+.status-tracker-step::before {
     display: none !important;
     content: none !important;
-    width: 0 !important;
-    height: 0 !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 }
 .status-tracker-step:first-child::before { left: 50%; }
 .status-tracker-step:last-child::before { right: 50%; }
