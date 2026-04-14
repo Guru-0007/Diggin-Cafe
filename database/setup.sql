@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS orders (
     items JSONB NOT NULL DEFAULT '[]',
     total NUMERIC NOT NULL DEFAULT 0,
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'preparing', 'ready', 'paid')),
+    eta TEXT,
+    timer_end TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now()
 );
@@ -71,3 +73,11 @@ CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status);
 CREATE INDEX IF NOT EXISTS idx_orders_created ON orders(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_calls_status ON calls(status);
 CREATE INDEX IF NOT EXISTS idx_bookings_date ON bookings(date, time);
+
+-- ═══════════════════════════════════════════
+-- MIGRATION v2: Add timer columns to orders
+-- Run this if you already have the table set up
+-- ═══════════════════════════════════════════
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS eta TEXT;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS timer_end TIMESTAMPTZ;
+

@@ -22,8 +22,6 @@
     <style>
         .view-hidden { display: none !important; }
         .view-active { display: block; animation: pageIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
-        /* Portal shadows fix for light mode */
-        html.light .portal-card { box-shadow: 0 10px 30px rgba(44,36,30,0.05) !important; border-color: rgba(44,36,30,0.06) !important; }
     </style>
 </head>
 <body class="bg-cafe-bg text-cafe-text font-sans antialiased min-h-screen flex flex-col">
@@ -57,26 +55,38 @@
                 </div>
             </div>
             <div class="flex items-center gap-4">
+                <!-- Theme Toggle for Staff Portal -->
+                <div class="theme-toggle" id="staff-theme-toggle" title="Toggle dark/light mode">
+                    <div class="theme-toggle-thumb">
+                        <span class="theme-toggle-icon">🌙</span>
+                    </div>
+                </div>
                 <div id="realtime-status-dot" class="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse" title="Systems Online"></div>
                 <button id="logout-btn" class="px-4 py-2 border border-white/[0.06] hover:bg-white/[0.04] rounded-lg text-xs font-bold text-cafe-muted hover:text-cafe-text transition-colors uppercase tracking-[0.12em]">Logout</button>
             </div>
         </nav>
 
+        <!-- Analytics View -->
         <div id="view-analytics" class="view-hidden flex-grow w-full">
             <main class="flex-grow p-6 md:p-10 max-w-7xl mx-auto w-full">
-                <div class="mb-10">
-                    <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Dashboard</h2>
-                    <p class="text-cafe-muted text-sm mt-2 font-light">Real-time business insights</p>
+                <div class="flex justify-between items-end mb-10">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Dashboard</h2>
+                        <p class="text-cafe-muted text-sm mt-2 font-light">Real-time business insights</p>
+                    </div>
+                    <button onclick="window.refreshAnalytics && window.refreshAnalytics()" class="px-4 py-2 bg-cafe-accent/10 text-cafe-accent border border-cafe-accent/20 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-cafe-accent hover:text-white transition-all">↻ Refresh</button>
                 </div>
                 <!-- Metrics -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
                     <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
                         <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Revenue</div>
                         <div id="metric-revenue" class="text-3xl font-bold text-emerald-400">₹0</div>
+                        <div id="metric-revenue-sub" class="text-[10px] text-cafe-muted mt-1">today</div>
                     </div>
                     <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
                         <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Orders</div>
                         <div id="metric-orders" class="text-3xl font-bold text-cafe-accent">0</div>
+                        <div id="metric-orders-sub" class="text-[10px] text-cafe-muted mt-1">today</div>
                     </div>
                     <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
                         <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Avg Order</div>
@@ -85,6 +95,7 @@
                     <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
                         <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Active</div>
                         <div id="metric-pending" class="text-3xl font-bold text-yellow-400">0</div>
+                        <div class="text-[10px] text-cafe-muted mt-1">pending / preparing</div>
                     </div>
                 </div>
                 <!-- Charts -->
@@ -94,7 +105,7 @@
                         <canvas id="revenue-chart" height="200"></canvas>
                     </div>
                     <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
-                        <h3 class="text-sm font-bold text-cafe-text uppercase tracking-widest mb-4">Statuses</h3>
+                        <h3 class="text-sm font-bold text-cafe-text uppercase tracking-widest mb-4">Order Statuses</h3>
                         <canvas id="status-chart" height="200"></canvas>
                     </div>
                 </div>
@@ -112,6 +123,7 @@
             </main>
         </div>
 
+        <!-- Kitchen View -->
         <div id="view-kitchen" class="view-hidden flex-grow w-full">
             <main class="flex-grow p-6 md:p-10">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
@@ -119,21 +131,28 @@
                         <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Kitchen</h2>
                         <p class="text-cafe-muted text-sm mt-2 font-light">Real-time order management</p>
                     </div>
-                    <div id="kitchen-load" class="kitchen-load free"><span id="kitchen-load-text">Wait for updates</span></div>
+                    <div class="flex items-center gap-3">
+                        <div id="kitchen-load" class="kitchen-load free"><span id="kitchen-load-text">Loading...</span></div>
+                        <button onclick="window.refreshKitchen && window.refreshKitchen()" class="px-3 py-1.5 bg-cafe-accent/10 text-cafe-accent border border-cafe-accent/20 rounded-lg text-[10px] font-bold uppercase tracking-wider hover:bg-cafe-accent hover:text-white transition-all">↻</button>
+                    </div>
                 </div>
                 <div id="orders-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"></div>
                 <div id="no-orders" class="hidden text-center py-24 border-2 border-dashed border-white/[0.06] rounded-[2rem]">
                     <div class="text-5xl mb-4 opacity-20">🍽️</div>
-                    <p class="text-cafe-muted/40 text-sm uppercase font-bold tracking-widest">Kitchen's Clear</p>
+                    <p class="text-cafe-muted/40 text-sm uppercase font-bold tracking-widest">Kitchen's Clear — No Active Orders</p>
                 </div>
             </main>
         </div>
 
+        <!-- Cashier View -->
         <div id="view-cashier" class="view-hidden flex-grow w-full">
             <main class="flex-grow p-6 md:p-10">
-                <div class="mb-10">
-                    <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Billing</h2>
-                    <p class="text-cafe-muted text-sm mt-2 font-light">Table settlements & payments</p>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Billing</h2>
+                        <p class="text-cafe-muted text-sm mt-2 font-light">Table settlements & payments</p>
+                    </div>
+                    <button onclick="window.refreshCashier && window.refreshCashier()" class="px-3 py-1.5 bg-cafe-accent/10 text-cafe-accent border border-cafe-accent/20 rounded-lg text-[10px] font-bold uppercase tracking-wider hover:bg-cafe-accent hover:text-white transition-all">↻ Refresh</button>
                 </div>
                 <div id="cashier-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"></div>
                 <div id="no-cashier-orders" class="hidden text-center py-24 border-2 border-dashed border-white/[0.06] rounded-[2rem]">
@@ -151,98 +170,469 @@
     <!-- Scripts -->
     <script src="js/supabase-config.js"></script>
     <script>
-        // --- MODULES: ANALYTICS ---
-        window.initAnalytics = async function() {
-            if (window.analyticsInitialized) return;
-            window.analyticsInitialized = true;
-            let revChart, statChart;
-            async function load() {
-                try {
-                    const data = await fetchAnalytics();
-                    const weekly = await fetchWeeklyRevenue();
-                    const bookings = await fetchBookings();
-                    
-                    const paid = data.orders.filter(o => o.status === 'paid');
-                    const rev = paid.reduce((s, o) => s + (o.total || 0), 0);
-                    document.getElementById('metric-revenue').textContent = `₹${rev.toLocaleString()}`;
-                    document.getElementById('metric-orders').textContent = data.orders.length;
-                    document.getElementById('metric-pending').textContent = data.orders.filter(o => o.status !== 'paid').length;
-                    
-                    // Render Top Items
-                    const top = document.getElementById('top-items');
-                    if (top) top.innerHTML = data.topItems.slice(0, 5).map(i => `<div class="flex justify-between text-sm"><span>${i.name}</span><span class="text-cafe-accent font-bold">${i.count}</span></div>`).join('');
-                    
-                    // Render Reservations
-                    const resList = document.getElementById('reservations-list');
-                    if (resList) resList.innerHTML = bookings.slice(0, 5).map(b => `<div class="p-3 bg-cafe-bg rounded-lg border border-white/[0.04] text-xs"><div class="font-bold">${b.name}</div><div class="text-cafe-muted">${b.time} · ${b.guests} guests</div></div>`).join('');
+        /* ═══════════════════════════════════════════
+           STAFF PORTAL v3.0 — Complete Overhaul
+           Kitchen Timers, Cashier Billing, Analytics
+           ═══════════════════════════════════════════ */
 
-                    // Charts
-                    const ctxR = document.getElementById('revenue-chart')?.getContext('2d');
-                    if (ctxR) {
-                        if (revChart) revChart.destroy();
-                        revChart = new Chart(ctxR, { type: 'bar', data: { labels: ['M','T','W','T','F','S','S'], datasets: [{ data: [1200, 1900, 3000, 5000, 2000, 3000, 4500], backgroundColor: 'rgba(200, 135, 58, 0.4)' }] }, options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } } } } });
+        // --- THEME SUPPORT ---
+        (function initStaffTheme() {
+            const saved = localStorage.getItem("diggin_theme");
+            if (saved === "light") document.documentElement.classList.add("light");
+            const isLight = document.documentElement.classList.contains("light");
+            document.querySelectorAll(".theme-toggle-icon").forEach(i => i.textContent = isLight ? "☀️" : "🌙");
+
+            document.getElementById("staff-theme-toggle")?.addEventListener("click", () => {
+                document.documentElement.classList.toggle("light");
+                const nowLight = document.documentElement.classList.contains("light");
+                localStorage.setItem("diggin_theme", nowLight ? "light" : "dark");
+                document.querySelectorAll(".theme-toggle-icon").forEach(i => i.textContent = nowLight ? "☀️" : "🌙");
+            });
+        })();
+
+        // --- ACTIVE TIMERS REGISTRY ---
+        const _activeTimers = new Map(); // orderId -> intervalId
+
+        function clearAllTimers() {
+            _activeTimers.forEach(id => clearInterval(id));
+            _activeTimers.clear();
+        }
+
+        function formatCountdown(endTime) {
+            const now = Date.now();
+            const end = new Date(endTime).getTime();
+            const diff = end - now;
+            if (diff <= 0) return { text: "OVERDUE", urgent: true };
+            const mins = Math.floor(diff / 60000);
+            const secs = Math.floor((diff % 60000) / 1000);
+            return { text: `${mins}:${secs.toString().padStart(2, '0')}`, urgent: mins < 2 };
+        }
+
+        function startCountdownDisplay(orderId, endTime) {
+            if (_activeTimers.has(orderId)) clearInterval(_activeTimers.get(orderId));
+            
+            const update = () => {
+                const el = document.getElementById(`timer-${orderId}`);
+                if (!el) { clearInterval(_activeTimers.get(orderId)); _activeTimers.delete(orderId); return; }
+                const cd = formatCountdown(endTime);
+                el.textContent = cd.text;
+                el.className = `countdown-display ${cd.urgent ? 'urgent' : ''}`;
+            };
+            update();
+            const id = setInterval(update, 1000);
+            _activeTimers.set(orderId, id);
+        }
+
+        // --- MODULES: ANALYTICS ---
+        let _revChart = null, _statChart = null;
+
+        window.refreshAnalytics = async function() {
+            try {
+                const data = await fetchAnalytics();
+                const bookings = await fetchBookings();
+                const weekly = await fetchWeeklyRevenue();
+                
+                const paid = data.orders.filter(o => o.status === 'paid');
+                const rev = paid.reduce((s, o) => s + (o.total || 0), 0);
+                const active = data.orders.filter(o => o.status !== 'paid');
+                const avgOrder = paid.length > 0 ? Math.round(rev / paid.length) : 0;
+
+                document.getElementById('metric-revenue').textContent = `₹${rev.toLocaleString()}`;
+                document.getElementById('metric-orders').textContent = data.orders.length;
+                document.getElementById('metric-pending').textContent = active.length;
+                document.getElementById('metric-avg').textContent = `₹${avgOrder.toLocaleString()}`;
+                document.getElementById('metric-orders-sub').textContent = `${paid.length} completed`;
+                
+                // Render Top Items
+                const top = document.getElementById('top-items');
+                if (top) {
+                    if (data.topItems.length === 0) {
+                        top.innerHTML = '<p class="text-cafe-muted text-sm font-light">No orders yet today</p>';
+                    } else {
+                        top.innerHTML = data.topItems.slice(0, 8).map((i, idx) => `
+                            <div class="flex justify-between items-center text-sm p-3 rounded-lg ${idx === 0 ? 'bg-cafe-accent/10 border border-cafe-accent/20' : 'bg-cafe-bg border border-white/[0.04]'}">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-cafe-muted text-xs font-bold w-5">#${idx+1}</span>
+                                    <span class="text-cafe-text font-semibold">${i.name}</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-cafe-accent font-bold">${i.count}×</span>
+                                    <span class="text-cafe-muted text-xs ml-2">₹${i.revenue?.toLocaleString() || 0}</span>
+                                </div>
+                            </div>
+                        `).join('');
                     }
-                } catch(e) { console.error("Analytics Fail:", e); }
+                }
+                
+                // Render Reservations
+                const resList = document.getElementById('reservations-list');
+                if (resList) {
+                    if (bookings.length === 0) {
+                        resList.innerHTML = '<p class="text-cafe-muted text-sm font-light">No reservations</p>';
+                    } else {
+                        resList.innerHTML = bookings.slice(0, 6).map(b => `
+                            <div class="p-4 bg-cafe-bg rounded-xl border border-white/[0.04] flex justify-between items-center">
+                                <div>
+                                    <div class="font-bold text-cafe-text text-sm">${b.name}</div>
+                                    <div class="text-cafe-muted text-xs mt-1">${b.date} · ${b.time} · ${b.guests} guests · ${b.outlet}</div>
+                                </div>
+                                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase ${b.status === 'confirmed' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-cafe-muted/10 text-cafe-muted border border-cafe-muted/20'}">${b.status}</span>
+                            </div>
+                        `).join('');
+                    }
+                }
+
+                // Revenue Chart (7D) — use real data grouped by day
+                const ctxR = document.getElementById('revenue-chart')?.getContext('2d');
+                if (ctxR) {
+                    // Group weekly data by day
+                    const dayLabels = [];
+                    const dayData = [];
+                    for (let i = 6; i >= 0; i--) {
+                        const d = new Date();
+                        d.setDate(d.getDate() - i);
+                        const label = d.toLocaleDateString('en', { weekday: 'short' });
+                        const dateStr = d.toISOString().split('T')[0];
+                        dayLabels.push(label);
+                        const dayTotal = (weekly || [])
+                            .filter(o => o.created_at && o.created_at.startsWith(dateStr))
+                            .reduce((s, o) => s + (o.total || 0), 0);
+                        dayData.push(dayTotal);
+                    }
+
+                    if (_revChart) _revChart.destroy();
+                    const isLight = document.documentElement.classList.contains('light');
+                    _revChart = new Chart(ctxR, {
+                        type: 'bar',
+                        data: {
+                            labels: dayLabels,
+                            datasets: [{
+                                data: dayData,
+                                backgroundColor: isLight ? 'rgba(176, 120, 48, 0.3)' : 'rgba(200, 135, 58, 0.4)',
+                                borderColor: isLight ? 'rgba(176, 120, 48, 0.6)' : 'rgba(200, 135, 58, 0.6)',
+                                borderWidth: 1,
+                                borderRadius: 6
+                            }]
+                        },
+                        options: {
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: { grid: { color: isLight ? 'rgba(44,36,30,0.06)' : 'rgba(255,255,255,0.04)' }, ticks: { color: isLight ? '#968B7F' : '#9c9590' } },
+                                x: { grid: { display: false }, ticks: { color: isLight ? '#968B7F' : '#9c9590' } }
+                            }
+                        }
+                    });
+                }
+
+                // Status Chart
+                const ctxS = document.getElementById('status-chart')?.getContext('2d');
+                if (ctxS) {
+                    const statusCounts = { pending: 0, preparing: 0, ready: 0, paid: 0 };
+                    data.orders.forEach(o => { if (statusCounts.hasOwnProperty(o.status)) statusCounts[o.status]++; });
+                    
+                    if (_statChart) _statChart.destroy();
+                    _statChart = new Chart(ctxS, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['Pending', 'Preparing', 'Ready', 'Paid'],
+                            datasets: [{
+                                data: [statusCounts.pending, statusCounts.preparing, statusCounts.ready, statusCounts.paid],
+                                backgroundColor: ['#ef4444', '#eab308', '#22c55e', '#6b7280'],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: { color: document.documentElement.classList.contains('light') ? '#5C5248' : '#9c9590', padding: 16, usePointStyle: true }
+                                }
+                            },
+                            cutout: '65%'
+                        }
+                    });
+                }
+            } catch(e) { console.error("Analytics Error:", e); }
+        };
+
+        window.initAnalytics = async function() {
+            await window.refreshAnalytics();
+            // Auto-refresh every 30s
+            if (!window._analyticsInterval) {
+                window._analyticsInterval = setInterval(window.refreshAnalytics, 30000);
             }
-            await load();
-            setInterval(load, 60000);
         };
 
         // --- MODULES: KITCHEN ---
-        window.initKitchen = async function() {
-            if (window.kitchenInitialized) return;
-            window.kitchenInitialized = true;
-            async function render() {
-                const cont = document.getElementById("orders-container");
-                if (!cont) return;
+        window.refreshKitchen = async function() {
+            const cont = document.getElementById("orders-container");
+            if (!cont) return;
+            
+            try {
                 const orders = await fetchOrders(['pending', 'preparing', 'ready']);
-                if (orders.length === 0) { document.getElementById("no-orders")?.classList.remove("hidden"); cont.innerHTML = ""; return; }
+                
+                // Update kitchen load
+                const loadEl = document.getElementById("kitchen-load");
+                const loadText = document.getElementById("kitchen-load-text");
+                const activeCount = orders.filter(o => o.status !== 'ready').length;
+                if (activeCount === 0) { loadEl.className = "kitchen-load free"; loadText.textContent = "Kitchen Clear"; }
+                else if (activeCount <= 3) { loadEl.className = "kitchen-load free"; loadText.textContent = `${activeCount} Active`; }
+                else if (activeCount <= 6) { loadEl.className = "kitchen-load moderate"; loadText.textContent = `${activeCount} Active`; }
+                else { loadEl.className = "kitchen-load busy"; loadText.textContent = `${activeCount} Active — Busy`; }
+
+                if (orders.length === 0) {
+                    document.getElementById("no-orders")?.classList.remove("hidden");
+                    cont.innerHTML = "";
+                    return;
+                }
                 document.getElementById("no-orders")?.classList.add("hidden");
-                cont.innerHTML = orders.map(o => `
-                    <div class="bg-cafe-card p-6 rounded-2xl border border-white/[0.04] shadow-xl portal-card">
-                        <div class="flex justify-between items-start mb-4">
-                            <div><div class="text-[10px] font-bold text-cafe-accent uppercase tracking-widest mb-1">Table ${o.table_number}</div><h3 class="text-lg font-bold text-cafe-text">${o.customer_name}</h3></div>
-                            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border ${o.status === 'pending' ? 'border-red-500/30 text-red-400' : 'border-yellow-500/30 text-yellow-500'}">${o.status}</span>
+
+                cont.innerHTML = orders.map(o => {
+                    const items = (o.items || []).map(i => `<div class="flex justify-between text-sm py-1.5 border-b border-white/[0.03] last:border-0"><span>${i.quantity}× ${i.name}</span><span class="text-cafe-muted">₹${i.price * i.quantity}</span></div>`).join('');
+                    
+                    const statusColors = {
+                        pending: 'border-red-500/30 text-red-400 bg-red-500/5',
+                        preparing: 'border-yellow-500/30 text-yellow-400 bg-yellow-500/5',
+                        ready: 'border-green-500/30 text-green-400 bg-green-500/5'
+                    };
+                    const statusClass = statusColors[o.status] || statusColors.pending;
+
+                    // Timer section
+                    let timerHTML = '';
+                    if (o.status === 'preparing' && o.timer_end) {
+                        timerHTML = `
+                            <div class="flex items-center justify-between p-3 bg-cafe-accent/5 border border-cafe-accent/15 rounded-xl mb-4">
+                                <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-widest">⏱ Time Left</div>
+                                <div id="timer-${o.id}" class="countdown-display">--:--</div>
+                            </div>
+                        `;
+                    }
+
+                    // Action buttons
+                    let actionsHTML = '';
+                    if (o.status === 'pending') {
+                        actionsHTML = `
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-2 p-3 bg-cafe-bg rounded-xl border border-white/[0.04]">
+                                    <span class="text-[10px] font-bold text-cafe-muted uppercase tracking-widest whitespace-nowrap">Set Timer:</span>
+                                    <div class="timer-input-group flex-grow">
+                                        <input type="number" id="timer-min-${o.id}" min="1" max="60" value="10" class="flex-grow">
+                                        <span>min</span>
+                                    </div>
+                                </div>
+                                <button onclick="window.startPreparing('${o.id}')" class="w-full py-3 bg-yellow-600/20 hover:bg-yellow-600 text-yellow-500 hover:text-white border border-yellow-600/30 rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                                    👨‍🍳 Start Preparing
+                                </button>
+                            </div>
+                        `;
+                    } else if (o.status === 'preparing') {
+                        actionsHTML = `
+                            <div class="space-y-2">
+                                <div class="flex gap-2">
+                                    <button onclick="window.changeTimer('${o.id}')" class="flex-1 py-2.5 bg-cafe-accent/10 hover:bg-cafe-accent text-cafe-accent hover:text-white border border-cafe-accent/20 rounded-xl text-[10px] font-bold uppercase transition-all">⏱ Change Timer</button>
+                                    <input type="number" id="new-timer-${o.id}" min="1" max="60" value="5" class="w-16 text-center text-sm rounded-xl">
+                                </div>
+                                <button onclick="window.markReady('${o.id}')" class="w-full py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                                    ✅ Mark Ready
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        actionsHTML = `<div class="w-full text-center text-green-500 text-[11px] font-bold uppercase py-3 bg-green-500/5 border border-green-500/15 rounded-xl">✅ Ready — Waiting for Pickup</div>`;
+                    }
+
+                    return `
+                        <div class="bg-cafe-card p-6 rounded-2xl border border-white/[0.04] shadow-xl portal-card order-card-enter">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <div class="text-[10px] font-bold text-cafe-accent uppercase tracking-widest mb-1">Table ${o.table_number}</div>
+                                    <h3 class="text-lg font-bold text-cafe-text">${o.customer_name}</h3>
+                                    <div class="text-[10px] text-cafe-muted mt-1">${new Date(o.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>
+                                </div>
+                                <span class="px-3 py-1 rounded-full text-[9px] font-bold uppercase border ${statusClass}">${o.status}</span>
+                            </div>
+                            <div class="mb-4 p-3 bg-cafe-bg rounded-xl border border-white/[0.04]">${items}</div>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-cafe-muted text-xs font-bold uppercase tracking-widest">Total</span>
+                                <span class="text-lg font-bold text-cafe-accent">₹${o.total}</span>
+                            </div>
+                            ${timerHTML}
+                            ${actionsHTML}
                         </div>
-                        <div class="mb-4">${(o.items||[]).map(i => `<div class="text-sm py-1 border-b border-white/[0.03] last:border-0">${i.quantity}x ${i.name}</div>`).join('')}</div>
-                        <div class="flex gap-2">
-                            ${o.status === 'pending' ? `
-                                <button onclick="window.updateStatus('${o.id}', 'preparing', '10m')" class="flex-grow py-2 bg-yellow-600/20 hover:bg-yellow-600 text-yellow-500 hover:text-white border border-yellow-600/30 rounded-xl text-[10px] font-bold uppercase transition-all">Start (10m)</button>
-                                <button onclick="window.updateStatus('${o.id}', 'preparing', '20m')" class="flex-grow py-2 bg-yellow-600/20 hover:bg-yellow-600 text-yellow-500 hover:text-white border border-yellow-600/30 rounded-xl text-[10px] font-bold uppercase transition-all">Start (20m)</button>
-                            ` : o.status === 'preparing' ? `
-                                <button onclick="window.updateStatus('${o.id}', 'ready')" class="w-full py-2 bg-green-600 hover:bg-green-500 text-white rounded-xl text-[10px] font-bold uppercase transition-all">Ready</button>
-                            ` : `<div class="w-full text-center text-green-500 text-[10px] font-bold uppercase py-2">Waiting for Pickup</div>`}
-                        </div>
-                    </div>`).join('');
-            }
-            window.updateStatus = async (id, status, eta) => { await updateOrderStatus(id, status, eta); await render(); };
-            await render();
-            subscribeToOrders(render);
+                    `;
+                }).join('');
+
+                // Start countdowns for preparing orders
+                orders.filter(o => o.status === 'preparing' && o.timer_end).forEach(o => {
+                    startCountdownDisplay(o.id, o.timer_end);
+                });
+
+            } catch(e) { console.error("Kitchen Error:", e); }
+        };
+
+        window.startPreparing = async (id) => {
+            const minInput = document.getElementById(`timer-min-${id}`);
+            const mins = parseInt(minInput?.value || '10');
+            const timerEnd = new Date(Date.now() + mins * 60000).toISOString();
+            
+            try {
+                await updateOrderStatus(id, 'preparing', `${mins}m`);
+                // Update timer_end
+                if (supabase) {
+                    await supabase.from('orders').update({ timer_end: timerEnd }).eq('id', id);
+                }
+                await window.refreshKitchen();
+            } catch(e) { console.error("Start preparing error:", e); }
+        };
+
+        window.changeTimer = async (id) => {
+            const minInput = document.getElementById(`new-timer-${id}`);
+            const mins = parseInt(minInput?.value || '5');
+            const timerEnd = new Date(Date.now() + mins * 60000).toISOString();
+            
+            try {
+                if (supabase) {
+                    await supabase.from('orders').update({ timer_end: timerEnd, eta: `${mins}m` }).eq('id', id);
+                }
+                startCountdownDisplay(id, timerEnd);
+            } catch(e) { console.error("Change timer error:", e); }
+        };
+
+        window.markReady = async (id) => {
+            try {
+                await updateOrderStatus(id, 'ready');
+                if (_activeTimers.has(id)) { clearInterval(_activeTimers.get(id)); _activeTimers.delete(id); }
+                await window.refreshKitchen();
+            } catch(e) { console.error("Mark ready error:", e); }
+        };
+
+        window.initKitchen = async function() {
+            await window.refreshKitchen();
+            // Subscribe to real-time updates
+            subscribeToOrders(async () => {
+                await window.refreshKitchen();
+            });
         };
 
         // --- MODULES: CASHIER ---
-        window.initCashier = async function() {
-            if (window.cashierInitialized) return;
-            window.cashierInitialized = true;
-            async function render() {
-                const cont = document.getElementById("cashier-container");
-                if (!cont) return;
-                const orders = await fetchOrders(['ready']);
-                if (orders.length === 0) { document.getElementById("no-cashier-orders")?.classList.remove("hidden"); cont.innerHTML = ""; return; }
+        window.refreshCashier = async function() {
+            const cont = document.getElementById("cashier-container");
+            if (!cont) return;
+            
+            try {
+                const orders = await fetchOrders(['ready', 'preparing', 'pending']);
+                // Show ready orders first, then others for reference
+                const readyOrders = orders.filter(o => o.status === 'ready');
+                const otherOrders = orders.filter(o => o.status !== 'ready');
+                const allOrders = [...readyOrders, ...otherOrders];
+
+                if (allOrders.length === 0) {
+                    document.getElementById("no-cashier-orders")?.classList.remove("hidden");
+                    cont.innerHTML = "";
+                    return;
+                }
                 document.getElementById("no-cashier-orders")?.classList.add("hidden");
-                cont.innerHTML = orders.map(o => `
-                    <div class="bg-cafe-card p-6 rounded-2xl border border-white/[0.04] shadow-xl portal-card">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-xl font-serif italic text-cafe-text">Table ${o.table_number}</h3>
-                            <div class="text-right"><div class="text-[10px] text-cafe-muted uppercase font-bold">Total</div><div class="text-xl font-bold text-emerald-400">₹${o.total}</div></div>
+
+                cont.innerHTML = allOrders.map(o => {
+                    const items = (o.items || []).map(i => `
+                        <div class="flex justify-between text-sm py-1.5 border-b border-white/[0.03] last:border-0">
+                            <span>${i.quantity}× ${i.name}</span>
+                            <span class="text-cafe-muted font-medium">₹${i.price * i.quantity}</span>
                         </div>
-                        <button onclick="window.markPaid('${o.id}')" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all">💰 Mark Paid</button>
-                    </div>`).join('');
-            }
-            window.markPaid = async (id) => { await updateOrderStatus(id, 'paid'); await render(); };
-            await render();
-            subscribeToOrders(render);
+                    `).join('');
+
+                    const subtotal = o.total || 0;
+                    const gst = Math.round(subtotal * 0.05);
+                    const serviceCharge = Math.round(subtotal * 0.05);
+                    const grandTotal = subtotal + gst + serviceCharge;
+                    const isReady = o.status === 'ready';
+                    
+                    const statusColors = {
+                        pending: 'text-red-400',
+                        preparing: 'text-yellow-400',
+                        ready: 'text-green-400'
+                    };
+
+                    return `
+                        <div class="bg-cafe-card p-6 rounded-2xl border border-white/[0.04] shadow-xl portal-card order-card-enter ${isReady ? 'border-green-500/20' : ''}">
+                            <div class="flex justify-between items-center mb-4">
+                                <div>
+                                    <h3 class="text-xl font-serif italic text-cafe-text">Table ${o.table_number}</h3>
+                                    <div class="text-xs text-cafe-muted mt-1">${o.customer_name} · ${new Date(o.created_at).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</div>
+                                </div>
+                                <span class="text-[10px] font-bold uppercase ${statusColors[o.status] || 'text-cafe-muted'}">${o.status}</span>
+                            </div>
+                            
+                            <div class="mb-4 p-3 bg-cafe-bg rounded-xl border border-white/[0.04]">${items}</div>
+                            
+                            <div class="space-y-2 mb-4 text-sm">
+                                <div class="flex justify-between"><span class="text-cafe-muted">Subtotal</span><span>₹${subtotal}</span></div>
+                                <div class="flex justify-between"><span class="text-cafe-muted">GST (5%)</span><span>₹${gst}</span></div>
+                                <div class="flex justify-between"><span class="text-cafe-muted">Service (5%)</span><span>₹${serviceCharge}</span></div>
+                                <div class="flex justify-between pt-2 border-t border-white/[0.06]">
+                                    <span class="font-bold text-cafe-text">Grand Total</span>
+                                    <span class="text-xl font-bold text-emerald-400">₹${grandTotal}</span>
+                                </div>
+                            </div>
+
+                            ${isReady ? `
+                                <div class="space-y-2">
+                                    <button onclick="window.markPaid('${o.id}', ${grandTotal})" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">
+                                        💰 Mark Paid & Clear Table
+                                    </button>
+                                    <button onclick="window.printBill('${o.id}')" class="w-full py-2.5 bg-white/[0.04] hover:bg-white/[0.08] text-cafe-text border border-white/[0.06] rounded-xl text-[10px] font-bold uppercase tracking-wider transition-all">
+                                        🖨️ Print Bill
+                                    </button>
+                                </div>
+                            ` : `
+                                <div class="w-full text-center ${statusColors[o.status]} text-[10px] font-bold uppercase py-2.5 bg-white/[0.02] rounded-xl border border-white/[0.04]">
+                                    ${o.status === 'pending' ? '⏳ Waiting for Kitchen' : '👨‍🍳 Being Prepared'}
+                                </div>
+                            `}
+                        </div>
+                    `;
+                }).join('');
+            } catch(e) { console.error("Cashier Error:", e); }
         };
+
+        window.markPaid = async (id, grandTotal) => {
+            try {
+                // Update order total to include taxes, mark as paid
+                if (supabase) {
+                    await supabase.from('orders').update({ status: 'paid', total: grandTotal }).eq('id', id);
+                } else {
+                    await updateOrderStatus(id, 'paid');
+                }
+                await window.refreshCashier();
+                // Also refresh analytics if it was initialized
+                if (window._analyticsInterval) await window.refreshAnalytics();
+                
+                showStaffToast(`✅ Table settled — ₹${grandTotal} collected`);
+            } catch(e) { console.error("Mark paid error:", e); }
+        };
+
+        window.printBill = (orderId) => {
+            // Find the order card and print it
+            showStaffToast("🖨️ Preparing bill for print...");
+            setTimeout(() => window.print(), 500);
+        };
+
+        window.initCashier = async function() {
+            await window.refreshCashier();
+            subscribeToOrders(async () => {
+                await window.refreshCashier();
+            });
+        };
+
+        // --- STAFF TOAST ---
+        function showStaffToast(msg) {
+            const toast = document.createElement("div");
+            toast.className = "notification-toast";
+            toast.innerHTML = `<div class="flex items-center gap-3"><div class="text-cafe-text font-bold text-sm">${msg}</div></div>`;
+            document.body.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.add("show"));
+            setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 600); }, 4000);
+        }
 
         // --- CORE PORTAL LOGIC ---
         function showDashboard() {
@@ -261,10 +651,11 @@
             document.getElementById("view-" + v)?.classList.remove("view-hidden");
             
             // Nav Toggle
-            document.querySelectorAll('.admin-nav-link').forEach(el => el.classList.remove("bg-cafe-accent", "text-white", "shadow-md"));
-            document.getElementById("nav-" + v)?.classList.add("bg-cafe-accent", "text-white", "shadow-md");
+            document.querySelectorAll('.admin-nav-link').forEach(el => el.classList.remove("bg-cafe-accent", "text-white", "shadow-md", "active"));
+            const navBtn = document.getElementById("nav-" + v);
+            if (navBtn) navBtn.classList.add("bg-cafe-accent", "text-white", "shadow-md", "active");
 
-            // Initializer
+            // Initialize the view
             try {
                 if (v === 'analytics') await window.initAnalytics();
                 if (v === 'kitchen') await window.initKitchen();
@@ -279,17 +670,21 @@
             if (p === "admin123" || p === "staff123") {
                 sessionStorage.setItem("staff_auth", "true");
                 showDashboard();
-                window.switchView('analytics');
+                window.switchView('kitchen');
             } else { document.getElementById("login-error").classList.remove("hidden"); }
         });
 
-        document.getElementById("logout-btn").addEventListener("click", () => { sessionStorage.clear(); window.location.reload(); });
+        document.getElementById("logout-btn").addEventListener("click", () => {
+            clearAllTimers();
+            sessionStorage.clear();
+            window.location.reload();
+        });
 
         // Auto-load
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem("staff_auth") === "true") {
                 showDashboard();
-                const last = sessionStorage.getItem("last_view") || 'analytics';
+                const last = sessionStorage.getItem("last_view") || 'kitchen';
                 setTimeout(() => window.switchView(last), 50);
             }
         });

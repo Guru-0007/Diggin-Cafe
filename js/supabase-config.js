@@ -119,10 +119,11 @@ async function fetchOrdersDesc(statusFilter) {
     return data || [];
 }
 
-async function updateOrderStatus(orderId, newStatus, eta = null) {
+async function updateOrderStatus(orderId, newStatus, eta = null, timerEnd = null) {
     if (!supabase) throw new Error('Supabase not configured');
     const updateData = { status: newStatus };
     if (eta) updateData.eta = eta;
+    if (timerEnd) updateData.timer_end = timerEnd;
     
     const { error } = await supabase
         .from('orders')
@@ -132,6 +133,28 @@ async function updateOrderStatus(orderId, newStatus, eta = null) {
         console.error('Update order error:', error);
         throw error;
     }
+}
+
+async function updateOrderTimer(orderId, timerEnd, eta = null) {
+    if (!supabase) return;
+    const updateData = { timer_end: timerEnd };
+    if (eta) updateData.eta = eta;
+    const { error } = await supabase
+        .from('orders')
+        .update(updateData)
+        .eq('id', orderId);
+    if (error) console.error('Update timer error:', error);
+}
+
+async function fetchOrderById(orderId) {
+    if (!supabase) return null;
+    const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', orderId)
+        .single();
+    if (error) return null;
+    return data;
 }
 
 /* ─── CALL WAITER HELPERS ─────────────────── */

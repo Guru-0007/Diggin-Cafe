@@ -65,7 +65,11 @@ function updateCartCount() {
             const price = cart.reduce((s, i) => s + i.price * i.quantity, 0);
             trayTotal.textContent = `₹${price}`;
         }
-        if (total > 0) {
+
+        // Keep tray visible if actively tracking an order
+        const isTracking = activeOrderId && document.getElementById("tray-order-section") && !document.getElementById("tray-order-section").classList.contains("hidden");
+
+        if (total > 0 || isTracking) {
             tray.classList.remove("translate-y-full", "opacity-0", "pointer-events-none");
             tray.classList.add("translate-y-0", "opacity-100");
         } else {
@@ -708,29 +712,59 @@ function renderCartItems() {
 function injectOrderTray() {
     const tray = document.createElement("div");
     tray.id = "order-tray";
-    tray.className = "fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] bg-cafe-card/95 backdrop-blur-xl border border-cafe-accent/30 rounded-2xl px-5 sm:px-6 py-3 sm:py-4 shadow-[0_8px_40px_rgba(0,0,0,0.5)] flex items-center gap-4 sm:gap-5 transition-all duration-500 translate-y-full opacity-0 pointer-events-none cursor-pointer hover:border-cafe-accent/60 hover:shadow-[0_12px_50px_rgba(200,135,58,0.15)]";
+    tray.className = "fixed bottom-6 left-1/2 -translate-x-1/2 z-[90] bg-cafe-card/95 backdrop-blur-xl border border-cafe-accent/30 rounded-2xl px-4 sm:px-5 py-3 shadow-[0_8px_40px_rgba(0,0,0,0.5)] flex items-center gap-3 sm:gap-4 transition-all duration-500 translate-y-full opacity-0 pointer-events-none hover:border-cafe-accent/60 hover:shadow-[0_12px_50px_rgba(200,135,58,0.15)]";
     tray.innerHTML = `
-        <div class="flex items-center gap-3">
-            <div class="w-9 h-9 sm:w-10 sm:h-10 bg-cafe-accent/15 rounded-xl flex items-center justify-center border border-cafe-accent/20">
-                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-cafe-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3C7.03 3 3 5.69 3 9h18c0-3.31-4.03-6-9-6z"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 9v1a1 1 0 001 1h16a1 1 0 001-1V9"/><path stroke-linecap="round" stroke-linejoin="round" d="M5 11v6a2 2 0 002 2h10a2 2 0 002-2v-6"/><line x1="12" y1="1" x2="12" y2="3" stroke-linecap="round"/></svg>
+        <div id="tray-cart-section" class="flex items-center gap-3 cursor-pointer" id="tray-cart-click">
+            <div class="w-9 h-9 bg-cafe-accent/15 rounded-xl flex items-center justify-center border border-cafe-accent/20 flex-shrink-0">
+                <svg class="w-4 h-4 text-cafe-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3C7.03 3 3 5.69 3 9h18c0-3.31-4.03-6-9-6z"/><path stroke-linecap="round" stroke-linejoin="round" d="M3 9v1a1 1 0 001 1h16a1 1 0 001-1V9"/><path stroke-linecap="round" stroke-linejoin="round" d="M5 11v6a2 2 0 002 2h10a2 2 0 002-2v-6"/></svg>
             </div>
             <div>
                 <div class="text-cafe-text font-bold text-sm"><span id="tray-count">0</span> items</div>
-                <div class="text-cafe-accent font-bold text-base sm:text-lg" id="tray-total">₹0</div>
+                <div class="text-cafe-accent font-bold text-base" id="tray-total">₹0</div>
             </div>
         </div>
-        <div class="w-px h-10 bg-white/[0.08]"></div>
-        <div class="text-cafe-text text-xs font-bold uppercase tracking-[0.15em] flex items-center gap-2">
-            View Order
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+
+        <!-- Live order progress section (hidden until order placed) -->
+        <div id="tray-order-section" class="hidden items-center gap-3 border-l border-white/[0.08] pl-3">
+            <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] font-bold text-cafe-accent uppercase tracking-widest">Live Order</span>
+                    <span id="tray-order-status" class="text-[10px] font-bold text-cafe-muted">⏳ Pending</span>
+                </div>
+                <div class="tray-tracker">
+                    <div class="mini-progress">
+                        <div class="mini-progress-fill" id="tray-mini-progress" style="width: 10%"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="tray-timer-wrap" class="hidden flex-col items-center">
+                <span class="text-[9px] text-cafe-muted uppercase font-bold">Chef</span>
+                <span id="tray-timer" class="tray-timer">--:--</span>
+            </div>
+        </div>
+
+        <div class="w-px h-8 bg-white/[0.08] flex-shrink-0"></div>
+        <div class="text-cafe-text text-[10px] font-bold uppercase tracking-[0.15em] flex items-center gap-1.5 cursor-pointer flex-shrink-0" id="tray-view-btn">
+            View
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
         </div>
     `;
     document.body.appendChild(tray);
 
-    tray.addEventListener("click", () => {
-        renderCartItems();
-        document.getElementById("cart-slider")?.classList.add("open");
-        document.getElementById("cart-backdrop")?.classList.add("open");
+    // Cart section opens cart drawer
+    tray.addEventListener("click", (e) => {
+        const orderSection = document.getElementById("tray-order-section");
+        const isTracking = orderSection && !orderSection.classList.contains("hidden");
+        
+        if (isTracking) {
+            // Open tracking screen
+            const ss = document.getElementById("success-screen");
+            if (ss) ss.classList.add("open");
+        } else {
+            renderCartItems();
+            document.getElementById("cart-slider")?.classList.add("open");
+            document.getElementById("cart-backdrop")?.classList.add("open");
+        }
     });
 }
 
@@ -992,50 +1026,97 @@ function injectCheckoutModal() {
 // ─── ORDER TRACKING (Real-time + Fallback Polling) ────
 let _orderSubscription = null;
 
-function updateTrackerUI(status, eta = null) {
-    const tracker = document.getElementById("success-tracker");
-    if (!tracker) return;
-
-    const steps = tracker.querySelectorAll(".status-tracker-step");
-    const fill = document.getElementById("progress-fill");
-    if (steps.length < 4) return;
-
-    // Reset all
-    steps.forEach(s => s.classList.remove("active", "completed"));
-
+function updateTrackerUI(status, eta = null, timerEnd = null) {
     const progressMap = {
-        pending: { active: 0, fill: "10%" },
-        preparing: { active: 1, fill: "38%" },
-        ready: { active: 2, fill: "68%" },
-        paid: { active: 3, fill: "100%" }
+        pending:   { active: 0, fill: "10%",  label: "⏳ Pending...",      trayLabel: "⏳ Pending" },
+        preparing: { active: 1, fill: "40%",  label: "👨‍🍳 Preparing...",  trayLabel: "👨‍🍳 Preparing" },
+        ready:     { active: 2, fill: "72%",  label: "✅ Ready!",           trayLabel: "✅ Ready!" },
+        paid:      { active: 3, fill: "100%", label: "🍽️ Delivered!",      trayLabel: "🍽️ Delivered" }
     };
-
     const state = progressMap[status] || progressMap.pending;
 
-    // Mark completed steps
-    for (let i = 0; i < state.active; i++) {
-        steps[i].classList.add("completed");
-    }
-    // Mark active step
-    steps[state.active].classList.add("active");
-
-    // Animate progress bar
-    if (fill) fill.style.width = state.fill;
-
-    // Update floating tracker
-    const floatingStatus = document.getElementById("floating-status");
-    if (floatingStatus) {
-        let label = { pending: "⏳ Pending...", preparing: "👨‍🍳 Preparing...", ready: "✅ Ready!", paid: "🚀 Arriving" }[status] || status;
-        if (status === "preparing" && eta) {
-            label = `👨‍🍳 Prep (${eta})`;
+    // Update success screen tracker if visible
+    const tracker = document.getElementById("success-tracker");
+    if (tracker) {
+        const steps = tracker.querySelectorAll(".status-tracker-step");
+        const fill = document.getElementById("progress-fill");
+        if (steps.length >= 4) {
+            steps.forEach(s => s.classList.remove("active", "completed"));
+            for (let i = 0; i < state.active; i++) steps[i].classList.add("completed");
+            steps[state.active]?.classList.add("active");
+            if (fill) fill.style.width = state.fill;
         }
-        floatingStatus.textContent = label;
     }
 
-    // Sound + toast on ready
-    if (status === "ready" || status === "paid") {
+    // Update floating tray order section
+    const trayOrderSection = document.getElementById("tray-order-section");
+    const trayStatus = document.getElementById("tray-order-status");
+    const trayProgress = document.getElementById("tray-mini-progress");
+    const trayTimerWrap = document.getElementById("tray-timer-wrap");
+    const trayTimer = document.getElementById("tray-timer");
+    const tray = document.getElementById("order-tray");
+
+    if (trayOrderSection && status !== 'paid') {
+        // Show order tracking section in tray
+        trayOrderSection.classList.remove("hidden");
+        trayOrderSection.classList.add("flex");
+        if (trayStatus) trayStatus.textContent = state.trayLabel;
+        if (trayProgress) trayProgress.style.width = state.fill;
+        
+        // Show/start chef timer countdown
+        if (timerEnd && status === 'preparing') {
+            if (trayTimerWrap) { trayTimerWrap.classList.remove("hidden"); trayTimerWrap.classList.add("flex"); }
+            // Start countdown for tray
+            if (window._trayTimerInterval) clearInterval(window._trayTimerInterval);
+            const updateTrayTimer = () => {
+                const now = Date.now();
+                const end = new Date(timerEnd).getTime();
+                const diff = end - now;
+                if (!document.getElementById('tray-timer')) { clearInterval(window._trayTimerInterval); return; }
+                if (diff <= 0) {
+                    if (trayTimer) { trayTimer.textContent = 'DONE'; trayTimer.style.color = '#22c55e'; }
+                    clearInterval(window._trayTimerInterval);
+                    return;
+                }
+                const mins = Math.floor(diff / 60000);
+                const secs = Math.floor((diff % 60000) / 1000);
+                if (trayTimer) trayTimer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+            };
+            updateTrayTimer();
+            window._trayTimerInterval = setInterval(updateTrayTimer, 1000);
+        } else {
+            if (trayTimerWrap) { trayTimerWrap.classList.add("hidden"); trayTimerWrap.classList.remove("flex"); }
+            if (window._trayTimerInterval) { clearInterval(window._trayTimerInterval); window._trayTimerInterval = null; }
+        }
+
+        // Keep tray visible when tracking
+        if (tray) {
+            tray.classList.remove("translate-y-full", "opacity-0", "pointer-events-none");
+            tray.classList.add("translate-y-0", "opacity-100");
+        }
+    } else if (trayOrderSection && status === 'paid') {
+        // Order paid — hide tracker, allow normal cart tray behavior
+        setTimeout(() => {
+            trayOrderSection.classList.add("hidden");
+            trayOrderSection.classList.remove("flex");
+            sessionStorage.removeItem("active_order_id");
+            activeOrderId = null;
+        }, 5000); // Linger for 5s then disappear
+    }
+
+    // Update floating tracker widget (old one)
+    const floatingStatus = document.getElementById("floating-status");
+    if (floatingStatus) floatingStatus.textContent = state.label;
+    const floatingProgress = document.getElementById("floating-progress");
+    if (floatingProgress) floatingProgress.style.width = state.fill;
+
+    // Sound + toast on ready/paid
+    if (status === "ready") {
         playSound("success");
-        if (status === "ready") showMiniToast("Your order is ready! 🎉");
+        showMiniToast("Your order is ready! 🎉");
+    }
+    if (status === "paid") {
+        clearInterval(_pollInterval); _pollInterval = null;
     }
 }
 
@@ -1046,9 +1127,9 @@ function startOrderTracking(orderId) {
     if (typeof subscribeToOrders === "function") {
         _orderSubscription = subscribeToOrders((payload) => {
             if (payload.new && payload.new.id === orderId) {
-                updateTrackerUI(payload.new.status, payload.new.eta);
-                if (payload.new.status === "ready" || payload.new.status === "paid") {
-                    // Auto-cleanup after 60s
+                const o = payload.new;
+                updateTrackerUI(o.status, o.eta, o.timer_end);
+                if (o.status === "ready" || o.status === "paid") {
                     setTimeout(() => {
                         try { supabase?.removeChannel(_orderSubscription); } catch(e) {}
                         _orderSubscription = null;
@@ -1058,44 +1139,43 @@ function startOrderTracking(orderId) {
         });
     }
 
-    // Also poll as fallback (slower interval since we have real-time)
+    // Immediate fetch to get current state (in case order was updated while page was closed)
+    if (typeof fetchOrderById === "function") {
+        fetchOrderById(orderId).then(order => {
+            if (order) updateTrackerUI(order.status, order.eta, order.timer_end);
+        }).catch(() => {});
+    }
+
+    // Poll as fallback (slower since we have realtime)
     _pollInterval = setInterval(async () => {
         try {
-            if (typeof fetchOrders !== "function") return;
-            const orders = await fetchOrders(null);
-            const order = orders.find(o => o.id === orderId);
-            if (!order) { clearInterval(_pollInterval); _pollInterval = null; return; }
-
-            updateTrackerUI(order.status, order.eta);
-
-            if (order.status === "ready" || order.status === "paid") {
-                clearInterval(_pollInterval);
-                _pollInterval = null;
+            if (typeof fetchOrderById === "function") {
+                const order = await fetchOrderById(orderId);
+                if (!order) { clearInterval(_pollInterval); _pollInterval = null; return; }
+                updateTrackerUI(order.status, order.eta, order.timer_end);
+                if (order.status === "paid") { clearInterval(_pollInterval); _pollInterval = null; }
             }
         } catch (e) {}
-    }, 8000);  // 8s poll as backup
+    }, 8000);
 }
 
 // ─── ORDER TRACKER WIDGET ────────────────────
 function injectOrderTracker() {
     if (!activeOrderId) return;
-    const tracker = document.createElement("div");
-    tracker.id = "floating-tracker";
-    tracker.className = "fixed bottom-6 left-6 z-[85] bg-cafe-card/95 backdrop-blur-xl border border-white/[0.06] rounded-2xl px-4 sm:px-5 py-3 sm:py-4 shadow-[0_8px_32px_rgba(0,0,0,0.4)] cursor-pointer hover:border-cafe-accent/30 transition-all max-w-[220px]";
-    tracker.innerHTML = `
-        <div class="text-[10px] font-bold text-cafe-accent uppercase tracking-[0.2em] mb-1">Live Order</div>
-        <div class="text-cafe-text text-sm font-bold" id="floating-status">⏳ Pending...</div>
-        <div class="w-full h-1 mt-2 bg-white/[0.04] rounded-full overflow-hidden">
-            <div class="h-full bg-cafe-accent rounded-full transition-all duration-700" id="floating-progress" style="width: 10%"></div>
-        </div>
-    `;
-    document.body.appendChild(tracker);
-    tracker.addEventListener("click", () => {
-        const ss = document.getElementById("success-screen");
-        if (ss) ss.classList.add("open");
-    });
+    
+    // Show the persistent tray tracking section
+    const trayOrderSection = document.getElementById("tray-order-section");
+    const tray = document.getElementById("order-tray");
+    if (trayOrderSection) {
+        trayOrderSection.classList.remove("hidden");
+        trayOrderSection.classList.add("flex");
+    }
+    if (tray) {
+        tray.classList.remove("translate-y-full", "opacity-0", "pointer-events-none");
+        tray.classList.add("translate-y-0", "opacity-100");
+    }
 
-    // Start tracking for the floating widget too
+    // Start tracking
     startOrderTracking(activeOrderId);
 }
 

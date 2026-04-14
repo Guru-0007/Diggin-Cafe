@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════
-   DIGGIN CAFÉ — Premium Design System v2.0
+   DIGGIN CAFÉ — Premium Design System v3.0
    Production-grade · Premium Polish
    ═══════════════════════════════════════════ */
 
@@ -32,7 +32,6 @@
 }
 
 /* ─── PREMIUM LIGHT MODE ────────────────── */
-/* A completely separate warm, cream-toned theme */
 html.light {
     --bg-primary: #FCFAF7;
     --bg-card: #FFFFFF;
@@ -44,16 +43,24 @@ html.light {
     --accent: #B07830;
     --accent-hover: #8A5E20;
     --accent-glow: rgba(176, 120, 48, 0.12);
-    --border: rgba(44, 36, 30, 0.06);
+    --border: rgba(44, 36, 30, 0.08);
     --border-hover: rgba(176, 120, 48, 0.2);
     --glass-bg: rgba(255, 255, 255, 0.9);
-    --glass-border: rgba(255, 255, 255, 0.4);
-    --shadow-card: 0 10px 30px -5px rgba(44, 36, 30, 0.04), 0 4px 6px -2px rgba(44, 36, 30, 0.02);
+    --glass-border: rgba(44, 36, 30, 0.08);
+    --shadow-card: 0 10px 30px -5px rgba(44, 36, 30, 0.06), 0 4px 6px -2px rgba(44, 36, 30, 0.03);
     --shadow-glow: 0 0 40px rgba(176, 120, 48, 0.08);
-    --shadow-hover: 0 20px 40px -10px rgba(176, 120, 48, 0.15), 0 10px 10px -5px rgba(44, 36, 30, 0.04);
+    --shadow-hover: 0 20px 40px -10px rgba(176, 120, 48, 0.12), 0 10px 10px -5px rgba(44, 36, 30, 0.04);
     --invert-text: #2C241E;
     --review-bg: #FFFFFF;
     color-scheme: light;
+}
+
+/* ─── MODE TRANSITION ────────────────────── */
+html {
+    transition: color-scheme 0.3s;
+}
+body {
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 /* ─── GLOBAL LIGHT-MODE FORCE OVERRIDES ──── */
@@ -97,7 +104,7 @@ html.light .hover\:bg-white\/\[0\.04\]:hover {
     background-color: var(--bg-surface) !important;
 }
 
-/* Keep white text on primary action buttons (Accent BG) */
+/* Keep white text on primary action buttons */
 html.light .bg-cafe-accent,
 html.light .bg-emerald-600 {
     color: #ffffff !important;
@@ -105,7 +112,7 @@ html.light .bg-emerald-600 {
 html.light .text-white { color: var(--text-primary) !important; }
 html.light .hover\:text-white:hover { color: var(--text-primary) !important; }
 
-/* Elements that MUST remain white (e.g. inside accent buttons) */
+/* Elements that MUST remain white (inside accent buttons) */
 html.light .bg-cafe-accent .text-white,
 html.light .bg-cafe-accent.text-white,
 html.light .bg-emerald-600 .text-white,
@@ -114,7 +121,7 @@ html.light a.bg-cafe-accent {
     color: #ffffff !important;
 }
 
-/* Hover State Contrast - Ensure backgrounds don't wash out text */
+/* Hover State Contrast */
 html.light .hover\:bg-cafe-accent:hover,
 html.light .hover\:bg-cafe-accentHover:hover {
     color: #ffffff !important;
@@ -135,37 +142,110 @@ html.light .text-cafe-muted\/60 { color: var(--text-muted) !important; opacity: 
 /* Light mode: navbar */
 html.light nav.bg-cafe-bg\/85,
 html.light .bg-cafe-bg\/85 {
-    background-color: rgba(251, 248, 243, 0.92) !important;
+    background-color: rgba(252, 250, 247, 0.92) !important;
     border-bottom-color: rgba(44, 36, 24, 0.06) !important;
 }
 html.light .bg-cafe-bg\/80 {
-    background-color: rgba(251, 248, 243, 0.88) !important;
+    background-color: rgba(252, 250, 247, 0.88) !important;
 }
 html.light .bg-cafe-card\/95 {
     background-color: rgba(255, 255, 255, 0.96) !important;
 }
 
-/* Light mode: hero gradients */
-html.light .from-cafe-bg { --tw-gradient-from: var(--bg-primary) !important; }
-html.light .via-cafe-bg\/90 { --tw-gradient-via: rgba(251, 248, 243, 0.9) !important; }
-html.light .to-cafe-bg\/40 { --tw-gradient-to: rgba(251, 248, 243, 0.4) !important; }
-html.light .from-cafe-bg\/80 { --tw-gradient-from: rgba(251, 248, 243, 0.8) !important; }
-html.light .from-cafe-bg\/60 { --tw-gradient-from: rgba(251, 248, 243, 0.6) !important; }
-html.light .from-cafe-card { --tw-gradient-from: var(--bg-card) !important; }
+/* ═══════════════════════════════════════════
+   HERO SECTION — LIGHT MODE COMPLETE REWORK
+   Removes all black shadows, uses warm cream
+   ═══════════════════════════════════════════ */
 
-/* Light mode: reviews section - warm off-white cards */
+/* Light mode: hero background image brightness */
+html.light #home > img {
+    filter: brightness(1.1) saturate(0.9) contrast(0.95) !important;
+}
+
+/* Light mode: hero gradients — warm cream overlays instead of black */
+html.light #home > .bg-gradient-to-r {
+    background: linear-gradient(
+        to right,
+        rgba(252, 250, 247, 0.97) 0%,
+        rgba(252, 250, 247, 0.92) 25%,
+        rgba(252, 250, 247, 0.7) 55%,
+        rgba(252, 250, 247, 0.3) 80%,
+        rgba(252, 250, 247, 0.05) 100%
+    ) !important;
+}
+html.light #home > .bg-gradient-to-t {
+    background: linear-gradient(
+        to top,
+        rgba(252, 250, 247, 0.95) 0%,
+        rgba(252, 250, 247, 0.4) 30%,
+        transparent 60%
+    ) !important;
+}
+
+/* Light mode: hero text needs warm dark tones, no shadows */
+html.light #home h1 {
+    color: #2C241E !important;
+    text-shadow: none !important;
+}
+html.light #home h1 .text-cafe-accent,
+html.light #home h1 span.italic {
+    color: var(--accent) !important;
+}
+html.light #home .text-cafe-text {
+    color: #2C241E !important;
+    text-shadow: none !important;
+}
+html.light #home p {
+    text-shadow: none !important;
+}
+
+/* Light mode: hero right-side image card */
+html.light #home .parallax-wrap .bg-gradient-to-t {
+    background: linear-gradient(to top, rgba(252, 250, 247, 0.6) 0%, transparent 50%) !important;
+}
+html.light #home .parallax-wrap > div {
+    border-color: rgba(44, 36, 30, 0.1) !important;
+    box-shadow: 0 20px 60px rgba(44, 36, 30, 0.12), 0 4px 12px rgba(44, 36, 30, 0.06) !important;
+}
+
+/* Light mode: hero buttons */
+html.light #home .border-white\/15 {
+    border-color: rgba(44, 36, 30, 0.15) !important;
+    color: var(--text-primary) !important;
+}
+html.light #home .border-white\/15:hover,
+html.light #home .hover\:border-cafe-accent\/50:hover {
+    border-color: rgba(176, 120, 48, 0.4) !important;
+}
+
+/* Light mode: hero View Menu button bg */
+html.light #home .hover\:bg-white\/\[0\.03\]:hover {
+    background-color: rgba(44, 36, 30, 0.04) !important;
+}
+
+/* ═══════════════════════════════════════════ */
+
+/* Light mode: reviews section */
 html.light .review-card,
 html.light #testimonials .bg-cafe-bg {
     background-color: var(--review-bg) !important;
     border-color: var(--border) !important;
-    box-shadow: 0 2px 12px rgba(44, 36, 24, 0.04) !important;
+    box-shadow: 0 2px 16px rgba(44, 36, 24, 0.05) !important;
 }
 html.light #testimonials .text-cafe-text\/80 {
     color: #3D3526 !important;
     opacity: 1;
 }
 html.light #testimonials {
-    background-color: var(--bg-card) !important;
+    background-color: var(--bg-surface) !important;
+}
+
+/* Light mode: review dish images - overlay style to look warm */
+html.light #testimonials .bg-cafe-bg img[src*="oreo"],
+html.light #testimonials .bg-cafe-bg img[src*="masala"],
+html.light #testimonials .bg-cafe-bg img[src*="pizza"] {
+    mix-blend-mode: multiply !important;
+    opacity: 0.08 !important;
 }
 
 /* Light mode: about stats */
@@ -176,7 +256,7 @@ html.light #about {
     background-color: var(--bg-card) !important;
 }
 
-/* Light mode: footer - warm tone */
+/* Light mode: footer — warm tone */
 html.light footer.bg-cafe-card,
 html.light footer.bg-cafe-bg {
     background-color: #EDE5D8 !important;
@@ -258,10 +338,10 @@ html.light #staff-modal .bg-cafe-bg {
 
 /* Light mode: booking section */
 html.light .bg-gradient-to-t.from-cafe-bg\/60 {
-    --tw-gradient-from: rgba(251, 248, 243, 0.6) !important;
+    --tw-gradient-from: rgba(252, 250, 247, 0.6) !important;
 }
 
-/* Light mode: featured cards - warm shadow */
+/* Light mode: featured cards */
 html.light .group.bg-cafe-bg {
     background-color: var(--bg-card) !important;
     border-color: var(--border) !important;
@@ -275,7 +355,7 @@ html.light .bg-gradient-to-t.from-cafe-bg {
     --tw-gradient-from: var(--bg-card) !important;
 }
 html.light .via-cafe-bg\/20 {
-    --tw-gradient-via: rgba(251, 248, 243, 0.2) !important;
+    --tw-gradient-via: rgba(252, 250, 247, 0.2) !important;
 }
 
 /* Light mode: order tray */
@@ -297,15 +377,13 @@ html.light #call-waiter-btn {
     box-shadow: 0 8px 30px rgba(176, 120, 48, 0.2) !important;
 }
 
-/* Light mode: hero video - much lighter for a lush feel */
-html.light #home video {
-    filter: brightness(0.65) saturate(1.2) contrast(1.1) !important;
-}
-
-/* Light mode: section backgrounds */
+/* Light mode: section backgrounds — transparent warm blend */
 html.light .section-bg::before {
     opacity: 0.1 !important;
     mix-blend-mode: multiply;
+}
+html.light .section-bg::after {
+    background: linear-gradient(180deg, rgba(252,250,247,0.9) 0%, transparent 25%, transparent 75%, rgba(252,250,247,0.9) 100%) !important;
 }
 
 /* Light mode: outlets section */
@@ -314,6 +392,9 @@ html.light #outlets {
 }
 html.light #outlets .bg-cafe-card {
     box-shadow: 0 2px 16px rgba(44, 36, 24, 0.05) !important;
+}
+html.light #outlets .bg-gradient-to-t {
+    --tw-gradient-from: var(--bg-card) !important;
 }
 
 /* Light mode: admin/chef/cashier pages */
@@ -344,6 +425,69 @@ html.light section.bg-cafe-bg:not(#home):not(#outlets):not(#booking) {
     background-color: var(--bg-primary) !important;
 }
 
+/* ═══════════════════════════════════════════
+   STAFF PORTAL — LIGHT MODE COMPLETE SUPPORT
+   ═══════════════════════════════════════════ */
+html.light #login-view {
+    background-color: var(--bg-primary) !important;
+}
+html.light #login-view .bg-cafe-card {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 25px 60px rgba(44, 36, 30, 0.08) !important;
+}
+html.light #dashboard-view > nav {
+    background-color: var(--bg-card) !important;
+    border-bottom-color: var(--border) !important;
+    box-shadow: 0 1px 8px rgba(44, 36, 30, 0.04);
+}
+html.light .admin-nav {
+    background-color: var(--bg-surface) !important;
+    border-color: var(--border) !important;
+}
+html.light .admin-nav-link {
+    color: var(--text-muted) !important;
+    border-color: transparent !important;
+}
+html.light .admin-nav-link:hover {
+    color: var(--accent) !important;
+    background: rgba(176, 120, 48, 0.06) !important;
+}
+html.light .admin-nav-link.active,
+html.light .admin-nav-link.bg-cafe-accent {
+    color: #ffffff !important;
+    background: var(--accent) !important;
+    border-color: var(--accent) !important;
+}
+html.light .portal-card {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border) !important;
+    box-shadow: 0 2px 12px rgba(44, 36, 30, 0.04) !important;
+}
+html.light .admin-footer {
+    background-color: var(--bg-card) !important;
+    border-top-color: var(--border) !important;
+}
+html.light #logout-btn {
+    border-color: var(--border) !important;
+    color: var(--text-muted) !important;
+}
+html.light #logout-btn:hover {
+    background-color: var(--bg-surface) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Staff portal: status badges in light mode */
+html.light .border-red-500\/30 { border-color: rgba(239, 68, 68, 0.3) !important; }
+html.light .border-yellow-500\/30 { border-color: rgba(234, 179, 8, 0.3) !important; }
+html.light .border-green-500\/30 { border-color: rgba(34, 197, 94, 0.3) !important; }
+
+/* Staff portal: timer display */
+.timer-display {
+    font-family: 'Outfit', monospace;
+    font-variant-numeric: tabular-nums;
+}
+
 /* ─── SCROLLBAR ──────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
@@ -369,6 +513,21 @@ html { scroll-behavior: smooth; }
     50% { text-shadow: 0 0 60px rgba(200, 135, 58, 0.6), 0 0 120px rgba(200, 135, 58, 0.2); }
 }
 .intro-line { opacity: 0; }
+
+/* Intro background image layer */
+#intro-screen .intro-bg-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.2;
+    z-index: 0;
+}
+html.light #intro-screen .intro-bg-image {
+    opacity: 0.15;
+    filter: brightness(1.2) saturate(0.8);
+}
 
 /* ─── TYPEWRITER EFFECT ──────────────────── */
 @keyframes typewriter-cursor {
@@ -910,6 +1069,7 @@ input:focus, select:focus, textarea:focus {
 .section-bg-reviews::before {
     background-image: url('../images/img_087e416f.jpg');
     filter: blur(2px);
+    opacity: 0.12;
 }
 .section-bg-booking::before {
     background-image: url('../images/img_78f7f2f2.jpg');
@@ -992,6 +1152,77 @@ input:focus, select:focus, textarea:focus {
         color: black;
         padding: 20px;
     }
+}
+
+/* ═══════════════════════════════════════════
+   PERSISTENT ORDER TRACKER — In Tray
+   ═══════════════════════════════════════════ */
+#order-tray .tray-tracker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px;
+}
+#order-tray .tray-tracker .mini-progress {
+    width: 80px;
+    height: 4px;
+    background: var(--bg-surface);
+    border-radius: 4px;
+    overflow: hidden;
+}
+#order-tray .tray-tracker .mini-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #d4a24c);
+    border-radius: 4px;
+    transition: width 0.8s ease;
+}
+#order-tray .tray-tracker .tray-status-text {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    white-space: nowrap;
+}
+#order-tray .tray-timer {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════════════════════════════
+   CHEF TIMER INPUT
+   ═══════════════════════════════════════════ */
+.timer-input-group {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+.timer-input-group input {
+    width: 48px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 6px 4px;
+    border-radius: 8px;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border) !important;
+    color: var(--text-primary) !important;
+}
+.timer-input-group span {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+.countdown-display {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+}
+.countdown-display.urgent {
+    color: #ef4444;
+    animation: timerTick 1s step-end infinite;
 }
 
 /* ─── RESPONSIVE TWEAKS ──────────────────── */
