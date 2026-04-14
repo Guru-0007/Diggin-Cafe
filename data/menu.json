@@ -5,7 +5,7 @@
       "name": "Velvet Cold Brew",
       "price": 295,
       "description": "Slow-steeped 18-hour cold brew, silky smooth with a hint of dark chocolate.",
-      "image": "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&q=80",
+      "image": "images/img_b535fa02.jpg",
       "tag": "Chef's Pick"
     },
     {
@@ -13,7 +13,7 @@
       "name": "Caramel Whisper Latte",
       "price": 345,
       "description": "House-pulled espresso swirled with handmade caramel and steamed milk.",
-      "image": "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&q=80",
+      "image": "images/img_df98358e.jpg",
       "tag": "Trending"
     },
     {
@@ -21,14 +21,14 @@
       "name": "Midnight Espresso",
       "price": 225,
       "description": "Double-shot single-origin espresso — bold, unapologetic, unforgettable.",
-      "image": "https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&q=80"
+      "image": "images/img_bfecd83a.jpg"
     },
     {
       "id": "sig4",
       "name": "Hazelnut Dream Cappuccino",
       "price": 325,
       "description": "Velvety foam kissed with roasted hazelnut and a dusting of cocoa.",
-      "image": "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80",
+      "image": "images/img_49e4bd24.jpg",
       "tag": "Instagram Favorite"
     },
     {
@@ -36,7 +36,7 @@
       "name": "Rose Cardamom Latte",
       "price": 365,
       "description": "An aromatic Indian-inspired latte with rose syrup and fresh cardamom.",
-      "image": "https://images.unsplash.com/photo-1577968897966-3d4325b36b61?auto=format&fit=crop&q=80",
+      "image": "images/img_7748efdb.jpg",
       "tag": "Chef's Pick"
     },
     {
@@ -44,7 +44,7 @@
       "name": "Banta Masala Soda",
       "price": 195,
       "description": "Diggin's legendary mint lemonade — fizzy, tangy, and absolutely addictive.",
-      "image": "https://images.unsplash.com/photo-1513558161293-cdaf765ed514?auto=format&fit=crop&q=80",
+      "image": "images/banta.png",
       "tag": "Trending"
     }
   ],
@@ -54,7 +54,7 @@
       "name": "Sunset Citrus Iced Tea",
       "price": 245,
       "description": "Blood orange and passion fruit iced tea that tastes like golden hour.",
-      "image": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80",
+      "image": "images/img_dc1a67d7.jpg",
       "tag": "Instagram Favorite"
     },
     {
@@ -62,7 +62,7 @@
       "name": "Berry Blush Smoothie",
       "price": 295,
       "description": "Mixed berries blended thick with Greek yogurt and a honey drizzle.",
-      "image": "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&q=80",
+      "image": "images/img_fd4405fb.jpg",
       "tag": "Trending"
     },
     {
@@ -70,7 +70,7 @@
       "name": "Mango Tango Cooler",
       "price": 275,
       "description": "Alphonso mango puree shaken with lime, mint, and crushed ice.",
-      "image": "https://images.unsplash.com/photo-1534353473418-4cfa6c56fd38?auto=format&fit=crop&q=80",
+      "image": "images/img_8e0d4fa7.jpg",
       "tag": "Chef's Pick"
     },
     {
@@ -78,14 +78,14 @@
       "name": "Matcha Zen Latte",
       "price": 325,
       "description": "Ceremonial-grade Japanese matcha whisked with oat milk over ice.",
-      "image": "https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&q=80"
+      "image": "images/img_502493fe.jpg"
     },
     {
       "id": "cool5",
       "name": "Classic Oreo Shake",
       "price": 285,
       "description": "Thick, creamy, loaded with crushed Oreos — a Diggin cult classic.",
-      "image": "https://images.unsplash.com/photo-1568901839119-631418a3910d?auto=format&fit=crop&q=80",
+      "image": "images/img_e883bb45.jpg",
       "tag": "Trending"
     }
   ],
@@ -95,7 +95,7 @@
       "name": "Spaghetti Carbonara",
       "price": 475,
       "description": "Creamy egg-based sauce with crispy pancetta — the Roman original.",
-      "image": "https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&q=80",
+      "image": "images/img_753245ea.jpg",
       "tag": "Chef's Pick"
     },
     {
@@ -103,7 +103,7 @@
       "name": "Garden Herb Penne",
       "price": 425,
       "description": "Fresh basil, thyme, and roasted garlic tossed in olive oil and parmesan.",
-      "image": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&q=80",
+      "image": "images/img_2d443949.jpg",
       "tag": "Instagram Favorite"
     },
     {
@@ -111,7 +111,7 @@
       "name": "Baked Penne Arrabbiata",
       "price": 475,
       "description": "Fiery tomato sauce with chili flakes, baked under a golden cheese crust.",
-      "image": "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?auto=format&fit=crop&q=80",
+      "image": "images/img_11193a9a.jpg",
       "tag": "Trending"
     },
     {
@@ -119,7 +119,7 @@
       "name": "Truffle Mushroom Ravioli",
       "price": 545,
       "description": "Handmade ravioli stuffed with wild mushrooms and black truffle oil.",
-      "image": "https://images.unsplash.com/photo-1587740908075-9e245070dfaa?auto=format&fit=crop&q=80",
+      "image": "images/img_56c7c88b.jpg",
       "tag": "Chef's Pick"
     },
     {
@@ -127,7 +127,7 @@
       "name": "Seashell Pesto Pasta",
       "price": 475,
       "description": "Conchiglie shells coated in house-made basil pesto with toasted pine nuts.",
-      "image": "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&q=80"
+      "image": "images/img_38dd281f.jpg"
     }
   ],
   "pizza": [
@@ -136,7 +136,7 @@
       "name": "Margherita Classica",
       "price": 525,
       "description": "San Marzano tomatoes, fresh mozzarella, basil — stone-baked perfection.",
-      "image": "https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&q=80",
+      "image": "images/img_58ff40eb.jpg",
       "tag": "Instagram Favorite"
     },
     {
@@ -144,7 +144,7 @@
       "name": "Wild Mushroom & Feta",
       "price": 575,
       "description": "Roasted forest mushrooms with crumbled feta and rosemary-infused oil.",
-      "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80",
+      "image": "images/img_392dae04.jpg",
       "tag": "Chef's Pick"
     },
     {
@@ -152,7 +152,7 @@
       "name": "Four Cheese Pizza",
       "price": 595,
       "description": "Mozzarella, gorgonzola, parmesan, gruyère — melted to golden bliss.",
-      "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&q=80",
+      "image": "images/img_c92def07.jpg",
       "tag": "Trending"
     },
     {
@@ -160,7 +160,7 @@
       "name": "Pepperoni Fuoco",
       "price": 625,
       "description": "Spicy pepperoni, jalapeños, mozzarella, and a drizzle of chili oil.",
-      "image": "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&q=80"
+      "image": "images/img_28303ad1.jpg"
     }
   ],
   "starters": [
@@ -169,7 +169,7 @@
       "name": "Truffle Fries",
       "price": 295,
       "description": "Hand-cut fries tossed in truffle oil with parmesan and fresh herbs.",
-      "image": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&q=80",
+      "image": "images/img_3f8b2908.jpg",
       "tag": "Trending"
     },
     {
@@ -177,7 +177,7 @@
       "name": "Mushroom Bruschetta",
       "price": 325,
       "description": "Toasted ciabatta topped with sautéed wild mushrooms and aged balsamic.",
-      "image": "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?auto=format&fit=crop&q=80",
+      "image": "images/img_4fc2d447.jpg",
       "tag": "Chef's Pick"
     },
     {
@@ -185,14 +185,14 @@
       "name": "Cheesy Jalapeño Poppers",
       "price": 245,
       "description": "Cream cheese-stuffed jalapeños, golden-fried to crunchy perfection.",
-      "image": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&q=80"
+      "image": "images/img_e8f4ea54.jpg"
     },
     {
       "id": "st4",
       "name": "Garlic Cheese Bread",
       "price": 255,
       "description": "Warm sourdough brushed with roasted garlic butter and melted cheese.",
-      "image": "https://images.unsplash.com/photo-1619535860434-ba1d8fa12536?auto=format&fit=crop&q=80",
+      "image": "images/img_845b2f81.jpg",
       "tag": "Instagram Favorite"
     }
   ],
@@ -202,7 +202,7 @@
       "name": "Lotus Biscoff Cheesecake",
       "price": 345,
       "description": "Creamy cheesecake on a Biscoff crust, drizzled with caramelized cookie butter.",
-      "image": "https://images.unsplash.com/photo-1524351199432-f330e91a4dab?auto=format&fit=crop&q=80&w=800",
+      "image": "images/biscoff.png",
       "tag": "Trending"
     },
     {
@@ -210,7 +210,7 @@
       "name": "Tiramisu Royale",
       "price": 385,
       "description": "Layers of espresso-soaked ladyfingers and mascarpone — Italian heaven.",
-      "image": "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&q=80",
+      "image": "images/img_366b5c0f.jpg",
       "tag": "Chef's Pick"
     },
     {
@@ -218,7 +218,7 @@
       "name": "Crème Brûlée",
       "price": 325,
       "description": "Custard with a coffee twist and a torched sugar crown. Pure indulgence.",
-      "image": "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?auto=format&fit=crop&q=80",
+      "image": "images/img_dcfdbbaa.jpg",
       "tag": "Instagram Favorite"
     },
     {
@@ -226,14 +226,14 @@
       "name": "Molten Lava Cake",
       "price": 295,
       "description": "Warm dark chocolate cake with a gooey, flowing center. Served with gelato.",
-      "image": "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?auto=format&fit=crop&q=80"
+      "image": "images/img_885832f4.jpg"
     },
     {
       "id": "d5",
       "name": "Apple Crumble",
       "price": 275,
       "description": "Warm cinnamon-spiced apples under a buttery oat crumble with vanilla cream.",
-      "image": "https://images.unsplash.com/photo-1568571780765-9276ac8b75a2?auto=format&fit=crop&q=80",
+      "image": "images/img_ce68c05e.jpg",
       "tag": "Chef's Pick"
     }
   ]

@@ -284,7 +284,8 @@ html.light #home video {
 
 /* Light mode: section backgrounds */
 html.light .section-bg::before {
-    opacity: 0.06 !important;
+    opacity: 0.1 !important;
+    mix-blend-mode: multiply;
 }
 
 /* Light mode: outlets section */
@@ -884,14 +885,14 @@ input:focus, select:focus, textarea:focus {
     z-index: 1;
 }
 .section-bg-about::before {
-    background-image: url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&w=1920&q=30');
+    background-image: url('../images/img_27af3b0f.jpg');
 }
 .section-bg-reviews::before {
-    background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&w=1920&q=30');
+    background-image: url('../images/img_087e416f.jpg');
     filter: blur(2px);
 }
 .section-bg-booking::before {
-    background-image: url('https://images.unsplash.com/photo-1521017432531-fbd92d768814?auto=format&w=1920&q=30');
+    background-image: url('../images/img_78f7f2f2.jpg');
     opacity: 0.06;
 }
 

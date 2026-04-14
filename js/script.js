@@ -323,22 +323,22 @@ const categoryLabels = {
 // Fallback menu with Diggin branding
 const fallbackMenu = {
     signatures: [
-        { id: "sig1", name: "Velvet Cold Brew", price: 295, description: "Slow-steeped 18-hour cold brew, silky smooth with a hint of dark chocolate.", image: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&q=80", tag: "Chef's Pick" },
-        { id: "sig2", name: "Caramel Whisper Latte", price: 345, description: "House-pulled espresso swirled with handmade caramel and steamed milk.", image: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&q=80", tag: "Trending" },
-        { id: "sig3", name: "Midnight Espresso", price: 225, description: "Double-shot single-origin espresso — bold, unapologetic, unforgettable.", image: "https://images.unsplash.com/photo-1551030173-122aabc4489c?auto=format&fit=crop&q=80" },
-        { id: "sig4", name: "Hazelnut Dream Cappuccino", price: 325, description: "Velvety foam kissed with roasted hazelnut and a dusting of cocoa.", image: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&q=80", tag: "Instagram Favorite" }
+        { id: "sig1", name: "Velvet Cold Brew", price: 295, description: "Slow-steeped 18-hour cold brew, silky smooth with a hint of dark chocolate.", image: "images/img_b535fa02.jpg", tag: "Chef's Pick" },
+        { id: "sig2", name: "Caramel Whisper Latte", price: 345, description: "House-pulled espresso swirled with handmade caramel and steamed milk.", image: "images/img_df98358e.jpg", tag: "Trending" },
+        { id: "sig3", name: "Midnight Espresso", price: 225, description: "Double-shot single-origin espresso — bold, unapologetic, unforgettable.", image: "images/img_bfecd83a.jpg" },
+        { id: "sig4", name: "Hazelnut Dream Cappuccino", price: 325, description: "Velvety foam kissed with roasted hazelnut and a dusting of cocoa.", image: "images/img_49e4bd24.jpg", tag: "Instagram Favorite" }
     ],
     coolers: [
-        { id: "cool1", name: "Sunset Citrus Iced Tea", price: 245, description: "Blood orange and passion fruit iced tea that tastes like golden hour.", image: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&q=80", tag: "Instagram Favorite" },
-        { id: "cool2", name: "Berry Blush Smoothie", price: 295, description: "Mixed berries blended thick with Greek yogurt and a honey drizzle.", image: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&q=80", tag: "Trending" }
+        { id: "cool1", name: "Sunset Citrus Iced Tea", price: 245, description: "Blood orange and passion fruit iced tea that tastes like golden hour.", image: "images/img_dc1a67d7.jpg", tag: "Instagram Favorite" },
+        { id: "cool2", name: "Berry Blush Smoothie", price: 295, description: "Mixed berries blended thick with Greek yogurt and a honey drizzle.", image: "images/img_fd4405fb.jpg", tag: "Trending" }
     ],
     pasta: [
-        { id: "p1", name: "Spaghetti Carbonara", price: 475, description: "Creamy egg-based sauce with crispy pancetta — the Roman original.", image: "https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&q=80", tag: "Chef's Pick" },
-        { id: "p2", name: "Garden Herb Penne", price: 425, description: "Fresh basil, thyme, and roasted garlic tossed in olive oil and parmesan.", image: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&q=80", tag: "Instagram Favorite" }
+        { id: "p1", name: "Spaghetti Carbonara", price: 475, description: "Creamy egg-based sauce with crispy pancetta — the Roman original.", image: "images/img_753245ea.jpg", tag: "Chef's Pick" },
+        { id: "p2", name: "Garden Herb Penne", price: 425, description: "Fresh basil, thyme, and roasted garlic tossed in olive oil and parmesan.", image: "images/img_2d443949.jpg", tag: "Instagram Favorite" }
     ],
     desserts: [
-        { id: "d1", name: "Lotus Biscoff Cheesecake", price: 345, description: "Creamy cheesecake on a Biscoff crust, drizzled with caramelized cookie butter.", image: "https://images.unsplash.com/photo-1524351199432-f330e91a4dab?auto=format&fit=crop&q=80", tag: "Trending" },
-        { id: "d2", name: "Tiramisu Royale", price: 385, description: "Layers of espresso-soaked ladyfingers and mascarpone — Italian heaven.", image: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&q=80", tag: "Chef's Pick" }
+        { id: "d1", name: "Lotus Biscoff Cheesecake", price: 345, description: "Creamy cheesecake on a Biscoff crust, drizzled with caramelized cookie butter.", image: "images/biscoff.png", tag: "Trending" },
+        { id: "d2", name: "Tiramisu Royale", price: 385, description: "Layers of espresso-soaked ladyfingers and mascarpone — Italian heaven.", image: "images/img_366b5c0f.jpg", tag: "Chef's Pick" }
     ]
 };
 
@@ -508,7 +508,7 @@ function createMenuCard(item) {
     card.innerHTML = `
         <div class="relative h-48 sm:h-52 md:h-56 w-full overflow-hidden">
             ${badgeHTML}
-            <img src="${imgSrc}" alt="${item.name}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            <img src="${imgSrc}" alt="${item.name}" loading="lazy" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.parentElement.innerHTML='<div class=\\'img-fallback w-full h-full absolute inset-0\\'>🍽️</div>'">
             <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg via-cafe-bg/20 to-transparent"></div>
         </div>
         <div class="p-5 sm:p-6 md:p-7 flex-grow flex flex-col">
