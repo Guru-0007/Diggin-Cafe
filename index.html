@@ -118,9 +118,7 @@
     <!-- VIDEO HERO                                 -->
     <!-- ═══════════════════════════════════════════ -->
     <section id="home" class="relative min-h-screen flex items-center overflow-hidden">
-        <video autoplay loop muted playsinline preload="metadata" class="absolute inset-0 w-full h-full object-cover z-0" style="filter: brightness(0.25) saturate(1.2);">
-            <source src="https://assets.mixkit.co/videos/preview/mixkit-pouring-coffee-from-a-coffee-maker-into-a-cup-4730-large.mp4" type="video/mp4">
-        </video>
+        <img src="images/img_27af3b0f.jpg" alt="Cafe Ambiance" class="absolute inset-0 w-full h-full object-cover z-0" style="filter: brightness(0.65) saturate(1.1);">
         <div class="absolute inset-0 bg-gradient-to-r from-cafe-bg via-cafe-bg/90 to-cafe-bg/40 z-[1]"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-cafe-bg via-transparent to-transparent z-[1]"></div>
 
@@ -143,10 +141,10 @@
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-5 scroll-reveal">
-                    <a href="menu.html" id="hero-order" class="inline-flex justify-center items-center px-10 py-4 text-base font-bold uppercase tracking-[0.15em] rounded-full text-white bg-cafe-accent hover:bg-cafe-accentHover transition-all duration-300 hover:scale-[1.03] shadow-[0_8px_30px_rgba(200,135,58,0.25)]">
+                    <a href="menu" id="hero-order" class="inline-flex justify-center items-center px-10 py-4 text-base font-bold uppercase tracking-[0.15em] rounded-full text-white bg-cafe-accent hover:bg-cafe-accentHover transition-all duration-300 hover:scale-[1.03] shadow-[0_8px_30px_rgba(200,135,58,0.25)]">
                         Order Now
                     </a>
-                    <a href="menu.html" class="inline-flex justify-center items-center px-10 py-4 text-base font-bold uppercase tracking-[0.15em] rounded-full text-cafe-text border border-white/15 hover:border-cafe-accent/50 hover:bg-white/[0.03] transition-all duration-300">
+                    <a href="menu" class="inline-flex justify-center items-center px-10 py-4 text-base font-bold uppercase tracking-[0.15em] rounded-full text-cafe-text border border-white/15 hover:border-cafe-accent/50 hover:bg-white/[0.03] transition-all duration-300">
                         View Menu
                     </a>
                 </div>
@@ -431,9 +429,10 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal">
-                    <div class="text-cafe-accent mb-5 flex gap-1">★★★★★</div>
-                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"Lucky it was raining — the green around the cafe added to a cold breeze. The ambience is perfect for dates. Ordered Oreo Shake (delicious) and Baked Penne Pasta (quite good). Can sit, eat, talk for hours."</p>
+                <div class="relative bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal overflow-hidden">
+                    <img src="images/img_28303ad1.jpg" alt="Ambience" class="absolute inset-0 w-full h-full object-cover opacity-10 md:opacity-15 pointer-events-none group-hover:scale-110 transition-transform duration-700 mix-blend-overlay">
+                    <div class="relative z-10 text-cafe-accent mb-5 flex gap-1">★★★★★</div>
+                    <p class="relative z-10 text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"Lucky it was raining — the green around the cafe added to a cold breeze. The ambience is perfect for dates. Ordered Oreo Shake (delicious) and Baked Penne Pasta (quite good). Can sit, eat, talk for hours."</p>
                     <div class="flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
                         <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">S</div>
                         <div>
@@ -442,10 +441,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal">
-                    <div class="text-cafe-accent mb-5 flex gap-1">★★★★★</div>
-                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"The standout items were the Banta Masala — basically a mint lemonade — and the Crème Brûlée, with an amazingly fresh flavor profile with coffee and chocolate. A great closer for our meal."</p>
-                    <div class="flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
+                <div class="relative bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal md:translate-y-6 overflow-hidden">
+                    <img src="images/img_845b2f81.jpg" alt="Food" class="absolute inset-0 w-full h-full object-cover opacity-10 md:opacity-[0.12] pointer-events-none group-hover:scale-110 transition-transform duration-700 mix-blend-overlay z-0">
+                    <div class="relative z-10 text-cafe-accent mb-5 flex gap-1">★★★★★</div>
+                    <p class="relative z-10 text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"The standout items were the Banta Masala — basically a mint lemonade — and the Crème Brûlée, with an amazingly fresh flavor profile with coffee and chocolate. A great closer for our meal."</p>
+                    <div class="relative z-10 flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
                         <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">NJ</div>
                         <div>
                             <h4 class="font-bold text-cafe-text text-sm">Nisha James</h4>
@@ -453,10 +453,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal">
-                    <div class="text-cafe-accent mb-5 flex gap-1">★★★★★</div>
-                    <p class="text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"Probably the best pizzeria in town. Cocktails were okay but food was excellent — pizzas done just the way they should be. Service was quick and courteous. Definitely recommend for South Delhi."</p>
-                    <div class="flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
+                <div class="relative bg-cafe-bg p-8 md:p-10 rounded-[1.5rem] border border-white/[0.04] hover:border-cafe-accent/20 transition-all duration-500 flex flex-col group scroll-reveal overflow-hidden">
+                    <img src="images/img_ce68c05e.jpg" alt="Pizza" class="absolute inset-0 w-full h-full object-cover opacity-10 md:opacity-[0.12] pointer-events-none group-hover:scale-110 transition-transform duration-700 mix-blend-overlay z-0">
+                    <div class="relative z-10 text-cafe-accent mb-5 flex gap-1">★★★★★</div>
+                    <p class="relative z-10 text-cafe-text/80 text-base font-light italic leading-relaxed mb-8 flex-grow">"Probably the best pizzeria in town. Cocktails were okay but food was excellent — pizzas done just the way they should be. Service was quick and courteous. Definitely recommend for South Delhi."</p>
+                    <div class="relative z-10 flex items-center gap-3 mt-auto pt-6 border-t border-white/[0.04]">
                         <div class="w-10 h-10 rounded-full bg-cafe-accent/20 flex items-center justify-center text-cafe-accent font-bold text-sm">AK</div>
                         <div>
                             <h4 class="font-bold text-cafe-text text-sm">Ainkareswar K.P.</h4>
@@ -582,17 +583,16 @@
                 <div>
                     <h4 class="text-xs font-bold text-cafe-text uppercase tracking-[0.2em] mb-4">Quick Links</h4>
                     <div class="space-y-3">
-                        <a href="menu.html" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Menu</a>
+                        <a href="menu" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Menu</a>
                         <a href="#about" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">About Us</a>
                         <a href="#outlets" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Outlets</a>
                         <a href="#booking" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Reserve a Table</a>
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-xs font-bold text-cafe-text uppercase tracking-[0.2em] mb-4">Staff Portal</h4>
+                    <h4 class="text-xs font-bold text-cafe-text uppercase tracking-[0.2em] mb-4">Staff</h4>
                     <div class="space-y-3">
-                        <button id="staff-login-btn" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors text-left">Staff Login →</button>
-                        <a href="staff.html" class="block text-cafe-muted/40 text-xs hover:text-cafe-accent transition-colors">Staff Portal</a>
+                        <a href="staff" class="block text-cafe-muted text-sm hover:text-cafe-accent transition-colors">Staff Portal →</a>
                     </div>
                 </div>
             </div>

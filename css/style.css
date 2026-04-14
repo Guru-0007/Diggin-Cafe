@@ -97,14 +97,34 @@ html.light .hover\:bg-white\/\[0\.04\]:hover {
     background-color: var(--bg-surface) !important;
 }
 
-/* Keep white text on accent-bg buttons */
+/* Keep white text on primary action buttons (Accent BG) */
+html.light .bg-cafe-accent,
+html.light .bg-emerald-600 {
+    color: #ffffff !important;
+}
+html.light .text-white { color: var(--text-primary) !important; }
+html.light .hover\:text-white:hover { color: var(--text-primary) !important; }
+
+/* Elements that MUST remain white (e.g. inside accent buttons) */
 html.light .bg-cafe-accent .text-white,
 html.light .bg-cafe-accent.text-white,
+html.light .bg-emerald-600 .text-white,
 html.light button.bg-cafe-accent,
 html.light a.bg-cafe-accent {
     color: #ffffff !important;
 }
-html.light .text-white { color: #ffffff !important; }
+
+/* Hover State Contrast - Ensure backgrounds don't wash out text */
+html.light .hover\:bg-cafe-accent:hover,
+html.light .hover\:bg-cafe-accentHover:hover {
+    color: #ffffff !important;
+    background-color: var(--accent) !important;
+}
+
+html.light .review-card:hover,
+html.light .group:hover {
+    box-shadow: 0 15px 45px rgba(44, 36, 24, 0.08) !important;
+}
 
 /* Light mode text opacity fix */
 html.light .text-cafe-text\/80 { color: var(--text-primary) !important; opacity: 0.88; }

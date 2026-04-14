@@ -119,11 +119,14 @@ async function fetchOrdersDesc(statusFilter) {
     return data || [];
 }
 
-async function updateOrderStatus(orderId, newStatus) {
+async function updateOrderStatus(orderId, newStatus, eta = null) {
     if (!supabase) throw new Error('Supabase not configured');
+    const updateData = { status: newStatus };
+    if (eta) updateData.eta = eta;
+    
     const { error } = await supabase
         .from('orders')
-        .update({ status: newStatus })
+        .update(updateData)
         .eq('id', orderId);
     if (error) {
         console.error('Update order error:', error);
@@ -181,8 +184,8 @@ async function checkDoubleBooking(date, time, outlet) {
         .eq('outlet', outlet)
         .eq('status', 'confirmed');
     if (error) return false;
-    // Allow max 5 bookings per slot per outlet
-    return (data || []).length >= 5;
+    // Allow max 1 booking per slot per outlet (no simultaneous bookings)
+    return (data || []).length >= 1;
 }
 
 async function suggestAlternativeSlots(date, outlet) {
@@ -197,7 +200,7 @@ async function suggestAlternativeSlots(date, outlet) {
     if (error) return allSlots;
     const booked = {};
     (data || []).forEach(b => { booked[b.time] = (booked[b.time] || 0) + 1; });
-    return allSlots.filter(slot => (booked[slot] || 0) < 5);
+    return allSlots.filter(slot => (booked[slot] || 0) < 1);
 }
 
 async function insertBooking(bookingData) {

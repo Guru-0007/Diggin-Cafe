@@ -992,7 +992,7 @@ function injectCheckoutModal() {
 // ─── ORDER TRACKING (Real-time + Fallback Polling) ────
 let _orderSubscription = null;
 
-function updateTrackerUI(status) {
+function updateTrackerUI(status, eta = null) {
     const tracker = document.getElementById("success-tracker");
     if (!tracker) return;
 
@@ -1025,8 +1025,11 @@ function updateTrackerUI(status) {
     // Update floating tracker
     const floatingStatus = document.getElementById("floating-status");
     if (floatingStatus) {
-        const labels = { pending: "⏳ Pending...", preparing: "👨‍🍳 Preparing...", ready: "✅ Ready!", paid: "🚀 Arriving" };
-        floatingStatus.textContent = labels[status] || status;
+        let label = { pending: "⏳ Pending...", preparing: "👨‍🍳 Preparing...", ready: "✅ Ready!", paid: "🚀 Arriving" }[status] || status;
+        if (status === "preparing" && eta) {
+            label = `👨‍🍳 Prep (${eta})`;
+        }
+        floatingStatus.textContent = label;
     }
 
     // Sound + toast on ready
@@ -1043,7 +1046,7 @@ function startOrderTracking(orderId) {
     if (typeof subscribeToOrders === "function") {
         _orderSubscription = subscribeToOrders((payload) => {
             if (payload.new && payload.new.id === orderId) {
-                updateTrackerUI(payload.new.status);
+                updateTrackerUI(payload.new.status, payload.new.eta);
                 if (payload.new.status === "ready" || payload.new.status === "paid") {
                     // Auto-cleanup after 60s
                     setTimeout(() => {
@@ -1063,7 +1066,7 @@ function startOrderTracking(orderId) {
             const order = orders.find(o => o.id === orderId);
             if (!order) { clearInterval(_pollInterval); _pollInterval = null; return; }
 
-            updateTrackerUI(order.status);
+            updateTrackerUI(order.status, order.eta);
 
             if (order.status === "ready" || order.status === "paid") {
                 clearInterval(_pollInterval);
