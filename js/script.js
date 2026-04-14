@@ -660,7 +660,14 @@ window.showNotificationToast = function(msg, urgent) {
     }, 5000);
 };
 
+// Global throttle for cart rendering to prevent lag loops
+let _lastCartRender = 0;
+
 function renderCartItems() {
+    const now = Date.now();
+    if (now - _lastCartRender < 300) return; // Throttle to 300ms
+    _lastCartRender = now;
+
     const container = document.getElementById("cart-items-container");
     const totalEl = document.getElementById("cart-total");
     const btn = document.getElementById("checkout-btn");
@@ -669,12 +676,15 @@ function renderCartItems() {
     container.innerHTML = "";
     let total = 0;
 
+    // Direct re-fetch from storage to ensure we haven't lost the ID
+    activeOrderId = sessionStorage.getItem("active_order_id") || activeOrderId;
+
     if (activeOrderId) {
         container.innerHTML += `
-            <div class="text-center py-6 px-4 mb-4 border-b border-white/[0.08]">
+            <div class="text-center py-6 px-4 mb-4 border-b border-white/[0.08]" id="tray-live-tracking">
                 <div class="flex flex-col items-center justify-center mb-5 mt-2">
-                    <span class="text-xs font-bold bg-cafe-accent/10 border border-cafe-accent/20 text-cafe-accent px-3 py-1 rounded-full uppercase tracking-widest mb-3">Live Order</span>
-                    <h2 class="text-2xl font-serif italic text-cafe-text">Tracking Active</h2>
+                    <span class="text-xs font-bold bg-cafe-accent/10 border border-cafe-accent/20 text-cafe-accent px-3 py-1 rounded-full uppercase tracking-widest mb-3">Live Order Tracking</span>
+                    <h2 class="text-2xl font-serif italic text-cafe-text">Kitchen Preparing</h2>
                 </div>
                 <div id="cart-progress-tracker" class="mb-2">
                     <div class="progress-tracker">
@@ -691,7 +701,7 @@ function renderCartItems() {
                 </div>
             </div>
         `;
-        // Trigger tracking update to sync the bar
+        // Sync tracker state
         if (typeof fetchOrderById === "function") {
             fetchOrderById(activeOrderId).then(o => {
                 if (o) window.updateTrackerUI(o.status, o.eta, o.timer_end);

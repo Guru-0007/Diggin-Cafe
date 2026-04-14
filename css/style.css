@@ -856,20 +856,15 @@ html.light #intro-screen .intro-bg-image {
     text-align: center;
     position: relative;
 }
-.status-tracker-step::before {
-    content: '';
-    position: absolute;
-    top: 14px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--border);
-    z-index: 0;
-}
-.progress-tracker .status-tracker-step::before,
-.progress-tracker .status-tracker-step.active::before,
-.progress-tracker .status-tracker-step.completed::before {
+/* NUCLEAR FIX: Completely suppress ALL legacy pseudo-element lines in progress trackers */
+[class*="progress-tracker"] .status-tracker-step::before,
+[class*="progress-tracker"] .status-tracker-step.active::before,
+[class*="progress-tracker"] .status-tracker-step.completed::before,
+.progress-tracker .status-tracker-step::before {
     display: none !important;
+    content: none !important;
+    width: 0 !important;
+    height: 0 !important;
 }
 .status-tracker-step:first-child::before { left: 50%; }
 .status-tracker-step:last-child::before { right: 50%; }
