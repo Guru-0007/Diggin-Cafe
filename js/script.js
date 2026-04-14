@@ -938,8 +938,13 @@ function injectCheckoutModal() {
 
     document.getElementById("close-success")?.addEventListener("click", () => {
         successScreen.classList.remove("open");
-        // Clean up polling
-        if (_pollInterval) { clearInterval(_pollInterval); _pollInterval = null; }
+        // Don't kill polling here if an order is active — we need it for the cart tracker!
+        if (!activeOrderId && _pollInterval) { 
+            clearInterval(_pollInterval); 
+            _pollInterval = null; 
+        }
+        // Immediately render cart to show the persistent tracker
+        if (typeof renderCartItems === "function") renderCartItems();
     });
 
     document.getElementById("checkout-form").addEventListener("submit", async (e) => {
