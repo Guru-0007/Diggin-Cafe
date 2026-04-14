@@ -866,6 +866,9 @@ html.light #intro-screen .intro-bg-image {
     background: var(--border);
     z-index: 0;
 }
+.progress-tracker .status-tracker-step::before {
+    display: none; /* Hide duplicate segment track lines in favor of the smooth continuous progress-bar-track */
+}
 .status-tracker-step:first-child::before { left: 50%; }
 .status-tracker-step:last-child::before { right: 50%; }
 .status-tracker-step.active::before,

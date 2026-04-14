@@ -669,41 +669,42 @@ function renderCartItems() {
     container.innerHTML = "";
     let total = 0;
 
-    if (cart.length === 0) {
-        if (activeOrderId) {
-            container.innerHTML = `
-                <div class="text-center py-10 px-4">
-                    <div class="success-check w-16 h-16 mx-auto bg-green-500/15 rounded-full flex items-center justify-center mb-6 border-2 border-green-500/30">
-                        <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                    </div>
-                    <h2 class="text-2xl font-serif italic text-cafe-text mb-3">Order Active</h2>
-                    <p class="text-cafe-muted text-sm font-light mb-8">Your food is being prepared. Track its status below.</p>
-                    <div id="cart-progress-tracker" class="mb-4">
-                        <div class="progress-tracker">
-                            <div class="progress-bar-track">
-                                <div class="progress-bar-fill transition-all duration-1000" id="cart-progress-fill" style="width: 10%"></div>
-                            </div>
-                            <div class="status-tracker">
-                                <div class="status-tracker-step active"><span class="status-tracker-dot">📦</span><span class="status-tracker-label">Placed</span></div>
-                                <div class="status-tracker-step"><span class="status-tracker-dot">👨‍🍳</span><span class="status-tracker-label">Preparing</span></div>
-                                <div class="status-tracker-step"><span class="status-tracker-dot">✅</span><span class="status-tracker-label">Ready</span></div>
-                                <div class="status-tracker-step"><span class="status-tracker-dot">🚀</span><span class="status-tracker-label">Arriving</span></div>
-                            </div>
+    if (activeOrderId) {
+        container.innerHTML += `
+            <div class="text-center py-6 px-4 mb-4 border-b border-white/[0.08]">
+                <div class="flex flex-col items-center justify-center mb-5 mt-2">
+                    <span class="text-xs font-bold bg-cafe-accent/10 border border-cafe-accent/20 text-cafe-accent px-3 py-1 rounded-full uppercase tracking-widest mb-3">Live Order</span>
+                    <h2 class="text-2xl font-serif italic text-cafe-text">Tracking Active</h2>
+                </div>
+                <div id="cart-progress-tracker" class="mb-2">
+                    <div class="progress-tracker">
+                        <div class="progress-bar-track">
+                            <div class="progress-bar-fill transition-all duration-1000" id="cart-progress-fill" style="width: 10%"></div>
+                        </div>
+                        <div class="status-tracker">
+                            <div class="status-tracker-step active"><span class="status-tracker-dot">📦</span><span class="status-tracker-label">Placed</span></div>
+                            <div class="status-tracker-step"><span class="status-tracker-dot">👨‍🍳</span><span class="status-tracker-label">Preparing</span></div>
+                            <div class="status-tracker-step"><span class="status-tracker-dot">✅</span><span class="status-tracker-label">Ready</span></div>
+                            <div class="status-tracker-step"><span class="status-tracker-dot">🚀</span><span class="status-tracker-label">Arriving</span></div>
                         </div>
                     </div>
                 </div>
-            `;
-            // Trigger tracking update to sync the bar
-            if (typeof fetchOrderById === "function") {
-                fetchOrderById(activeOrderId).then(o => {
-                    if (o) window.updateTrackerUI(o.status, o.eta, o.timer_end);
-                }).catch(()=>{});
-            }
-        } else {
-            container.innerHTML = `
+            </div>
+        `;
+        // Trigger tracking update to sync the bar
+        if (typeof fetchOrderById === "function") {
+            fetchOrderById(activeOrderId).then(o => {
+                if (o) window.updateTrackerUI(o.status, o.eta, o.timer_end);
+            }).catch(()=>{});
+        }
+    }
+
+    if (cart.length === 0) {
+        if (!activeOrderId) {
+            container.innerHTML += `
                 <div class="text-center py-16">
                     <div class="text-5xl mb-4 opacity-30">☕</div>
-                    <p class="text-cafe-muted font-light text-lg">Your order is empty</p>
+                    <p class="text-cafe-muted font-light text-lg">Your tray is empty</p>
                     <p class="text-cafe-muted/50 text-sm mt-2">Add items from the menu to get started</p>
                 </div>
             `;
