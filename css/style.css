@@ -241,11 +241,15 @@ html.light #testimonials {
 }
 
 /* Light mode: review dish images - overlay style to look warm */
-html.light #testimonials .bg-cafe-bg img[src*="oreo"],
-html.light #testimonials .bg-cafe-bg img[src*="masala"],
-html.light #testimonials .bg-cafe-bg img[src*="pizza"] {
+html.light .dish-bg-img {
     mix-blend-mode: multiply !important;
     opacity: 0.08 !important;
+}
+
+/* Dark mode dish-bg image handling */
+.dish-bg-img {
+    mix-blend-mode: plus-lighter;
+    opacity: 0.15;
 }
 
 /* Light mode: about stats */

@@ -670,13 +670,44 @@ function renderCartItems() {
     let total = 0;
 
     if (cart.length === 0) {
-        container.innerHTML = `
-            <div class="text-center py-16">
-                <div class="text-5xl mb-4 opacity-30">☕</div>
-                <p class="text-cafe-muted font-light text-lg">Your order is empty</p>
-                <p class="text-cafe-muted/50 text-sm mt-2">Add items from the menu to get started</p>
-            </div>
-        `;
+        if (activeOrderId) {
+            container.innerHTML = `
+                <div class="text-center py-10 px-4">
+                    <div class="success-check w-16 h-16 mx-auto bg-green-500/15 rounded-full flex items-center justify-center mb-6 border-2 border-green-500/30">
+                        <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <h2 class="text-2xl font-serif italic text-cafe-text mb-3">Order Active</h2>
+                    <p class="text-cafe-muted text-sm font-light mb-8">Your food is being prepared. Track its status below.</p>
+                    <div id="cart-progress-tracker" class="mb-4">
+                        <div class="progress-tracker">
+                            <div class="progress-bar-track">
+                                <div class="progress-bar-fill transition-all duration-1000" id="cart-progress-fill" style="width: 10%"></div>
+                            </div>
+                            <div class="status-tracker">
+                                <div class="status-tracker-step active"><span class="status-tracker-dot">📦</span><span class="status-tracker-label">Placed</span></div>
+                                <div class="status-tracker-step"><span class="status-tracker-dot">👨‍🍳</span><span class="status-tracker-label">Preparing</span></div>
+                                <div class="status-tracker-step"><span class="status-tracker-dot">✅</span><span class="status-tracker-label">Ready</span></div>
+                                <div class="status-tracker-step"><span class="status-tracker-dot">🚀</span><span class="status-tracker-label">Arriving</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            // Trigger tracking update to sync the bar
+            if (typeof fetchOrderById === "function") {
+                fetchOrderById(activeOrderId).then(o => {
+                    if (o) window.updateTrackerUI(o.status, o.eta, o.timer_end);
+                }).catch(()=>{});
+            }
+        } else {
+            container.innerHTML = `
+                <div class="text-center py-16">
+                    <div class="text-5xl mb-4 opacity-30">☕</div>
+                    <p class="text-cafe-muted font-light text-lg">Your order is empty</p>
+                    <p class="text-cafe-muted/50 text-sm mt-2">Add items from the menu to get started</p>
+                </div>
+            `;
+        }
         if (btn) {
             btn.disabled = true;
             btn.classList.add("opacity-30", "cursor-not-allowed");
@@ -1035,18 +1066,22 @@ function updateTrackerUI(status, eta = null, timerEnd = null) {
     };
     const state = progressMap[status] || progressMap.pending;
 
-    // Update success screen tracker if visible
-    const tracker = document.getElementById("success-tracker");
-    if (tracker) {
-        const steps = tracker.querySelectorAll(".status-tracker-step");
-        const fill = document.getElementById("progress-fill");
-        if (steps.length >= 4) {
-            steps.forEach(s => s.classList.remove("active", "completed"));
-            for (let i = 0; i < state.active; i++) steps[i].classList.add("completed");
-            steps[state.active]?.classList.add("active");
-            if (fill) fill.style.width = state.fill;
+    // Update trackers (success screen & cart slider)
+    const trackers = [
+        { container: document.getElementById("success-tracker"), fill: document.getElementById("progress-fill") },
+        { container: document.getElementById("cart-progress-tracker"), fill: document.getElementById("cart-progress-fill") }
+    ];
+    trackers.forEach(t => {
+        if (t.container) {
+            const steps = t.container.querySelectorAll(".status-tracker-step");
+            if (steps.length >= 4) {
+                steps.forEach(s => s.classList.remove("active", "completed"));
+                for (let i = 0; i < state.active; i++) steps[i].classList.add("completed");
+                if (steps[state.active]) steps[state.active].classList.add("active");
+                if (t.fill) t.fill.style.width = state.fill;
+            }
         }
-    }
+    });
 
     // Update floating tray order section
     const trayOrderSection = document.getElementById("tray-order-section");

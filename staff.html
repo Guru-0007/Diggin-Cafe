@@ -368,12 +368,13 @@
             const cont = document.getElementById("orders-container");
             if (!cont) return;
             
+            const loadEl = document.getElementById("kitchen-load");
+            const loadText = document.getElementById("kitchen-load-text");
+
             try {
                 const orders = await fetchOrders(['pending', 'preparing', 'ready']);
                 
                 // Update kitchen load
-                const loadEl = document.getElementById("kitchen-load");
-                const loadText = document.getElementById("kitchen-load-text");
                 const activeCount = orders.filter(o => o.status !== 'ready').length;
                 if (activeCount === 0) { loadEl.className = "kitchen-load free"; loadText.textContent = "Kitchen Clear"; }
                 else if (activeCount <= 3) { loadEl.className = "kitchen-load free"; loadText.textContent = `${activeCount} Active`; }
@@ -467,7 +468,11 @@
                     startCountdownDisplay(o.id, o.timer_end);
                 });
 
-            } catch(e) { console.error("Kitchen Error:", e); }
+            } catch(e) { 
+                console.error("Kitchen Error:", e); 
+                if (loadEl) loadEl.className = "kitchen-load"; 
+                if (loadText) loadText.textContent = "Offline / Connection Error";
+            }
         };
 
         window.startPreparing = async (id) => {
@@ -509,9 +514,21 @@
         window.initKitchen = async function() {
             await window.refreshKitchen();
             // Subscribe to real-time updates
-            subscribeToOrders(async () => {
-                await window.refreshKitchen();
-            });
+            if (typeof subscribeToOrders === 'function') {
+                subscribeToOrders(async () => {
+                    await window.refreshKitchen();
+                });
+            }
+            if (typeof subscribeToCalls === 'function') {
+                subscribeToCalls((payload) => {
+                    if (payload.new && payload.new.status === 'active') {
+                        const dict = { waiter: 'a Waiter', water: 'Water', bill: 'the Bill', help: 'Help' };
+                        const reqType = dict[payload.new.type] || payload.new.type;
+                        playSound("urgent");
+                        showStaffToast(`🔔 Table ${payload.new.table_number} needs ${reqType}!`, true);
+                    }
+                });
+            }
         };
 
         // --- MODULES: CASHIER ---
@@ -624,14 +641,57 @@
             });
         };
 
+        // --- SOUND EFFECTS ---
+        let _audioCtx = null;
+        function getAudioCtx() {
+            if (!_audioCtx || _audioCtx.state === 'closed') {
+                try { _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+                catch(e) { return null; }
+            }
+            if (_audioCtx.state === 'suspended') _audioCtx.resume();
+            return _audioCtx;
+        }
+
+        function playSound(type) {
+            const ctx = getAudioCtx();
+            if (!ctx) return;
+            try {
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
+                oscillator.connect(gainNode);
+                gainNode.connect(ctx.destination);
+                
+                if (type === "urgent") {
+                    oscillator.type = "sine";
+                    oscillator.frequency.setValueAtTime(1200, ctx.currentTime);
+                    oscillator.frequency.setValueAtTime(800, ctx.currentTime + 0.1);
+                    oscillator.frequency.setValueAtTime(1200, ctx.currentTime + 0.2);
+                    oscillator.frequency.setValueAtTime(800, ctx.currentTime + 0.3);
+                    gainNode.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+                    oscillator.start(ctx.currentTime);
+                    oscillator.stop(ctx.currentTime + 0.6);
+                } else {
+                    oscillator.type = "sine";
+                    oscillator.frequency.setValueAtTime(523, ctx.currentTime);
+                    oscillator.frequency.setValueAtTime(659, ctx.currentTime + 0.15);
+                    oscillator.frequency.setValueAtTime(784, ctx.currentTime + 0.3);
+                    gainNode.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+                    oscillator.start(ctx.currentTime);
+                    oscillator.stop(ctx.currentTime + 0.6);
+                }
+            } catch(e) {}
+        }
+
         // --- STAFF TOAST ---
-        function showStaffToast(msg) {
+        function showStaffToast(msg, urgent=false) {
             const toast = document.createElement("div");
-            toast.className = "notification-toast";
-            toast.innerHTML = `<div class="flex items-center gap-3"><div class="text-cafe-text font-bold text-sm">${msg}</div></div>`;
+            toast.className = "notification-toast" + (urgent ? " urgent" : "");
+            toast.innerHTML = `<div class="flex items-center gap-3"><div class="font-bold text-sm ${urgent ? 'text-red-400' : 'text-cafe-text'}">${msg}</div></div>`;
             document.body.appendChild(toast);
             requestAnimationFrame(() => toast.classList.add("show"));
-            setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 600); }, 4000);
+            setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 600); }, 5000);
         }
 
         // --- CORE PORTAL LOGIC ---
