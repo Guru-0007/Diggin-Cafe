@@ -682,7 +682,7 @@ function renderCartItems() {
                             <div class="progress-bar-fill transition-all duration-1000" id="cart-progress-fill" style="width: 10%"></div>
                         </div>
                         <div class="status-tracker">
-                            <div class="status-tracker-step active"><span class="status-tracker-dot">📦</span><span class="status-tracker-label">Placed</span></div>
+                            <div class="status-tracker-step"><span class="status-tracker-dot">📦</span><span class="status-tracker-label">Placed</span></div>
                             <div class="status-tracker-step"><span class="status-tracker-dot">👨‍🍳</span><span class="status-tracker-label">Preparing</span></div>
                             <div class="status-tracker-step"><span class="status-tracker-dot">✅</span><span class="status-tracker-label">Ready</span></div>
                             <div class="status-tracker-step"><span class="status-tracker-dot">🚀</span><span class="status-tracker-label">Arriving</span></div>

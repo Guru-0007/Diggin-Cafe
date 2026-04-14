@@ -866,8 +866,10 @@ html.light #intro-screen .intro-bg-image {
     background: var(--border);
     z-index: 0;
 }
-.progress-tracker .status-tracker-step::before {
-    display: none !important; /* Completely hide legacy segment track lines for this specific component */
+.progress-tracker .status-tracker-step::before,
+.progress-tracker .status-tracker-step.active::before,
+.progress-tracker .status-tracker-step.completed::before {
+    display: none !important;
 }
 .status-tracker-step:first-child::before { left: 50%; }
 .status-tracker-step:last-child::before { right: 50%; }
