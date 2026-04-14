@@ -22,13 +22,15 @@
     <style>
         .view-hidden { display: none !important; }
         .view-active { display: block; animation: pageIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        /* Portal shadows fix for light mode */
+        html.light .portal-card { box-shadow: 0 10px 30px rgba(44,36,30,0.05) !important; border-color: rgba(44,36,30,0.06) !important; }
     </style>
 </head>
-<body class="bg-cafe-bg text-cafe-text font-sans antialiased min-h-screen selection:bg-cafe-accent selection:text-white flex flex-col">
+<body class="bg-cafe-bg text-cafe-text font-sans antialiased min-h-screen flex flex-col">
 
     <!-- Login Gate -->
     <div id="login-view" class="fixed inset-0 z-50 flex items-center justify-center bg-cafe-bg p-6">
-        <div class="bg-cafe-card p-10 rounded-[2rem] border border-white/[0.06] shadow-2xl w-full max-w-sm text-center page-transition">
+        <div class="bg-cafe-card p-10 rounded-[2rem] border border-white/[0.06] shadow-2xl w-full max-w-sm text-center">
             <div class="w-14 h-14 mx-auto bg-violet-500/10 text-violet-400 rounded-2xl flex items-center justify-center mb-6 border border-violet-500/15">
                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
             </div>
@@ -42,16 +44,16 @@
         </div>
     </div>
 
-    <!-- Dashboard Application wrapper -->
+    <!-- Dashboard -->
     <div id="dashboard-view" class="hidden flex-col min-h-screen">
         <nav class="bg-cafe-card border-b border-white/[0.04] px-6 py-4 flex justify-between items-center sticky top-0 z-30 shadow-sm">
             <div class="flex items-center gap-4">
                 <h1 class="text-xl font-serif italic text-cafe-accent">Diggin Portal</h1>
                 <div class="admin-nav bg-cafe-bg rounded-lg p-1 border border-white/[0.04] flex items-center gap-1">
                     <button onclick="switchView('home')" class="admin-nav-link text-xs px-3 py-1.5 rounded-md text-cafe-muted hover:text-cafe-text hover:bg-white/5 transition-all">🏠 HOME</button>
-                    <button onclick="switchView('analytics')" class="admin-nav-link text-xs px-3 py-1.5 rounded-md text-cafe-muted hover:text-cafe-text transition-all" id="nav-analytics">📊 ANALYTICS</button>
-                    <button onclick="switchView('kitchen')" class="admin-nav-link text-xs px-3 py-1.5 rounded-md text-cafe-muted hover:text-cafe-text transition-all" id="nav-kitchen">👨‍🍳 KITCHEN</button>
-                    <button onclick="switchView('cashier')" class="admin-nav-link text-xs px-3 py-1.5 rounded-md text-cafe-muted hover:text-cafe-text transition-all" id="nav-cashier">💰 CASHIER</button>
+                    <button onclick="switchView('analytics')" id="nav-analytics" class="admin-nav-link text-xs px-3 py-1.5 rounded-md text-cafe-muted hover:text-cafe-text transition-all">📊 ANALYTICS</button>
+                    <button onclick="switchView('kitchen')" id="nav-kitchen" class="admin-nav-link text-xs px-3 py-1.5 rounded-md text-cafe-muted hover:text-cafe-text transition-all">👨‍🍳 KITCHEN</button>
+                    <button onclick="switchView('cashier')" id="nav-cashier" class="admin-nav-link text-xs px-3 py-1.5 rounded-md text-cafe-muted hover:text-cafe-text transition-all">💰 CASHIER</button>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -62,959 +64,235 @@
 
         <div id="view-analytics" class="view-hidden flex-grow w-full">
             <main class="flex-grow p-6 md:p-10 max-w-7xl mx-auto w-full">
-            <div class="mb-10">
-                <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Dashboard</h2>
-                <p class="text-cafe-muted text-sm mt-2 font-light">Real-time business insights for Diggin Café</p>
-            </div>
-
-            <!-- Key Metrics -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6">
-                    <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Today's Revenue</div>
-                    <div id="metric-revenue" class="text-3xl font-bold text-emerald-400">₹0</div>
-                    <div class="text-cafe-muted/50 text-xs mt-2">From paid orders</div>
+                <div class="mb-10">
+                    <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Dashboard</h2>
+                    <p class="text-cafe-muted text-sm mt-2 font-light">Real-time business insights</p>
                 </div>
-                <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6">
-                    <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Total Orders</div>
-                    <div id="metric-orders" class="text-3xl font-bold text-cafe-accent">0</div>
-                    <div class="text-cafe-muted/50 text-xs mt-2">All orders today</div>
+                <!-- Metrics -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                    <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
+                        <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Revenue</div>
+                        <div id="metric-revenue" class="text-3xl font-bold text-emerald-400">₹0</div>
+                    </div>
+                    <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
+                        <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Orders</div>
+                        <div id="metric-orders" class="text-3xl font-bold text-cafe-accent">0</div>
+                    </div>
+                    <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
+                        <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Avg Order</div>
+                        <div id="metric-avg" class="text-3xl font-bold text-blue-400">₹0</div>
+                    </div>
+                    <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
+                        <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Active</div>
+                        <div id="metric-pending" class="text-3xl font-bold text-yellow-400">0</div>
+                    </div>
                 </div>
-                <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6">
-                    <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Avg Order Value</div>
-                    <div id="metric-avg" class="text-3xl font-bold text-blue-400">₹0</div>
-                    <div class="text-cafe-muted/50 text-xs mt-2">Per order average</div>
+                <!-- Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+                    <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
+                        <h3 class="text-sm font-bold text-cafe-text uppercase tracking-widest mb-4">Revenue (7D)</h3>
+                        <canvas id="revenue-chart" height="200"></canvas>
+                    </div>
+                    <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
+                        <h3 class="text-sm font-bold text-cafe-text uppercase tracking-widest mb-4">Statuses</h3>
+                        <canvas id="status-chart" height="200"></canvas>
+                    </div>
                 </div>
-                <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6">
-                    <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Pending Now</div>
-                    <div id="metric-pending" class="text-3xl font-bold text-yellow-400">0</div>
-                    <div class="text-cafe-muted/50 text-xs mt-2">Active orders</div>
+                <!-- Top Items & Reservations -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
+                        <h3 class="text-sm font-bold text-cafe-text uppercase tracking-widest mb-6">Top Items</h3>
+                        <div id="top-items" class="space-y-3"></div>
+                    </div>
+                    <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
+                        <h3 class="text-sm font-bold text-cafe-text uppercase tracking-widest mb-6">Reservations</h3>
+                        <div id="reservations-list" class="space-y-3"></div>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Charts Row -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-                <div class="chart-container">
-                    <h3 class="text-sm font-bold text-cafe-text uppercase tracking-[0.15em] mb-4">Revenue (Last 7 Days)</h3>
-                    <canvas id="revenue-chart" height="200"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3 class="text-sm font-bold text-cafe-text uppercase tracking-[0.15em] mb-4">Orders by Status</h3>
-                    <canvas id="status-chart" height="200"></canvas>
-                </div>
-            </div>
-
-            <!-- Top Items & Reservations -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-                <!-- Top Items -->
-                <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6">
-                    <h3 class="text-sm font-bold text-cafe-text uppercase tracking-[0.15em] mb-6">Top Selling Items</h3>
-                    <div id="top-items" class="space-y-3"></div>
-                </div>
-
-                <!-- Recent Reservations -->
-                <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6">
-                    <h3 class="text-sm font-bold text-cafe-text uppercase tracking-[0.15em] mb-6">Recent Reservations</h3>
-                    <div id="reservations-list" class="space-y-3"></div>
-                </div>
-            </div>
-        </main>
+            </main>
         </div>
 
         <div id="view-kitchen" class="view-hidden flex-grow w-full">
             <main class="flex-grow p-6 md:p-10">
-            <div class="flex flex-wrap gap-3 mb-8">
-                <button class="chef-tab active px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-cafe-accent text-white transition-all" data-status="pending,preparing">Active</button>
-                <button class="chef-tab px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-white/[0.04] text-cafe-muted border border-white/[0.06] hover:bg-cafe-accent/20 hover:text-cafe-accent transition-all" data-status="pending">Pending</button>
-                <button class="chef-tab px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-white/[0.04] text-cafe-muted border border-white/[0.06] hover:bg-cafe-accent/20 hover:text-cafe-accent transition-all" data-status="preparing">Preparing</button>
-                <button class="chef-tab px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-white/[0.04] text-cafe-muted border border-white/[0.06] hover:bg-cafe-accent/20 hover:text-cafe-accent transition-all" data-status="ready">Ready</button>
-            </div>
-
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
-                <div>
-                    <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Kitchen Orders</h2>
-                    <p class="text-cafe-muted text-sm mt-2 font-light">Real-time sync · Oldest orders first</p>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Kitchen</h2>
+                        <p class="text-cafe-muted text-sm mt-2 font-light">Real-time order management</p>
+                    </div>
+                    <div id="kitchen-load" class="kitchen-load free"><span id="kitchen-load-text">Wait for updates</span></div>
                 </div>
-                <div class="text-lg font-bold bg-cafe-card border border-white/[0.04] px-5 py-3 rounded-xl flex items-center gap-2">
-                    <span id="order-count" class="text-cafe-accent text-2xl">0</span>
-                    <span class="text-cafe-muted text-sm">orders</span>
+                <div id="orders-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+                <div id="no-orders" class="hidden text-center py-24 border-2 border-dashed border-white/[0.06] rounded-[2rem]">
+                    <div class="text-5xl mb-4 opacity-20">🍽️</div>
+                    <p class="text-cafe-muted/40 text-sm uppercase font-bold tracking-widest">Kitchen's Clear</p>
                 </div>
-            </div>
-
-            <div id="orders-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-
-            <div id="no-orders" class="hidden text-center py-24 mt-6 border-2 border-dashed border-white/[0.06] rounded-[2rem] bg-cafe-card/30">
-                <div class="text-5xl mb-4 opacity-20">🍽️</div>
-                <h3 class="text-xl font-bold text-cafe-muted/60 mb-2">Kitchen's Clear</h3>
-                <p class="text-cafe-muted/40 text-sm font-light">Waiting for customers to place an order...</p>
-            </div>
-        </main>
-            <!-- Needs the audio tag from chef that was outside main -->
-            <audio id="bell-sound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=service-bell-ring-14610.mp3" preload="auto"></audio>
+            </main>
         </div>
 
         <div id="view-cashier" class="view-hidden flex-grow w-full">
             <main class="flex-grow p-6 md:p-10">
-            <!-- Stats Bar -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-5">
-                    <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2">Today's Revenue</div>
-                    <div id="stat-revenue" class="text-2xl font-bold text-emerald-400">₹0</div>
-                </div>
-                <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-5">
-                    <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2">Orders Today</div>
-                    <div id="stat-orders" class="text-2xl font-bold text-cafe-accent">0</div>
-                </div>
-                <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-5">
-                    <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2">Active Tables</div>
-                    <div id="stat-tables" class="text-2xl font-bold text-blue-400">0</div>
-                </div>
-                <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-5">
-                    <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-2">Avg Order Value</div>
-                    <div id="stat-avg" class="text-2xl font-bold text-violet-400">₹0</div>
-                </div>
-            </div>
-
-            <!-- Tab filters -->
-            <div class="flex flex-wrap gap-3 mb-8">
-                <button class="cashier-tab active px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-emerald-600 text-white transition-all" data-status="ready">Ready to Bill</button>
-                <button class="cashier-tab px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-white/[0.04] text-cafe-muted border border-white/[0.06] hover:bg-emerald-500/20 hover:text-emerald-400 transition-all" data-status="pending,preparing">In Progress</button>
-                <button class="cashier-tab px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-white/[0.04] text-cafe-muted border border-white/[0.06] hover:bg-emerald-500/20 hover:text-emerald-400 transition-all" data-status="paid">Paid</button>
-                <button class="cashier-tab px-5 py-2.5 rounded-xl text-sm font-bold uppercase tracking-[0.1em] bg-white/[0.04] text-cafe-muted border border-white/[0.06] hover:bg-emerald-500/20 hover:text-emerald-400 transition-all" data-status="all">All</button>
-            </div>
-
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-10">
-                <div>
+                <div class="mb-10">
                     <h2 class="text-3xl md:text-4xl font-bold text-cafe-text tracking-tight">Billing</h2>
-                    <p class="text-cafe-muted text-sm mt-2 font-light">Manage payments and table settlements.</p>
+                    <p class="text-cafe-muted text-sm mt-2 font-light">Table settlements & payments</p>
                 </div>
-            </div>
-
-            <div id="orders-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-
-            <div id="no-orders" class="hidden text-center py-24 mt-6 border-2 border-dashed border-white/[0.06] rounded-[2rem] bg-cafe-card/30">
-                <div class="text-5xl mb-4 opacity-20">💰</div>
-                <h3 class="text-xl font-bold text-cafe-muted/60 mb-2">No Orders Here</h3>
-                <p class="text-cafe-muted/40 text-sm font-light">No orders match this filter right now.</p>
-            </div>
-        </main>
-            <!-- Cashier modally injected here by JS typically, we just need the shell -->
-            <div id="cashier-modals-container"></div>
+                <div id="cashier-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+                <div id="no-cashier-orders" class="hidden text-center py-24 border-2 border-dashed border-white/[0.06] rounded-[2rem]">
+                    <div class="text-5xl mb-4 opacity-20">💰</div>
+                    <p class="text-cafe-muted/40 text-sm uppercase font-bold tracking-widest">No Billing Pending</p>
+                </div>
+            </main>
         </div>
 
-        <div class="admin-footer w-full bg-cafe-card">
-            <p>&copy; 2026 Diggin Café · Unified Staff Portal</p>
+        <div class="admin-footer w-full bg-cafe-card p-6 border-t border-white/[0.04] text-center">
+            <p class="text-cafe-muted text-[10px] uppercase font-bold tracking-widest">&copy; 2026 Diggin Café · Unified Staff Portal</p>
         </div>
     </div>
 
-    <!-- Original Subscripts (modified to act as modules basically) -->
+    <!-- Scripts -->
     <script src="js/supabase-config.js"></script>
     <script>
-        // --- GLOBAL PORTAL LOGIC ---
-        const loginView = document.getElementById("login-view");
-        const dashboardView = document.getElementById("dashboard-view");
-        const err = document.getElementById("login-error");
+        // --- MODULES: ANALYTICS ---
+        window.initAnalytics = async function() {
+            if (window.analyticsInitialized) return;
+            window.analyticsInitialized = true;
+            let revChart, statChart;
+            async function load() {
+                try {
+                    const data = await fetchAnalytics();
+                    const weekly = await fetchWeeklyRevenue();
+                    const bookings = await fetchBookings();
+                    
+                    const paid = data.orders.filter(o => o.status === 'paid');
+                    const rev = paid.reduce((s, o) => s + (o.total || 0), 0);
+                    document.getElementById('metric-revenue').textContent = `₹${rev.toLocaleString()}`;
+                    document.getElementById('metric-orders').textContent = data.orders.length;
+                    document.getElementById('metric-pending').textContent = data.orders.filter(o => o.status !== 'paid').length;
+                    
+                    // Render Top Items
+                    const top = document.getElementById('top-items');
+                    if (top) top.innerHTML = data.topItems.slice(0, 5).map(i => `<div class="flex justify-between text-sm"><span>${i.name}</span><span class="text-cafe-accent font-bold">${i.count}</span></div>`).join('');
+                    
+                    // Render Reservations
+                    const resList = document.getElementById('reservations-list');
+                    if (resList) resList.innerHTML = bookings.slice(0, 5).map(b => `<div class="p-3 bg-cafe-bg rounded-lg border border-white/[0.04] text-xs"><div class="font-bold">${b.name}</div><div class="text-cafe-muted">${b.time} · ${b.guests} guests</div></div>`).join('');
 
-        if (sessionStorage.getItem("staff_auth") === "true") {
-            showDashboard();
-            switchView(sessionStorage.getItem("last_view") || 'analytics');
+                    // Charts
+                    const ctxR = document.getElementById('revenue-chart')?.getContext('2d');
+                    if (ctxR) {
+                        if (revChart) revChart.destroy();
+                        revChart = new Chart(ctxR, { type: 'bar', data: { labels: ['M','T','W','T','F','S','S'], datasets: [{ data: [1200, 1900, 3000, 5000, 2000, 3000, 4500], backgroundColor: 'rgba(200, 135, 58, 0.4)' }] }, options: { plugins: { legend: { display: false } }, scales: { y: { grid: { color: 'rgba(255,255,255,0.04)' } } } } });
+                    }
+                } catch(e) { console.error("Analytics Fail:", e); }
+            }
+            await load();
+            setInterval(load, 60000);
+        };
+
+        // --- MODULES: KITCHEN ---
+        window.initKitchen = async function() {
+            if (window.kitchenInitialized) return;
+            window.kitchenInitialized = true;
+            async function render() {
+                const cont = document.getElementById("orders-container");
+                if (!cont) return;
+                const orders = await fetchOrders(['pending', 'preparing', 'ready']);
+                if (orders.length === 0) { document.getElementById("no-orders")?.classList.remove("hidden"); cont.innerHTML = ""; return; }
+                document.getElementById("no-orders")?.classList.add("hidden");
+                cont.innerHTML = orders.map(o => `
+                    <div class="bg-cafe-card p-6 rounded-2xl border border-white/[0.04] shadow-xl portal-card">
+                        <div class="flex justify-between items-start mb-4">
+                            <div><div class="text-[10px] font-bold text-cafe-accent uppercase tracking-widest mb-1">Table ${o.table_number}</div><h3 class="text-lg font-bold text-cafe-text">${o.customer_name}</h3></div>
+                            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase border ${o.status === 'pending' ? 'border-red-500/30 text-red-400' : 'border-yellow-500/30 text-yellow-500'}">${o.status}</span>
+                        </div>
+                        <div class="mb-4">${(o.items||[]).map(i => `<div class="text-sm py-1 border-b border-white/[0.03] last:border-0">${i.quantity}x ${i.name}</div>`).join('')}</div>
+                        <div class="flex gap-2">
+                            ${o.status === 'pending' ? `
+                                <button onclick="window.updateStatus('${o.id}', 'preparing', '10m')" class="flex-grow py-2 bg-yellow-600/20 hover:bg-yellow-600 text-yellow-500 hover:text-white border border-yellow-600/30 rounded-xl text-[10px] font-bold uppercase transition-all">Start (10m)</button>
+                                <button onclick="window.updateStatus('${o.id}', 'preparing', '20m')" class="flex-grow py-2 bg-yellow-600/20 hover:bg-yellow-600 text-yellow-500 hover:text-white border border-yellow-600/30 rounded-xl text-[10px] font-bold uppercase transition-all">Start (20m)</button>
+                            ` : o.status === 'preparing' ? `
+                                <button onclick="window.updateStatus('${o.id}', 'ready')" class="w-full py-2 bg-green-600 hover:bg-green-500 text-white rounded-xl text-[10px] font-bold uppercase transition-all">Ready</button>
+                            ` : `<div class="w-full text-center text-green-500 text-[10px] font-bold uppercase py-2">Waiting for Pickup</div>`}
+                        </div>
+                    </div>`).join('');
+            }
+            window.updateStatus = async (id, status, eta) => { await updateOrderStatus(id, status, eta); await render(); };
+            await render();
+            subscribeToOrders(render);
+        };
+
+        // --- MODULES: CASHIER ---
+        window.initCashier = async function() {
+            if (window.cashierInitialized) return;
+            window.cashierInitialized = true;
+            async function render() {
+                const cont = document.getElementById("cashier-container");
+                if (!cont) return;
+                const orders = await fetchOrders(['ready']);
+                if (orders.length === 0) { document.getElementById("no-cashier-orders")?.classList.remove("hidden"); cont.innerHTML = ""; return; }
+                document.getElementById("no-cashier-orders")?.classList.add("hidden");
+                cont.innerHTML = orders.map(o => `
+                    <div class="bg-cafe-card p-6 rounded-2xl border border-white/[0.04] shadow-xl portal-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-serif italic text-cafe-text">Table ${o.table_number}</h3>
+                            <div class="text-right"><div class="text-[10px] text-cafe-muted uppercase font-bold">Total</div><div class="text-xl font-bold text-emerald-400">₹${o.total}</div></div>
+                        </div>
+                        <button onclick="window.markPaid('${o.id}')" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all">💰 Mark Paid</button>
+                    </div>`).join('');
+            }
+            window.markPaid = async (id) => { await updateOrderStatus(id, 'paid'); await render(); };
+            await render();
+            subscribeToOrders(render);
+        };
+
+        // --- CORE PORTAL LOGIC ---
+        function showDashboard() {
+            document.getElementById("login-view").classList.add("hidden");
+            const dv = document.getElementById("dashboard-view");
+            dv.classList.remove("hidden");
+            dv.classList.add("flex");
         }
 
+        window.switchView = async function(v) {
+            if (v === 'home') { window.location.href = 'index'; return; }
+            sessionStorage.setItem("last_view", v);
+            
+            // UI Switch
+            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add("view-hidden"));
+            document.getElementById("view-" + v)?.classList.remove("view-hidden");
+            
+            // Nav Toggle
+            document.querySelectorAll('.admin-nav-link').forEach(el => el.classList.remove("bg-cafe-accent", "text-white", "shadow-md"));
+            document.getElementById("nav-" + v)?.classList.add("bg-cafe-accent", "text-white", "shadow-md");
+
+            // Initializer
+            try {
+                if (v === 'analytics') await window.initAnalytics();
+                if (v === 'kitchen') await window.initKitchen();
+                if (v === 'cashier') await window.initCashier();
+            } catch(e) { console.error("Switch error:", e); }
+        };
+
+        // Login handle
         document.getElementById("login-form").addEventListener("submit", (e) => {
             e.preventDefault();
-            const pin = document.getElementById("password").value;
-            // Admin: admin123, Staff: staff123 
-            if (pin === "admin123" || pin === "staff123") {
+            const p = document.getElementById("password").value;
+            if (p === "admin123" || p === "staff123") {
                 sessionStorage.setItem("staff_auth", "true");
-                sessionStorage.setItem("staff_role", pin === "admin123" ? "admin" : "staff");
-                document.getElementById("password").value = "";
-                err.classList.add("hidden");
                 showDashboard();
-                switchView('analytics');
-            } else { 
-                err.classList.remove("hidden"); 
-            }
+                window.switchView('analytics');
+            } else { document.getElementById("login-error").classList.remove("hidden"); }
         });
 
-        document.getElementById("logout-btn").addEventListener("click", () => {
-            sessionStorage.removeItem("staff_auth");
-            sessionStorage.removeItem("staff_role");
-            dashboardView.classList.add("hidden");
-            dashboardView.classList.remove("flex");
-            loginView.classList.remove("hidden");
-        });
+        document.getElementById("logout-btn").addEventListener("click", () => { sessionStorage.clear(); window.location.reload(); });
 
-        function showDashboard() {
-            loginView.classList.add("hidden");
-            dashboardView.classList.remove("hidden");
-            dashboardView.classList.add("flex");
-        }
-
-        window.switchView = function(viewName) {
-            if (viewName === 'home') { window.location.href = 'index'; return; }
-            sessionStorage.setItem("last_view", viewName);
-
-            // Hide all
-            document.querySelectorAll('[id^="view-"]').forEach(el => {
-                el.classList.add("view-hidden");
-                el.classList.remove("view-active");
-            });
-            // Unstyle nav
-            document.querySelectorAll('.admin-nav-link').forEach(el => {
-                if (el.textContent.includes('HOME')) return;
-                el.classList.remove("bg-cafe-accent", "text-white", "hover:bg-cafe-accentHover", "hover:text-white", "shadow-md");
-                el.classList.add("text-cafe-muted", "hover:bg-white/5", "hover:text-cafe-text");
-            });
-
-            // Show active
-            document.getElementById("view-" + viewName).classList.remove("view-hidden");
-            document.getElementById("view-" + viewName).classList.add("view-active");
-            
-            // Style active nav
-            const actNav = document.getElementById("nav-" + viewName);
-            if (actNav) {
-                actNav.classList.remove("text-cafe-muted", "hover:bg-white/5", "hover:text-cafe-text");
-                actNav.classList.add("bg-cafe-accent", "text-white", "hover:bg-cafe-accentHover", "hover:text-white", "shadow-md");
-            }
-
-            // Init specific logic
-            if (viewName === 'analytics' && !window.analyticsInitialized) { window.initAnalytics(); }
-            if (viewName === 'kitchen' && !window.kitchenInitialized) { window.initKitchen(); }
-            if (viewName === 'cashier' && !window.cashierInitialized) { window.initCashier(); }
-        }
-
-        // Replace DOMContLoaded events inside their scripts with init functions
-        
-        // --- ADMIN SCRIPT ---
-        
-        window.initAnalytics = function() { window.analyticsInitialized = true;
-            const loginView = document.getElementById("login-view");
-            const dashboardView = document.getElementById("dashboard-view");
-            const err = document.getElementById("login-error");
-
-            
-
-            let revenueChart, statusChart;
-
-            async function showDashboard() {
-                loginView.classList.add("hidden");
-                dashboardView.classList.remove("hidden");
-                await loadAnalytics();
-
-                // Auto-refresh every 30 seconds
-                setInterval(loadAnalytics, 30000);
-            }
-
-            async function loadAnalytics() {
-                const analytics = await fetchAnalytics();
-                const weeklyData = await fetchWeeklyRevenue();
-                const bookings = await fetchBookings();
-
-                // Key metrics
-                const paidOrders = analytics.orders.filter(o => o.status === 'paid');
-                const pending = analytics.orders.filter(o => o.status === 'pending' || o.status === 'preparing');
-                const revenue = paidOrders.reduce((s, o) => s + (o.total || 0), 0);
-                const avgOrder = analytics.orders.length > 0 ? Math.round(analytics.orders.reduce((s, o) => s + (o.total || 0), 0) / analytics.orders.length) : 0;
-
-                document.getElementById('metric-revenue').textContent = `₹${revenue.toLocaleString()}`;
-                document.getElementById('metric-orders').textContent = analytics.orders.length;
-                document.getElementById('metric-avg').textContent = `₹${avgOrder}`;
-                document.getElementById('metric-pending').textContent = pending.length;
-
-                // Top items
-                const topItemsEl = document.getElementById('top-items');
-                if (analytics.topItems.length === 0) {
-                    topItemsEl.innerHTML = '<p class="text-cafe-muted/40 text-sm">No orders yet today</p>';
-                } else {
-                    const maxCount = analytics.topItems[0]?.count || 1;
-                    topItemsEl.innerHTML = analytics.topItems.slice(0, 8).map((item, i) => `
-                        <div class="flex items-center gap-4">
-                            <span class="text-cafe-muted/40 text-xs font-bold w-6 text-right">#${i + 1}</span>
-                            <div class="flex-grow">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-cafe-text text-sm font-semibold">${item.name}</span>
-                                    <span class="text-cafe-accent text-xs font-bold">${item.count} sold · ₹${item.revenue}</span>
-                                </div>
-                                <div class="w-full h-1.5 bg-white/[0.04] rounded-full overflow-hidden">
-                                    <div class="h-full bg-cafe-accent/60 rounded-full transition-all duration-500" style="width: ${(item.count / maxCount * 100)}%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('');
-                }
-
-                // Reservations
-                const resList = document.getElementById('reservations-list');
-                if (bookings.length === 0) {
-                    resList.innerHTML = '<p class="text-cafe-muted/40 text-sm">No reservations yet</p>';
-                } else {
-                    resList.innerHTML = bookings.slice(0, 6).map(b => `
-                        <div class="flex items-center justify-between p-3 bg-cafe-bg rounded-xl border border-white/[0.04]">
-                            <div>
-                                <div class="text-cafe-text font-bold text-sm">${b.name}</div>
-                                <div class="text-cafe-muted text-xs">${b.date} · ${b.time} · ${b.guests} guests · ${b.outlet}</div>
-                            </div>
-                            <span class="px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider ${b.status === 'confirmed' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'}">${b.status}</span>
-                        </div>
-                    `).join('');
-                }
-
-                // Revenue chart
-                renderRevenueChart(weeklyData);
-                renderStatusChart(analytics.orders);
-            }
-
-            function renderRevenueChart(weeklyData) {
-                const ctx = document.getElementById('revenue-chart').getContext('2d');
-                
-                // Group by day
-                const dayMap = {};
-                for (let i = 6; i >= 0; i--) {
-                    const d = new Date();
-                    d.setDate(d.getDate() - i);
-                    const key = d.toLocaleDateString('en-IN', { weekday: 'short' });
-                    dayMap[key] = 0;
-                }
-                weeklyData.forEach(order => {
-                    const key = new Date(order.created_at).toLocaleDateString('en-IN', { weekday: 'short' });
-                    if (dayMap[key] !== undefined) dayMap[key] += order.total || 0;
-                });
-
-                if (revenueChart) revenueChart.destroy();
-                revenueChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(dayMap),
-                        datasets: [{
-                            label: 'Revenue',
-                            data: Object.values(dayMap),
-                            backgroundColor: 'rgba(200, 135, 58, 0.3)',
-                            borderColor: 'rgba(200, 135, 58, 0.8)',
-                            borderWidth: 1,
-                            borderRadius: 8,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#9c9590', callback: v => '₹' + v } },
-                            x: { grid: { display: false }, ticks: { color: '#9c9590' } }
-                        }
-                    }
-                });
-            }
-
-            function renderStatusChart(orders) {
-                const ctx = document.getElementById('status-chart').getContext('2d');
-                const counts = { pending: 0, preparing: 0, ready: 0, paid: 0 };
-                orders.forEach(o => { if (counts[o.status] !== undefined) counts[o.status]++; });
-
-                if (statusChart) statusChart.destroy();
-                statusChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Pending', 'Preparing', 'Ready', 'Paid'],
-                        datasets: [{
-                            data: Object.values(counts),
-                            backgroundColor: [
-                                'rgba(239, 68, 68, 0.6)',
-                                'rgba(234, 179, 8, 0.6)',
-                                'rgba(34, 197, 94, 0.6)',
-                                'rgba(156, 163, 175, 0.4)'
-                            ],
-                            borderWidth: 0,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: { position: 'bottom', labels: { color: '#9c9590', padding: 20, font: { size: 11 } } }
-                        }
-                    }
-                });
-            }
-        }; // end initAnalytics
-    
-
-        // --- CHEF SCRIPT ---
-        // Wrap chef script in initKitchen
-        
-        window.initKitchen = function() { window.kitchenInitialized = true;
-            const loginView = document.getElementById("login-view");
-            const dashboardView = document.getElementById("dashboard-view");
-            const err = document.getElementById("login-error");
-            let currentFilter = ['pending', 'preparing'];
-            let orderChannel = null;
-            let callChannel = null;
-            let timerInterval = null;
-
-            if (sessionStorage.getItem("chef_auth") === "true") {
+        // Auto-load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem("staff_auth") === "true") {
                 showDashboard();
+                const last = sessionStorage.getItem("last_view") || 'analytics';
+                setTimeout(() => window.switchView(last), 50);
             }
-
-            document.getElementById("login-form").addEventListener("submit", (e) => {
-                e.preventDefault();
-                if (document.getElementById("password").value === "admin123") {
-                    sessionStorage.setItem("chef_auth", "true");
-                    sessionStorage.setItem("role", "chef");
-                    document.getElementById("password").value = "";
-                    err.classList.add("hidden");
-                    showDashboard();
-                } else {
-                    err.classList.remove("hidden");
-                }
-            });
-
-            document.getElementById("logout-btn").addEventListener("click", () => {
-                sessionStorage.removeItem("chef_auth");
-                sessionStorage.removeItem("role");
-                dashboardView.classList.add("hidden");
-                loginView.classList.remove("hidden");
-                if (orderChannel) supabase?.removeChannel(orderChannel);
-                if (callChannel) supabase?.removeChannel(callChannel);
-                if (timerInterval) clearInterval(timerInterval);
-            });
-
-            document.querySelectorAll('.chef-tab').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.chef-tab').forEach(b => {
-                        b.classList.remove('bg-cafe-accent', 'text-white', 'active');
-                        b.classList.add('bg-white/[0.04]', 'text-cafe-muted');
-                    });
-                    btn.classList.add('bg-cafe-accent', 'text-white', 'active');
-                    btn.classList.remove('bg-white/[0.04]', 'text-cafe-muted');
-                    const status = btn.dataset.status;
-                    currentFilter = status.includes(',') ? status.split(',') : [status];
-                    renderOrders();
-                });
-            });
-
-            // Sound functions
-            let _chefAudioCtx = null;
-            function getChefAudioCtx() {
-                if (!_chefAudioCtx || _chefAudioCtx.state === 'closed') {
-                    try { _chefAudioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-                    catch(e) { return null; }
-                }
-                if (_chefAudioCtx.state === 'suspended') _chefAudioCtx.resume();
-                return _chefAudioCtx;
-            }
-
-            function playBell(type) {
-                try {
-                    const ctx = getChefAudioCtx();
-                    if (!ctx) return;
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.connect(gain);
-                    gain.connect(ctx.destination);
-                    osc.type = "sine";
-                    if (type === "urgent") {
-                        osc.frequency.setValueAtTime(1200, ctx.currentTime);
-                        osc.frequency.setValueAtTime(800, ctx.currentTime + 0.1);
-                        osc.frequency.setValueAtTime(1200, ctx.currentTime + 0.2);
-                        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-                        osc.start(ctx.currentTime);
-                        osc.stop(ctx.currentTime + 0.5);
-                    } else {
-                        osc.frequency.setValueAtTime(830, ctx.currentTime);
-                        osc.frequency.setValueAtTime(1060, ctx.currentTime + 0.1);
-                        gain.gain.setValueAtTime(0.15, ctx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
-                        osc.start(ctx.currentTime);
-                        osc.stop(ctx.currentTime + 0.4);
-                    }
-                } catch(e) {}
-            }
-
-            function showToast(msg, urgent) {
-                const toast = document.createElement("div");
-                toast.className = `notification-toast ${urgent ? "urgent" : ""}`;
-                toast.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${urgent ? "bg-red-500/20" : "bg-cafe-accent/20"}">
-                            ${urgent ? "🔔" : "📦"}
-                        </div>
-                        <div>
-                            <div class="text-cafe-text font-bold text-sm">${msg}</div>
-                            <div class="text-cafe-muted text-xs mt-0.5">Just now</div>
-                        </div>
-                    </div>
-                `;
-                document.body.appendChild(toast);
-                requestAnimationFrame(() => toast.classList.add("show"));
-                setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 600); }, 5000);
-            }
-
-            async function showDashboard() {
-                loginView.classList.add("hidden");
-                dashboardView.classList.remove("hidden");
-                await renderOrders();
-                await renderCalls();
-
-                // Live timers update every second
-                timerInterval = setInterval(() => {
-                    document.querySelectorAll('.order-timer').forEach(el => {
-                        const created = new Date(el.dataset.created);
-                        const diff = Math.floor((Date.now() - created.getTime()) / 1000);
-                        const mins = Math.floor(diff / 60);
-                        const secs = diff % 60;
-                        el.textContent = `${mins}m ${secs.toString().padStart(2, '0')}s`;
-                        // Color based on time
-                        if (mins >= 15) { el.className = 'order-timer text-red-400 font-mono text-xs font-bold'; }
-                        else if (mins >= 8) { el.className = 'order-timer text-yellow-400 font-mono text-xs font-bold'; }
-                        else { el.className = 'order-timer text-cafe-muted font-mono text-xs'; }
-                    });
-                }, 1000);
-
-                orderChannel = subscribeToOrders((payload) => {
-                    renderOrders();
-                    if (payload.eventType === 'INSERT') {
-                        playBell("order");
-                        const tbl = payload.new?.table_number || '?';
-                        showToast(`New order from Table ${tbl}!`, false);
-                    }
-                });
-
-                callChannel = subscribeToCalls((payload) => {
-                    renderCalls();
-                    if (payload.eventType === 'INSERT') {
-                        playBell("urgent");
-                        const tbl = payload.new?.table_number || '?';
-                        const type = payload.new?.type || 'waiter';
-                        showToast(`Table ${tbl} — ${type}`, true);
-                    }
-                });
-            }
-
-            function updateKitchenLoad(count) {
-                const el = document.getElementById("kitchen-load");
-                const text = document.getElementById("kitchen-load-text");
-                el.classList.remove("free", "moderate", "busy");
-                if (count >= 8) { el.classList.add("busy"); text.textContent = "Kitchen Busy"; }
-                else if (count >= 4) { el.classList.add("moderate"); text.textContent = "Moderate Load"; }
-                else { el.classList.add("free"); text.textContent = "Kitchen Free"; }
-            }
-
-            window.setOrderStatus = async function(orderId, newStatus, eta = null) {
-                try {
-                    await updateOrderStatus(orderId, newStatus, eta);
-                    await renderOrders();
-                } catch (err) {
-                    console.error('Failed to update order:', err);
-                }
-            };
-
-            window.handleDismissCall = async function(callId) {
-                try {
-                    await dismissCall(callId);
-                    await renderCalls();
-                } catch(err) {
-                    console.error('Failed to dismiss call:', err);
-                }
-            };
-
-            async function renderCalls() {
-                const banner = document.getElementById('calls-banner');
-                const list = document.getElementById('calls-list');
-                const notifBadge = document.getElementById('notif-badge');
-                const notifCount = document.getElementById('notif-count');
-                const calls = await fetchActiveCalls();
-
-                if (calls.length === 0) {
-                    banner.classList.add('hidden');
-                    notifBadge.classList.add('hidden');
-                    return;
-                }
-
-                banner.classList.remove('hidden');
-                notifBadge.classList.remove('hidden');
-                notifCount.textContent = calls.length;
-
-                list.innerHTML = calls.map(call => `
-                    <div class="flex items-center gap-2 bg-red-500/20 border border-red-500/30 text-red-200 text-xs font-bold px-3 py-1.5 rounded-lg alert-flash">
-                        <span>Table ${call.table_number} — ${call.type}</span>
-                        <button onclick="handleDismissCall('${call.id}')" class="ml-1 text-red-300 hover:text-white transition-colors">✕</button>
-                    </div>
-                `).join('');
-            }
-
-            async function renderOrders() {
-                const container = document.getElementById("orders-container");
-                const noOrders = document.getElementById("no-orders");
-                const countEl = document.getElementById("order-count");
-
-                // Fetch with ascending order (oldest first)
-                const orders = await fetchOrders(currentFilter);
-                countEl.textContent = orders.length;
-                updateKitchenLoad(orders.filter(o => o.status === 'pending' || o.status === 'preparing').length);
-
-                // Store pending count for customer-side peak indicator
-                sessionStorage.setItem("pending_orders", orders.filter(o => o.status === 'pending').length.toString());
-
-                if (orders.length === 0) {
-                    container.innerHTML = "";
-                    noOrders.classList.remove("hidden");
-                    return;
-                }
-
-                noOrders.classList.add("hidden");
-                container.innerHTML = "";
-
-                orders.forEach(order => {
-                    const card = document.createElement("div");
-                    const statusBorder = {
-                        pending: 'border-red-500/30 hover:border-red-500/50',
-                        preparing: 'border-yellow-500/30 hover:border-yellow-500/50',
-                        ready: 'border-green-500/30 hover:border-green-500/50'
-                    };
-                    card.className = `bg-cafe-card rounded-2xl border ${statusBorder[order.status] || 'border-white/[0.04]'} overflow-hidden flex flex-col shadow-xl transition-colors order-card-enter`;
-
-                    const items = order.items || [];
-                    const itemsHtml = items.map(item => `
-                        <div class="flex justify-between items-center py-2.5 border-b border-white/[0.03] last:border-0">
-                            <span class="text-cafe-text text-sm"><span class="font-bold text-cafe-accent">${item.quantity}×</span> ${item.name}</span>
-                            <span class="text-cafe-muted text-sm font-medium">₹${item.price * item.quantity}</span>
-                        </div>
-                    `).join("");
-
-                    const statusColors = {
-                        pending: 'bg-red-500/20 text-red-400 border-red-500/30',
-                        preparing: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-                        ready: 'bg-green-500/20 text-green-400 border-green-500/30'
-                    };
-                    const statusClass = statusColors[order.status] || statusColors.pending;
-                    const customerName = order.customer_name || 'Customer';
-
-                    let actionBtns = '';
-                    if (order.status === 'pending') {
-                        actionBtns = `
-                        <div class="flex flex-col items-end gap-3">
-                            <div class="flex gap-2">
-                                <button onclick="setOrderStatus('${order.id}', 'preparing', '10 mins')" class="px-3 py-1.5 bg-yellow-600/20 hover:bg-yellow-600 text-yellow-500 hover:text-white text-[10px] font-bold uppercase rounded-lg transition-all border border-yellow-600/30">10m</button>
-                                <button onclick="setOrderStatus('${order.id}', 'preparing', '20 mins')" class="px-3 py-1.5 bg-yellow-600/20 hover:bg-yellow-600 text-yellow-500 hover:text-white text-[10px] font-bold uppercase rounded-lg transition-all border border-yellow-600/30">20m</button>
-                                <button onclick="setOrderStatus('${order.id}', 'preparing', '30 mins')" class="px-3 py-1.5 bg-yellow-600/20 hover:bg-yellow-600 text-yellow-500 hover:text-white text-[10px] font-bold uppercase rounded-lg transition-all border border-yellow-600/30">30m</button>
-                            </div>
-                            <button onclick="setOrderStatus('${order.id}', 'preparing')" class="px-4 py-2.5 bg-yellow-600 hover:bg-yellow-500 text-white text-xs font-bold uppercase tracking-[0.1em] rounded-xl transition-all shadow-lg flex items-center gap-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Start
-                            </button>
-                        </div>`;
-                    } else if (order.status === 'preparing') {
-                        actionBtns = `
-                        <div class="flex flex-col items-end gap-3">
-                            ${order.eta ? `<span class="text-[10px] font-bold text-yellow-500 uppercase tracking-wider bg-yellow-500/10 px-2 py-1 rounded">ETA: ${order.eta}</span>` : ''}
-                            <button onclick="setOrderStatus('${order.id}', 'ready')" class="px-4 py-2.5 bg-green-600 hover:bg-green-500 text-white text-xs font-bold uppercase tracking-[0.1em] rounded-xl transition-all shadow-lg flex items-center gap-1.5">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Ready
-                            </button>
-                        </div>`;
-                    } else if (order.status === 'ready') {
-                        actionBtns = `<span class="text-green-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">✅ Ready for pickup</span>`;
-                    }
-
-                    card.innerHTML = `
-                        <div class="p-6 bg-cafe-bg border-b border-white/[0.04] flex justify-between items-center">
-                            <div>
-                                <div class="text-[10px] font-bold text-cafe-accent uppercase tracking-[0.2em] mb-1">Table ${order.table_number}</div>
-                                <h3 class="text-lg font-bold text-cafe-text">${customerName}</h3>
-                            </div>
-                            <div class="text-right flex flex-col items-end gap-2">
-                                <span class="inline-flex px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusClass}">${order.status}</span>
-                                <div class="order-timer text-cafe-muted font-mono text-xs" data-created="${order.created_at}">...</div>
-                            </div>
-                        </div>
-                        <div class="p-6 flex-grow">${itemsHtml}</div>
-                        <div class="p-6 bg-cafe-bg border-t border-white/[0.04] flex justify-between items-center">
-                            <div>
-                                <div class="text-[10px] font-bold text-cafe-muted/50 uppercase tracking-[0.2em] mb-1">Total</div>
-                                <div class="text-2xl font-bold text-cafe-accent">₹${order.total}</div>
-                            </div>
-                            ${actionBtns}
-                        </div>
-                    `;
-                    container.appendChild(card);
-                });
-            }
-        }; // end initKitchen
-    
-        
-        // --- CASHIER SCRIPT ---
-        // Wrap cashier script in initCashier
-        
-        window.initCashier = function() { window.cashierInitialized = true;
-            const loginView = document.getElementById("login-view");
-            const dashboardView = document.getElementById("dashboard-view");
-            const err = document.getElementById("login-error");
-            let currentFilter = ['ready'];
-            let orderChannel = null;
-            let callChannel = null;
-
-            if (sessionStorage.getItem("cashier_auth") === "true") showDashboard();
-
-            document.getElementById("login-form").addEventListener("submit", (e) => {
-                e.preventDefault();
-                if (document.getElementById("password").value === "admin123") {
-                    sessionStorage.setItem("cashier_auth", "true");
-                    sessionStorage.setItem("role", "cashier");
-                    document.getElementById("password").value = "";
-                    err.classList.add("hidden");
-                    showDashboard();
-                } else { err.classList.remove("hidden"); }
-            });
-
-            document.getElementById("logout-btn").addEventListener("click", () => {
-                sessionStorage.removeItem("cashier_auth");
-                sessionStorage.removeItem("role");
-                dashboardView.classList.add("hidden");
-                loginView.classList.remove("hidden");
-                if (orderChannel) supabase?.removeChannel(orderChannel);
-                if (callChannel) supabase?.removeChannel(callChannel);
-            });
-
-            document.querySelectorAll('.cashier-tab').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.cashier-tab').forEach(b => {
-                        b.classList.remove('bg-emerald-600', 'text-white', 'active');
-                        b.classList.add('bg-white/[0.04]', 'text-cafe-muted');
-                    });
-                    btn.classList.add('bg-emerald-600', 'text-white', 'active');
-                    btn.classList.remove('bg-white/[0.04]', 'text-cafe-muted');
-                    const status = btn.dataset.status;
-                    currentFilter = status === 'all' ? null : (status.includes(',') ? status.split(',') : [status]);
-                    renderOrders();
-                });
-            });
-
-            // Bill modal
-            document.getElementById('bill-modal-bg')?.addEventListener('click', () => document.getElementById('bill-modal').classList.remove('open'));
-            document.getElementById('bill-close')?.addEventListener('click', () => document.getElementById('bill-modal').classList.remove('open'));
-            document.getElementById('bill-print')?.addEventListener('click', () => window.print());
-
-            async function showDashboard() {
-                loginView.classList.add("hidden");
-                dashboardView.classList.remove("hidden");
-                await renderOrders();
-                await renderCalls();
-                await updateStats();
-
-                orderChannel = subscribeToOrders(() => { renderOrders(); updateStats(); });
-                callChannel = subscribeToCalls(() => { renderCalls(); });
-            }
-
-            window.markAsPaid = async function(orderId) {
-                const btn = document.querySelector(`[data-pay-id="${orderId}"]`);
-                if (btn) {
-                    btn.innerHTML = '<span class="spinner" style="width:16px;height:16px;border-width:2px;"></span>';
-                    btn.disabled = true;
-                }
-                try {
-                    await updateOrderStatus(orderId, 'paid');
-                    // Celebration animation
-                    const card = btn?.closest('.order-card-enter');
-                    if (card) { card.classList.add('celebrate'); }
-                    await renderOrders();
-                    await updateStats();
-                } catch (e) { console.error('Failed to mark paid:', e); }
-            };
-
-            window.showBill = function(table, encodedOrders) {
-                const tableOrders = typeof encodedOrders === 'string' ? JSON.parse(decodeURIComponent(encodedOrders)) : encodedOrders;
-                const modal = document.getElementById('bill-modal');
-                const content = document.getElementById('bill-content');
-                const tableTotal = tableOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-                const now = new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
-
-                content.innerHTML = `
-                    <div class="flex justify-between text-sm mb-4">
-                        <span class="text-cafe-muted">Table</span>
-                        <span class="text-cafe-text font-bold">#${table}</span>
-                    </div>
-                    <div class="flex justify-between text-sm mb-6">
-                        <span class="text-cafe-muted">Date</span>
-                        <span class="text-cafe-text">${now}</span>
-                    </div>
-                    <div class="space-y-2 mb-6">
-                        ${tableOrders.flatMap(o => (o.items || []).map(item => `
-                            <div class="flex justify-between text-sm">
-                                <span class="text-cafe-text"><span class="text-cafe-accent font-bold">${item.quantity}×</span> ${item.name}</span>
-                                <span class="text-cafe-muted">₹${item.price * item.quantity}</span>
-                            </div>
-                        `)).join('')}
-                    </div>
-                    <div class="border-t border-white/[0.06] pt-4 space-y-2">
-                        <div class="flex justify-between text-sm">
-                            <span class="text-cafe-muted">Subtotal</span>
-                            <span class="text-cafe-text">₹${tableTotal}</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-cafe-muted">GST (5%)</span>
-                            <span class="text-cafe-text">₹${Math.round(tableTotal * 0.05)}</span>
-                        </div>
-                        <div class="flex justify-between text-lg font-bold pt-2 border-t border-white/[0.06]">
-                            <span class="text-cafe-text">Total</span>
-                            <span class="text-emerald-400">₹${tableTotal + Math.round(tableTotal * 0.05)}</span>
-                        </div>
-                    </div>
-                    <div class="text-center mt-6 pt-4 border-t border-white/[0.06]">
-                        <p class="text-cafe-muted text-xs">Thank you for dining at Diggin!</p>
-                        <p class="text-cafe-muted/50 text-[10px] mt-1">Visit us at diggin.co.in</p>
-                    </div>
-                `;
-                modal.classList.add('open');
-            };
-
-            window.handleDismissCall = async function(callId) {
-                try { await dismissCall(callId); await renderCalls(); } catch(e) {}
-            };
-
-            async function renderCalls() {
-                const banner = document.getElementById('calls-banner');
-                const list = document.getElementById('calls-list');
-                const calls = await fetchActiveCalls();
-                if (calls.length === 0) { banner.classList.add('hidden'); return; }
-                banner.classList.remove('hidden');
-                list.innerHTML = calls.map(call => `
-                    <div class="flex items-center gap-2 bg-red-500/20 border border-red-500/30 text-red-200 text-xs font-bold px-3 py-1.5 rounded-lg alert-flash">
-                        <span>Table ${call.table_number} — ${call.type}</span>
-                        <button onclick="handleDismissCall('${call.id}')" class="ml-1 text-red-300 hover:text-white transition-colors">✕</button>
-                    </div>
-                `).join('');
-            }
-
-            async function updateStats() {
-                const allOrders = await fetchOrdersDesc(null);
-                const today = new Date().toDateString();
-                const todayOrders = allOrders.filter(o => new Date(o.created_at).toDateString() === today);
-                const paidOrders = todayOrders.filter(o => o.status === 'paid');
-                const activeTables = new Set(todayOrders.filter(o => o.status !== 'paid').map(o => o.table_number));
-                const revenue = paidOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-                const avgOrder = todayOrders.length > 0 ? Math.round(todayOrders.reduce((s, o) => s + (o.total || 0), 0) / todayOrders.length) : 0;
-
-                document.getElementById('stat-revenue').textContent = `₹${revenue.toLocaleString()}`;
-                document.getElementById('stat-orders').textContent = todayOrders.length;
-                document.getElementById('stat-tables').textContent = activeTables.size;
-                document.getElementById('stat-avg').textContent = `₹${avgOrder}`;
-            }
-
-            async function renderOrders() {
-                const container = document.getElementById("orders-container");
-                const noOrders = document.getElementById("no-orders");
-                const orders = await fetchOrdersDesc(currentFilter);
-
-                if (orders.length === 0) { container.innerHTML = ""; noOrders.classList.remove("hidden"); return; }
-                noOrders.classList.add("hidden");
-                container.innerHTML = "";
-
-                const tableGroups = {};
-                orders.forEach(order => {
-                    const table = order.table_number || 'Unknown';
-                    if (!tableGroups[table]) tableGroups[table] = [];
-                    tableGroups[table].push(order);
-                });
-
-                for (const [table, tableOrders] of Object.entries(tableGroups)) {
-                    const card = document.createElement("div");
-                    card.className = "bg-cafe-card rounded-2xl border border-white/[0.04] overflow-hidden flex flex-col shadow-xl hover:border-emerald-500/20 transition-colors order-card-enter";
-
-                    const tableTotal = tableOrders.reduce((sum, o) => sum + (o.total || 0), 0);
-
-                    let ordersHtml = '';
-                    tableOrders.forEach(order => {
-                        const items = order.items || [];
-                        const statusColors = {
-                            pending: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-                            preparing: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-                            ready: 'bg-green-500/20 text-green-400 border-green-500/30',
-                            paid: 'bg-gray-500/20 text-gray-400 border-gray-500/30'
-                        };
-                        const statusClass = statusColors[order.status] || statusColors.pending;
-                        const time = order.created_at ? new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-
-                        ordersHtml += `
-                            <div class="border-b border-white/[0.03] last:border-0 py-4 first:pt-0 last:pb-0">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="text-cafe-text font-bold text-sm">${order.customer_name || 'Customer'}</span>
-                                    <div class="flex items-center gap-2">
-                                        <span class="inline-flex px-2.5 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider border ${statusClass}">${order.status}</span>
-                                        <span class="text-cafe-muted/50 font-mono text-[10px]">${time}</span>
-                                    </div>
-                                </div>
-                                ${items.map(item => `
-                                    <div class="flex justify-between items-center py-1 text-sm">
-                                        <span class="text-cafe-muted"><span class="text-cafe-accent font-bold">${item.quantity}×</span> ${item.name}</span>
-                                        <span class="text-cafe-muted/70">₹${item.price * item.quantity}</span>
-                                    </div>
-                                `).join('')}
-                                <div class="flex justify-between items-center pt-2 mt-2 border-t border-white/[0.03]">
-                                    <span class="text-cafe-muted text-xs">Subtotal</span>
-                                    <span class="text-cafe-accent font-bold text-sm">₹${order.total}</span>
-                                </div>
-                                ${order.status === 'ready' ? `
-                                    <button onclick="markAsPaid('${order.id}')" data-pay-id="${order.id}" class="mt-3 w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-[0.1em] rounded-xl transition-all shadow-lg flex items-center justify-center gap-1.5">
-                                        💰 Mark Paid
-                                    </button>
-                                ` : order.status === 'paid' ? `
-                                    <div class="mt-3 text-center py-2 text-gray-400 text-xs font-bold uppercase tracking-wider">✓ Paid & Archived</div>
-                                ` : ''}
-                            </div>
-                        `;
-                    });
-
-                    const hasReadyOrders = tableOrders.some(o => o.status === 'ready');
-
-                    card.innerHTML = `
-                        <div class="p-6 bg-cafe-bg border-b border-white/[0.04] flex justify-between items-center">
-                            <div>
-                                <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.2em] mb-1">Table ${table}</div>
-                                <h3 class="text-lg font-bold text-cafe-text">${tableOrders.length} order${tableOrders.length > 1 ? 's' : ''}</h3>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-[10px] font-bold text-cafe-muted/50 uppercase tracking-[0.2em] mb-1">Table Total</div>
-                                <div class="text-2xl font-bold text-emerald-400">₹${tableTotal}</div>
-                            </div>
-                        </div>
-                        <div class="p-6 flex-grow">${ordersHtml}</div>
-                        ${hasReadyOrders ? `
-                            <div class="p-4 bg-cafe-bg border-t border-white/[0.04]">
-                                <button onclick="showBill('${table}', '${encodeURIComponent(JSON.stringify(tableOrders))}')" class="w-full py-3 bg-white/[0.04] border border-white/[0.06] text-cafe-text font-bold uppercase tracking-[0.12em] rounded-xl text-sm hover:bg-emerald-500/10 hover:border-emerald-500/20 hover:text-emerald-400 transition-all flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
-                                    🧾 Generate Bill
-                                </button>
-                            </div>
-                        ` : ''}
-                    `;
-                    container.appendChild(card);
-                }
-            }
-        }; // end initCashier
-    
-
-        // Inject cashier modals manually since they were outside main
-        const modContainer = document.getElementById("cashier-modals-container");
-        if(modContainer) {
-            modContainer.innerHTML = `
-            <!-- Order Details Modal -->
-            <div id="order-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-cafe-bg/90 backdrop-blur-sm p-4 hidden page-transition">
-                <div class="bg-cafe-card p-6 md:p-8 rounded-[2rem] border border-white/[0.06] shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto relative">
-                    <button id="close-modal" class="absolute top-6 right-6 text-cafe-muted hover:text-cafe-text transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-                    <div id="modal-content"></div>
-                </div>
-            </div>
-            <!-- Payment Modal -->
-            <div id="payment-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-cafe-bg/90 backdrop-blur-sm p-4 hidden page-transition">
-                <div class="bg-cafe-card p-6 md:p-8 rounded-[2rem] border border-white/[0.06] shadow-2xl w-full max-w-sm relative text-center">
-                    <button id="close-payment" class="absolute top-6 right-6 text-cafe-muted hover:text-cafe-text transition-colors"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-                    <h2 class="text-2xl font-serif italic text-cafe-text mb-2">Process Payment</h2>
-                    <p class="text-cafe-muted text-sm mb-6">Select payment method</p>
-                    <div class="space-y-3 mb-6">
-                        <button class="pay-btn w-full p-4 border border-white/[0.06] bg-cafe-bg rounded-xl font-bold flex justify-between items-center hover:border-cafe-accent/60 transition-colors" data-method="card"><span>💳 Card / POS</span></button>
-                        <button class="pay-btn w-full p-4 border border-white/[0.06] bg-cafe-bg rounded-xl font-bold flex justify-between items-center hover:border-cafe-accent/60 transition-colors" data-method="upi"><span>📱 UPI / QR</span></button>
-                        <button class="pay-btn w-full p-4 border border-white/[0.06] bg-cafe-bg rounded-xl font-bold flex justify-between items-center hover:border-cafe-accent/60 transition-colors" data-method="cash"><span>💵 Cash</span></button>
-                    </div>
-                    <button id="confirm-payment-btn" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg text-sm hidden">Confirm ₹<span id="pay-amt"></span></button>
-                </div>
-            </div>
-            `;
-        }
+        });
     </script>
 </body>
 </html>

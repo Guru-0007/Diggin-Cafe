@@ -34,25 +34,25 @@
 /* ─── PREMIUM LIGHT MODE ────────────────── */
 /* A completely separate warm, cream-toned theme */
 html.light {
-    --bg-primary: #FBF8F3;
+    --bg-primary: #FCFAF7;
     --bg-card: #FFFFFF;
-    --bg-surface: #F5EFE6;
-    --bg-elevated: #EDE5D8;
-    --text-primary: #2C2418;
-    --text-secondary: #57503F;
-    --text-muted: #8A7E6B;
+    --bg-surface: #F8F3EC;
+    --bg-elevated: #F2EBE1;
+    --text-primary: #2C241E;
+    --text-secondary: #5C5248;
+    --text-muted: #968B7F;
     --accent: #B07830;
     --accent-hover: #8A5E20;
-    --accent-glow: rgba(176, 120, 48, 0.18);
-    --border: rgba(44, 36, 24, 0.08);
-    --border-hover: rgba(176, 120, 48, 0.25);
-    --glass-bg: rgba(255, 255, 255, 0.88);
-    --glass-border: rgba(44, 36, 24, 0.08);
-    --shadow-card: 0 4px 24px rgba(44, 36, 24, 0.06);
-    --shadow-glow: 0 0 30px rgba(176, 120, 48, 0.06);
-    --shadow-hover: 0 12px 40px rgba(44, 36, 24, 0.1);
-    --invert-text: #2C2418;
-    --review-bg: #F8F3EC;
+    --accent-glow: rgba(176, 120, 48, 0.12);
+    --border: rgba(44, 36, 30, 0.06);
+    --border-hover: rgba(176, 120, 48, 0.2);
+    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --shadow-card: 0 10px 30px -5px rgba(44, 36, 30, 0.04), 0 4px 6px -2px rgba(44, 36, 30, 0.02);
+    --shadow-glow: 0 0 40px rgba(176, 120, 48, 0.08);
+    --shadow-hover: 0 20px 40px -10px rgba(176, 120, 48, 0.15), 0 10px 10px -5px rgba(44, 36, 30, 0.04);
+    --invert-text: #2C241E;
+    --review-bg: #FFFFFF;
     color-scheme: light;
 }
 
@@ -127,10 +127,10 @@ html.light .group:hover {
 }
 
 /* Light mode text opacity fix */
-html.light .text-cafe-text\/80 { color: var(--text-primary) !important; opacity: 0.88; }
-html.light .text-cafe-muted\/40 { color: var(--text-muted) !important; opacity: 0.55; }
-html.light .text-cafe-muted\/50 { color: var(--text-muted) !important; opacity: 0.65; }
-html.light .text-cafe-muted\/60 { color: var(--text-muted) !important; opacity: 0.72; }
+html.light .text-cafe-text\/80 { color: var(--text-primary) !important; opacity: 0.85; }
+html.light .text-cafe-muted\/40 { color: var(--text-muted) !important; opacity: 0.45; }
+html.light .text-cafe-muted\/50 { color: var(--text-muted) !important; opacity: 0.55; }
+html.light .text-cafe-muted\/60 { color: var(--text-muted) !important; opacity: 0.65; }
 
 /* Light mode: navbar */
 html.light nav.bg-cafe-bg\/85,
@@ -297,9 +297,9 @@ html.light #call-waiter-btn {
     box-shadow: 0 8px 30px rgba(176, 120, 48, 0.2) !important;
 }
 
-/* Light mode: hero video keep dark overlay for contrast */
+/* Light mode: hero video - much lighter for a lush feel */
 html.light #home video {
-    filter: brightness(0.3) saturate(1.1) !important;
+    filter: brightness(0.65) saturate(1.2) contrast(1.1) !important;
 }
 
 /* Light mode: section backgrounds */
