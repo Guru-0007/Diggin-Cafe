@@ -1076,7 +1076,12 @@ window.subscribeToBookings = subscribeToBookings;
             const printArea = document.getElementById('print-section');
             if (!printArea) return;
 
-            const date = new Date(order.created_at).toLocaleString();
+            // Ensure we use the latest pricing data
+            const subtotal = order.total || 0;
+            const gst = Math.round(subtotal * 0.05);
+            const service = Math.round(subtotal * 0.05);
+            const grandTotal = subtotal + gst + service;
+
             const itemsHTML = (order.items || []).map(i => `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
                     <span style="flex: 2;">${i.quantity} x ${i.name}</span>
@@ -1084,27 +1089,24 @@ window.subscribeToBookings = subscribeToBookings;
                 </div>
             `).join('');
 
-            const subtotal = order.total || 0;
-            const gst = Math.round(subtotal * 0.05);
-            const service = Math.round(subtotal * 0.05);
-            const grandTotal = subtotal + gst + service;
+            const date = new Date(order.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
             printArea.innerHTML = `
-                <div style="padding: 40px; font-family: 'Courier New', Courier, monospace; color: black; background: white; max-width: 400px; margin: auto; border: 1px solid #eee;">
+                <div style="padding: 40px; font-family: 'Courier New', Courier, monospace; color: black !important; background: white !important; max-width: 400px; margin: auto; border: 1px solid #eee; min-height: 100vh;">
                     <div style="text-align: center; margin-bottom: 25px;">
-                        <h1 style="margin: 0; font-size: 28px; letter-spacing: 2px;">DIGGIN CAFÉ</h1>
-                        <p style="margin: 5px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Premium Italian & Continental</p>
+                        <h1 style="margin: 0; font-size: 28px; letter-spacing: 2px; font-weight: bold;">DIGGIN CAFÉ</h1>
+                        <p style="margin: 5px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Premium Italian & Continental</p>
                         <div style="border-bottom: 2px solid #000; margin: 15px 0;"></div>
                     </div>
 
                     <div style="margin-bottom: 20px; font-size: 13px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                             <span>ORDER ID:</span>
-                            <span>#${order.id.slice(0, 8).toUpperCase()}</span>
+                            <span style="font-weight: bold;">#${order.id.slice(0, 8).toUpperCase()}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                             <span>TABLE:</span>
-                            <span>${order.table_number || 'Takeaway'}</span>
+                            <span style="font-weight: bold;">${order.table_number || 'Takeaway'}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
                             <span>DATE:</span>
@@ -1122,7 +1124,7 @@ window.subscribeToBookings = subscribeToBookings;
                     </div>
 
                     <div style="border-bottom: 1px solid #333; margin: 15px 0;"></div>
-                    <div style="font-size: 14px; space-y: 5px;">
+                    <div style="font-size: 14px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
                             <span>SUBTOTAL:</span>
                             <span>₹${subtotal}</span>
@@ -1145,10 +1147,9 @@ window.subscribeToBookings = subscribeToBookings;
                         </div>
                     </div>
 
-                    <div style="text-align: center; margin-top: 50px; font-size: 12px;">
-                        <p>--- THANK YOU ---</p>
-                        <p style="margin-top: 10px;">Visit us again at www.diggin-cafe.com</p>
-                        <p style="font-size: 10px; margin-top: 20px; color: #666;">Generated via Diggin Unified Staff Portal</p>
+                    <div style="text-align: center; margin-top: 50px; font-size: 11px;">
+                        <p style="margin: 0; font-weight: bold;">--- THANK YOU ---</p>
+                        <p style="margin: 5px 0;">Visit again at Diggin</p>
                     </div>
                 </div>
             `;
