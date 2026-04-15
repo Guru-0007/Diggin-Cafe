@@ -345,3 +345,20 @@ function subscribeToOrders(callback) {
 function subscribeToCalls(callback) {
     return _getOrCreateChannel('calls-realtime', 'calls', callback);
 }
+
+// Ensure functions are globally accessible
+window._getOrCreateChannel = _getOrCreateChannel;
+window.removeAllChannels = removeAllChannels;
+window.insertOrder = insertOrder;
+window.fetchOrders = fetchOrders;
+window.fetchOrdersDesc = fetchOrdersDesc;
+window.updateOrderStatus = updateOrderStatus;
+window.updateOrderTimer = updateOrderTimer;
+window.fetchOrderById = fetchOrderById;
+window.insertCall = insertCall;
+window.fetchActiveCalls = fetchActiveCalls;
+window.dismissCall = dismissCall;
+window.fetchDailyStats = fetchDailyStats;
+window.fetchWeeklyRevenue = fetchWeeklyRevenue;
+window.subscribeToOrders = subscribeToOrders;
+window.subscribeToCalls = subscribeToCalls;

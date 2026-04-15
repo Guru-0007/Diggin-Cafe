@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <script src="js/supabase-config.js?v=1.2" onerror="console.error('Failed to load supabase-config.js')"></script>
     <script>
-        if (!['chef','cashier'].includes(sessionStorage.getItem('role'))) {
+        if (!['chef','cashier','admin'].includes(sessionStorage.getItem('role'))) {
             alert("Please select a role first.");
             window.location.href = "index.html";
         }
@@ -749,9 +749,10 @@
         // Auto-load
         window.addEventListener('DOMContentLoaded', () => {
             const currentRole = sessionStorage.getItem("role");
-            if (sessionStorage.getItem("staff_auth") === "true" || currentRole) {
+            if (sessionStorage.getItem("staff_auth") === "true") {
                 showDashboard();
-                const last = sessionStorage.getItem("last_view") || (currentRole === 'cashier' ? 'cashier' : 'kitchen');
+                const defaultView = currentRole === 'admin' ? 'analytics' : (currentRole === 'cashier' ? 'cashier' : 'kitchen');
+                const last = sessionStorage.getItem("last_view") || defaultView;
                 setTimeout(() => window.switchView(last), 50);
             }
         });
