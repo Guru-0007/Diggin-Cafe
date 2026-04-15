@@ -8,9 +8,17 @@ const SUPABASE_ANON_KEY = 'sb_publishable_J6YFy9g_h4S0jfctuQc8Dw_0EBYPZ3h';
 let supabase;
 try {
     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log("[Supabase] Client initialized");
+    supabase.from('orders').select('*').limit(1).then(({ data, error }) => {
+        console.log("[Supabase] Test query result:", data, error);
+    });
 } catch (e) {
-    console.warn('Supabase client init failed. Orders will use localStorage fallback.', e);
+    console.warn('Supabase client init failed. Orders will use fallback.', e);
 }
+
+window.addEventListener('beforeunload', () => {
+    if (typeof removeAllChannels === 'function') removeAllChannels();
+});
 
 /* ─── CHANNEL REGISTRY (prevent duplicates) ── */
 const _activeChannels = new Map();

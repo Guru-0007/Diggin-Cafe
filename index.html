@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/style.css?v=1.2">
+    <link rel="stylesheet" href="css/style.css?v=1.2">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -613,9 +613,12 @@
             <h3 class="text-2xl font-serif italic text-cafe-text mb-2">Staff Portal</h3>
             <p class="text-cafe-muted text-sm font-light mb-8">Select your role to continue.</p>
             <div class="space-y-4">
-                <a href="staff.html" class="block w-full py-4 bg-cafe-accent/10 hover:bg-cafe-accent text-cafe-accent hover:text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all border border-cafe-accent/20 hover:border-cafe-accent text-sm">
-                    🔐 Access Staff Portal
-                </a>
+                <button onclick="sessionStorage.setItem('role', 'chef'); window.location='staff.html'" class="block w-full py-4 bg-cafe-accent/10 hover:bg-cafe-accent text-cafe-accent hover:text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all border border-cafe-accent/20 hover:border-cafe-accent text-sm text-center">
+                    👨‍🍳 Login as Chef
+                </button>
+                <button onclick="sessionStorage.setItem('role', 'cashier'); window.location='staff.html'" class="block w-full py-4 bg-white/[0.04] hover:bg-cafe-accent text-cafe-text hover:text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all border border-white/[0.08] hover:border-cafe-accent text-sm text-center">
+                    💰 Login as Cashier
+                </button>
             </div>
             <button id="staff-modal-close" class="mt-6 text-cafe-muted text-sm hover:text-cafe-text transition-colors">Cancel</button>
         </div>
@@ -623,8 +626,8 @@
 
     </div><!-- /main-content -->
 
-    <script src="/js/supabase-config.js?v=1.2"></script>
-    <script src="/js/script.js?v=1.2" defer></script>
+    <script src="js/supabase-config.js?v=1.2"></script>
+    <script src="js/script.js?v=1.2" defer></script>
     <script>
         // Staff role modal
         document.getElementById('staff-login-btn')?.addEventListener('click', () => {
