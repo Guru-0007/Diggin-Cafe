@@ -298,13 +298,12 @@ async function updateBookingStatus(bookingId, newStatus) {
 async function fetchAnalytics() {
     if (!_sb) return { orders: [], revenue: 0, topItems: [] };
     
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const todayStr = new Date().toLocaleDateString('en-CA');
     
     const { data: todayOrders, error } = await _sb
         .from('orders')
         .select('*')
-        .gte('created_at', today.toISOString())
+        .gte('created_at', todayStr)
         .order('created_at', { ascending: false });
     
     if (error) {
@@ -614,7 +613,7 @@ window.subscribeToBookings = subscribeToBookings;
                 const active = data.orders.filter(o => o.status !== 'paid');
                 const avgOrder = paid.length > 0 ? Math.round(rev / paid.length) : 0;
 
-                const todayStr = new Date().toISOString().split('T')[0];
+                const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD local format
                 const todayBookings = (bookings || []).filter(b => b.date === todayStr);
                 const confirmedBookings = todayBookings.filter(b => b.status === 'confirmed');
 
