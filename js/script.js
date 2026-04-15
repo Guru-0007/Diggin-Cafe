@@ -1078,7 +1078,8 @@ function updateTrackerUI(status, eta = null, timerEnd = null) {
     const progressMap = {
         pending:   { active: 0, fill: "10%",  label: "⏳ Pending...",      trayLabel: "⏳ Pending" },
         preparing: { active: 1, fill: "40%",  label: "👨‍🍳 Preparing...",  trayLabel: "👨‍🍳 Preparing" },
-        ready:     { active: 2, fill: "72%",  label: "✅ Ready!",           trayLabel: "✅ Ready!" },
+        ready:     { active: 2, fill: "70%",  label: "✅ Ready!",           trayLabel: "✅ Ready!" },
+        arriving:  { active: 3, fill: "92%",  label: "🚀 Out for Delivery", trayLabel: "🚀 Arriving" },
         paid:      { active: 3, fill: "100%", label: "🍽️ Delivered!",      trayLabel: "🍽️ Delivered" }
     };
     const state = progressMap[status] || progressMap.pending;

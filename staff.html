@@ -977,10 +977,10 @@ window.subscribeToBookings = subscribeToBookings;
             if (!cont) return;
             
             try {
-                const orders = await fetchOrders(['ready', 'preparing', 'pending']);
-                // Show ready orders first, then others for reference
-                const readyOrders = orders.filter(o => o.status === 'ready');
-                const otherOrders = orders.filter(o => o.status !== 'ready');
+                const orders = await fetchOrders(['ready', 'preparing', 'pending', 'arriving']);
+                // Show ready/arriving orders first, then others for reference
+                const readyOrders = orders.filter(o => o.status === 'ready' || o.status === 'arriving');
+                const otherOrders = orders.filter(o => o.status !== 'ready' && o.status !== 'arriving');
                 const allOrders = [...readyOrders, ...otherOrders];
 
                 if (allOrders.length === 0) {
@@ -1007,7 +1007,8 @@ window.subscribeToBookings = subscribeToBookings;
                     const statusColors = {
                         pending: 'text-red-400',
                         preparing: 'text-yellow-400',
-                        ready: 'text-green-400'
+                        ready: 'text-green-400',
+                        arriving: 'text-violet-400'
                     };
 
                     return `
@@ -1032,7 +1033,8 @@ window.subscribeToBookings = subscribeToBookings;
                                 </div>
                             </div>
 
-                            ${isReady ? `
+                                </div>
+                            ` : (o.status === 'ready' || o.status === 'arriving' ? `
                                 <div class="space-y-2">
                                     <button onclick="window.markPaid('${o.id}', ${grandTotal})" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">
                                         💰 Mark Paid & Clear Table
@@ -1045,7 +1047,7 @@ window.subscribeToBookings = subscribeToBookings;
                                 <div class="w-full text-center ${statusColors[o.status]} text-[10px] font-bold uppercase py-2.5 bg-white/[0.02] rounded-xl border border-white/[0.04]">
                                     ${o.status === 'pending' ? '⏳ Waiting for Kitchen' : '👨‍🍳 Being Prepared'}
                                 </div>
-                            `}
+                            `)}
                         </div>
                     `;
                 }).join('');
