@@ -799,10 +799,8 @@ html.light #intro-screen .intro-bg-image {
 
 /* Progress bar track */
 .progress-bar-track {
-    position: absolute;
-    top: 18px;
-    left: 14%;
-    right: 14%;
+    position: relative;
+    margin: 18px 14% 0;
     height: 3px;
     background: var(--bg-surface);
     border-radius: 4px;
@@ -1142,20 +1140,6 @@ input:focus, select:focus, textarea:focus {
     opacity: 0.4;
 }
 
-/* ─── BILL PRINT STYLES ─────────────────── */
-@media print {
-    body * { visibility: hidden; }
-    .bill-printable, .bill-printable * { visibility: visible; }
-    .bill-printable {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 80mm;
-        background: white;
-        color: black;
-        padding: 20px;
-    }
-}
 
 /* ═══════════════════════════════════════════
    PERSISTENT ORDER TRACKER — In Tray

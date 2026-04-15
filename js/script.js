@@ -680,18 +680,18 @@ function renderCartItems() {
     activeOrderId = sessionStorage.getItem("active_order_id") || activeOrderId;
 
     if (activeOrderId) {
-        container.innerHTML += `
-            <div class="text-center py-6 px-4 mb-4 border-b border-white/[0.08]" id="tray-live-tracking">
-                <div class="flex flex-col items-center justify-center mb-5 mt-2">
-                    <span class="text-xs font-bold bg-cafe-accent/10 border border-cafe-accent/20 text-cafe-accent px-3 py-1 rounded-full uppercase tracking-widest mb-3">Live Order Tracking</span>
-                    <h2 class="text-2xl font-serif italic text-cafe-text">Kitchen Preparing</h2>
+        container.innerHTML = `
+            <div class="relative w-full bg-cafe-accent/5 rounded-2xl p-6 mb-8 border border-cafe-accent/10" id="tray-live-tracking">
+                <div class="flex flex-col items-center justify-center mb-6">
+                    <span class="text-xs font-bold bg-cafe-accent/15 text-cafe-accent px-4 py-1.5 rounded-full uppercase tracking-widest mb-4">Current Order Progress</span>
+                    <h2 class="text-2xl font-serif italic text-cafe-text" id="cart-status-title">Kitchen Preparing</h2>
                 </div>
-                <div id="cart-progress-tracker" class="mb-2">
+                <div id="cart-progress-tracker" class="w-full">
                     <div class="progress-tracker">
                         <div class="progress-bar-track">
                             <div class="progress-bar-fill transition-all duration-1000" id="cart-progress-fill" style="width: 10%"></div>
                         </div>
-                        <div class="status-tracker">
+                        <div class="status-tracker mt-6">
                             <div class="status-tracker-step"><span class="status-tracker-dot">📦</span><span class="status-tracker-label">Placed</span></div>
                             <div class="status-tracker-step"><span class="status-tracker-dot">👨‍🍳</span><span class="status-tracker-label">Preparing</span></div>
                             <div class="status-tracker-step"><span class="status-tracker-dot">✅</span><span class="status-tracker-label">Ready</span></div>
@@ -700,7 +700,8 @@ function renderCartItems() {
                     </div>
                 </div>
             </div>
-        `;
+            <div class="w-full h-px bg-white/[0.05] mb-8"></div>
+        ` + container.innerHTML;
         // Sync tracker state
         if (typeof fetchOrderById === "function") {
             fetchOrderById(activeOrderId).then(o => {
