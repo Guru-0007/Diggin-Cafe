@@ -405,9 +405,9 @@ window.subscribeToBookings = subscribeToBookings;
 
 </script>
     <script>
-        if (!['chef','cashier','admin'].includes(sessionStorage.getItem('role'))) {
-            alert("Please select a role first.");
-            window.location.href = "index.html";
+        // Default role if missing
+        if (!sessionStorage.getItem('role')) {
+            sessionStorage.setItem('role', 'admin');
         }
         console.log('supabase-config loaded?', typeof fetchOrders !== 'undefined');
         tailwind.config = {
@@ -1033,8 +1033,7 @@ window.subscribeToBookings = subscribeToBookings;
                                 </div>
                             </div>
 
-                                </div>
-                            ` : (o.status === 'ready' || o.status === 'arriving' ? `
+                            ${(o.status === 'ready' || o.status === 'arriving') ? `
                                 <div class="space-y-2">
                                     <button onclick="window.markPaid('${o.id}', ${grandTotal})" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest transition-all flex items-center justify-center gap-2">
                                         💰 Mark Paid & Clear Table
@@ -1047,7 +1046,7 @@ window.subscribeToBookings = subscribeToBookings;
                                 <div class="w-full text-center ${statusColors[o.status]} text-[10px] font-bold uppercase py-2.5 bg-white/[0.02] rounded-xl border border-white/[0.04]">
                                     ${o.status === 'pending' ? '⏳ Waiting for Kitchen' : '👨‍🍳 Being Prepared'}
                                 </div>
-                            `)}
+                            `}
                         </div>
                     `;
                 }).join('');
@@ -1278,6 +1277,6 @@ window.subscribeToBookings = subscribeToBookings;
         });
     </script>
     <!-- Print Container (Clean white context) -->
-    <div id="print-section" class="hidden"></div>
+    <div id="print-section" style="display: none;"></div>
 </body>
 </html>
