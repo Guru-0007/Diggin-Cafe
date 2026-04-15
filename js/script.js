@@ -1050,7 +1050,7 @@ function injectCheckoutModal() {
             // Start real-time tracking (prefer Supabase subscription, fall back to polling)
             if (_pollInterval) clearInterval(_pollInterval);
             if (_orderSubscription) {
-                try { supabase?.removeChannel(_orderSubscription); } catch(e) {}
+                try { _sb?.removeChannel(_orderSubscription); } catch(e) {}
                 _orderSubscription = null;
             }
             if (activeOrderId) {
@@ -1183,7 +1183,7 @@ function startOrderTracking(orderId) {
                 updateTrackerUI(o.status, o.eta, o.timer_end);
                 if (o.status === "ready" || o.status === "paid") {
                     setTimeout(() => {
-                        try { supabase?.removeChannel(_orderSubscription); } catch(e) {}
+                        try { _sb?.removeChannel(_orderSubscription); } catch(e) {}
                         _orderSubscription = null;
                     }, 60000);
                 }
