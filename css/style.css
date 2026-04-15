@@ -1343,3 +1343,24 @@ html.light nav.scrolled {
     .progress-bar-fill { transition: none; }
     .progress-bar-fill::after { animation: none; }
 }
+
+/* ─── PRINT SYSTEM (Fixed Blank Page) ────── */
+@media print {
+    body > *:not(#print-section) {
+        display: none !important;
+    }
+    #print-section {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white !important;
+        margin: 0;
+        padding: 0;
+    }
+    html, body {
+        background: white !important;
+        height: auto;
+    }
+}

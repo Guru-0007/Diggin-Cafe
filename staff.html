@@ -284,6 +284,25 @@ async function fetchBookings() {
     return data || [];
 }
 
+async function cleanupOldBookings() {
+    if (!_sb) return;
+    const now = new Date();
+    const { data: bookings } = await _sb.from('bookings').select('id, date, time');
+    if (!bookings) return;
+
+    for (const b of bookings) {
+        try {
+            // Check if reservation start time + 2 hours is in the past
+            const scheduled = new Date(`${b.date}T${b.time}`);
+            const expiry = new Date(scheduled.getTime() + 2 * 3600000);
+            if (now > expiry) {
+                await _sb.from('bookings').delete().eq('id', b.id);
+                console.log(`[Cleanup] Deleted expired reservation: ${b.id}`);
+            }
+        } catch (e) {}
+    }
+}
+
 async function updateBookingStatus(bookingId, newStatus) {
     if (!_sb) return;
     const { error } = await _sb
@@ -298,12 +317,14 @@ async function updateBookingStatus(bookingId, newStatus) {
 async function fetchAnalytics() {
     if (!_sb) return { orders: [], revenue: 0, topItems: [] };
     
+    // Fetch last 24 hours to ensure we cover the local day regardless of UTC shifts
+    const last24h = new Date(Date.now() - 24 * 3600000).toISOString();
     const todayStr = new Date().toLocaleDateString('en-CA');
     
-    const { data: todayOrders, error } = await _sb
+    const { data: recentOrders, error } = await _sb
         .from('orders')
         .select('*')
-        .gte('created_at', todayStr)
+        .gte('created_at', last24h)
         .order('created_at', { ascending: false });
     
     if (error) {
@@ -311,7 +332,8 @@ async function fetchAnalytics() {
         return { orders: [], revenue: 0, topItems: [] };
     }
 
-    const orders = todayOrders || [];
+    // Filter locally for current local day (YYYY-MM-DD)
+    const orders = (recentOrders || []).filter(o => o.created_at && o.created_at.startsWith(todayStr));
     const paidOrders = orders.filter(o => o.status === 'paid');
     const revenue = paidOrders.reduce((sum, o) => sum + (o.total || 0), 0);
     
@@ -604,6 +626,9 @@ window.subscribeToBookings = subscribeToBookings;
 
         window.refreshAnalytics = async function() {
             try {
+                // Permanent cleanup of old reservations
+                await cleanupOldBookings();
+
                 const data = await fetchAnalytics();
                 const bookings = await fetchBookings();
                 const weekly = await fetchWeeklyRevenue();
@@ -822,13 +847,25 @@ window.subscribeToBookings = subscribeToBookings;
                                     <button onclick="window.changeTimer('${o.id}')" class="flex-1 py-2.5 bg-cafe-accent/10 hover:bg-cafe-accent text-cafe-accent hover:text-white border border-cafe-accent/20 rounded-xl text-[10px] font-bold uppercase transition-all">⏱ Change Timer</button>
                                     <input type="number" id="new-timer-${o.id}" min="1" max="60" value="5" class="w-16 text-center text-sm rounded-xl">
                                 </div>
-                                <button onclick="window.markReady('${o.id}')" class="w-full py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
-                                    ✅ Mark Ready
-                                </button>
+                                <div class="flex gap-2">
+                                    <button onclick="window.markReady('${o.id}')" class="flex-[2] py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                                        ✅ Ready
+                                    </button>
+                                    <button onclick="window.markArriving('${o.id}')" class="flex-1 py-3 bg-cafe-accent hover:bg-cafe-accentHover text-white rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2" title="Mark as Taken">
+                                        🚀 Taken
+                                    </button>
+                                </div>
                             </div>
                         `;
                     } else {
-                        actionsHTML = `<div class="w-full text-center text-green-500 text-[11px] font-bold uppercase py-3 bg-green-500/5 border border-green-500/15 rounded-xl">✅ Ready — Waiting for Pickup</div>`;
+                        actionsHTML = `
+                            <div class="space-y-2">
+                                <div class="w-full text-center text-green-500 text-[11px] font-bold uppercase py-3 bg-green-500/5 border border-green-500/15 rounded-xl">✅ Ready — Waiting for Pickup</div>
+                                <button onclick="window.markArriving('${o.id}')" class="w-full py-3 bg-cafe-accent hover:bg-cafe-accentHover text-white rounded-xl text-[11px] font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                                    🚀 Mark as Taken / Out
+                                </button>
+                            </div>
+                        `;
                     }
 
                     return `
@@ -898,6 +935,15 @@ window.subscribeToBookings = subscribeToBookings;
                 if (_activeTimers.has(id)) { clearInterval(_activeTimers.get(id)); _activeTimers.delete(id); }
                 await window.refreshKitchen();
             } catch(e) { console.error("Mark ready error:", e); }
+        };
+
+        window.markArriving = async (id) => {
+            try {
+                await updateOrderStatus(id, 'arriving');
+                if (_activeTimers.has(id)) { clearInterval(_activeTimers.get(id)); _activeTimers.delete(id); }
+                await window.refreshKitchen();
+                showStaffToast("🚀 Order marked as Taken — Out for Delivery");
+            } catch(e) { console.error("Mark arriving error:", e); }
         };
 
         window.initKitchen = async function() {
@@ -1017,10 +1063,94 @@ window.subscribeToBookings = subscribeToBookings;
             } catch(e) { console.error("Mark paid error:", e); }
         };
 
-        window.printBill = (orderId) => {
-            // Find the order card and print it
-            showStaffToast("🖨️ Preparing bill for print...");
-            setTimeout(() => window.print(), 500);
+        window.printBill = async (orderId) => {
+            const order = await fetchOrderById(orderId);
+            if (!order) return showStaffToast("Order not found!");
+
+            const printArea = document.getElementById('print-section');
+            if (!printArea) return;
+
+            const date = new Date(order.created_at).toLocaleString();
+            const itemsHTML = (order.items || []).map(i => `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
+                    <span style="flex: 2;">${i.quantity} x ${i.name}</span>
+                    <span style="flex: 1; text-align: right;">₹${i.price * i.quantity}</span>
+                </div>
+            `).join('');
+
+            const subtotal = order.total || 0;
+            const gst = Math.round(subtotal * 0.05);
+            const service = Math.round(subtotal * 0.05);
+            const grandTotal = subtotal + gst + service;
+
+            printArea.innerHTML = `
+                <div style="padding: 40px; font-family: 'Courier New', Courier, monospace; color: black; background: white; max-width: 400px; margin: auto; border: 1px solid #eee;">
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <h1 style="margin: 0; font-size: 28px; letter-spacing: 2px;">DIGGIN CAFÉ</h1>
+                        <p style="margin: 5px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Premium Italian & Continental</p>
+                        <div style="border-bottom: 2px solid #000; margin: 15px 0;"></div>
+                    </div>
+
+                    <div style="margin-bottom: 20px; font-size: 13px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>ORDER ID:</span>
+                            <span>#${order.id.slice(0, 8).toUpperCase()}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>TABLE:</span>
+                            <span>${order.table_number || 'Takeaway'}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>DATE:</span>
+                            <span>${date}</span>
+                        </div>
+                    </div>
+
+                    <div style="border-bottom: 1px solid #333; margin: 15px 0;"></div>
+                    <div style="font-weight: bold; font-size: 12px; display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span>ITEM DESCRIPTION</span>
+                        <span>AMOUNT</span>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        ${itemsHTML}
+                    </div>
+
+                    <div style="border-bottom: 1px solid #333; margin: 15px 0;"></div>
+                    <div style="font-size: 14px; space-y: 5px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>SUBTOTAL:</span>
+                            <span>₹${subtotal}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>CGST (2.5%):</span>
+                            <span>₹${gst/2}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>SGST (2.5%):</span>
+                            <span>₹${gst/2}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>SERVICE CHG (5%):</span>
+                            <span>₹${service}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 20px; border-top: 2px solid #000; padding-top: 10px;">
+                            <span>GRAND TOTAL:</span>
+                            <span>₹${grandTotal}</span>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 50px; font-size: 12px;">
+                        <p>--- THANK YOU ---</p>
+                        <p style="margin-top: 10px;">Visit us again at www.diggin-cafe.com</p>
+                        <p style="font-size: 10px; margin-top: 20px; color: #666;">Generated via Diggin Unified Staff Portal</p>
+                    </div>
+                </div>
+            `;
+
+            showStaffToast("🖨️ Preparing premium bill...");
+            setTimeout(() => {
+                window.print();
+            }, 600);
         };
 
         window.initCashier = async function() {
@@ -1140,5 +1270,7 @@ window.subscribeToBookings = subscribeToBookings;
             }
         });
     </script>
+    <!-- Print Container (Clean white context) -->
+    <div id="print-section" class="hidden"></div>
 </body>
 </html>
