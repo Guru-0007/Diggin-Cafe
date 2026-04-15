@@ -338,12 +338,8 @@ async function fetchWeeklyRevenue() {
 
 /* ─── REALTIME SUBSCRIPTIONS ──────────────── */
 
-function subscribeToOrders(callback) {
-    return _getOrCreateChannel('orders-realtime', 'orders', callback);
-}
-
-function subscribeToCalls(callback) {
-    return _getOrCreateChannel('calls-realtime', 'calls', callback);
+function subscribeToBookings(callback) {
+    return _getOrCreateChannel('bookings-realtime', 'bookings', callback);
 }
 
 // Ensure functions are globally accessible
@@ -358,7 +354,11 @@ window.fetchOrderById = fetchOrderById;
 window.insertCall = insertCall;
 window.fetchActiveCalls = fetchActiveCalls;
 window.dismissCall = dismissCall;
+window.insertBooking = insertBooking;
+window.fetchBookings = fetchBookings;
+window.updateBookingStatus = updateBookingStatus;
 window.fetchAnalytics = fetchAnalytics;
 window.fetchWeeklyRevenue = fetchWeeklyRevenue;
 window.subscribeToOrders = subscribeToOrders;
 window.subscribeToCalls = subscribeToCalls;
+window.subscribeToBookings = subscribeToBookings;

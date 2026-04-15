@@ -352,12 +352,8 @@ async function fetchWeeklyRevenue() {
 
 /* ─── REALTIME SUBSCRIPTIONS ──────────────── */
 
-function subscribeToOrders(callback) {
-    return _getOrCreateChannel('orders-realtime', 'orders', callback);
-}
-
-function subscribeToCalls(callback) {
-    return _getOrCreateChannel('calls-realtime', 'calls', callback);
+function subscribeToBookings(callback) {
+    return _getOrCreateChannel('bookings-realtime', 'bookings', callback);
 }
 
 // Ensure functions are globally accessible
@@ -372,10 +368,14 @@ window.fetchOrderById = fetchOrderById;
 window.insertCall = insertCall;
 window.fetchActiveCalls = fetchActiveCalls;
 window.dismissCall = dismissCall;
+window.insertBooking = insertBooking;
+window.fetchBookings = fetchBookings;
+window.updateBookingStatus = updateBookingStatus;
 window.fetchAnalytics = fetchAnalytics;
 window.fetchWeeklyRevenue = fetchWeeklyRevenue;
 window.subscribeToOrders = subscribeToOrders;
 window.subscribeToCalls = subscribeToCalls;
+window.subscribeToBookings = subscribeToBookings;
 
 </script>
     <script>
@@ -449,7 +449,7 @@ window.subscribeToCalls = subscribeToCalls;
                     <button onclick="window.refreshAnalytics && window.refreshAnalytics()" class="px-4 py-2 bg-cafe-accent/10 text-cafe-accent border border-cafe-accent/20 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-cafe-accent hover:text-white transition-all">↻ Refresh</button>
                 </div>
                 <!-- Metrics -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-10">
                     <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
                         <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Revenue</div>
                         <div id="metric-revenue" class="text-3xl font-bold text-emerald-400">₹0</div>
@@ -459,6 +459,11 @@ window.subscribeToCalls = subscribeToCalls;
                         <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Orders</div>
                         <div id="metric-orders" class="text-3xl font-bold text-cafe-accent">0</div>
                         <div id="metric-orders-sub" class="text-[10px] text-cafe-muted mt-1">today</div>
+                    </div>
+                    <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
+                        <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Reservations</div>
+                        <div id="metric-bookings" class="text-3xl font-bold text-violet-400">0</div>
+                        <div id="metric-bookings-sub" class="text-[10px] text-cafe-muted mt-1">today</div>
                     </div>
                     <div class="bg-cafe-card rounded-xl border border-white/[0.04] p-6 portal-card">
                         <div class="text-[10px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Avg Order</div>
@@ -609,8 +614,14 @@ window.subscribeToCalls = subscribeToCalls;
                 const active = data.orders.filter(o => o.status !== 'paid');
                 const avgOrder = paid.length > 0 ? Math.round(rev / paid.length) : 0;
 
+                const todayStr = new Date().toISOString().split('T')[0];
+                const todayBookings = (bookings || []).filter(b => b.date === todayStr);
+                const confirmedBookings = todayBookings.filter(b => b.status === 'confirmed');
+
                 document.getElementById('metric-revenue').textContent = `₹${rev.toLocaleString()}`;
                 document.getElementById('metric-orders').textContent = data.orders.length;
+                document.getElementById('metric-bookings').textContent = todayBookings.length;
+                document.getElementById('metric-bookings-sub').textContent = `${confirmedBookings.length} confirmed`;
                 document.getElementById('metric-pending').textContent = active.length;
                 document.getElementById('metric-avg').textContent = `₹${avgOrder.toLocaleString()}`;
                 document.getElementById('metric-orders-sub').textContent = `${paid.length} completed`;
@@ -732,6 +743,13 @@ window.subscribeToCalls = subscribeToCalls;
             // Auto-refresh every 30s
             if (!window._analyticsInterval) {
                 window._analyticsInterval = setInterval(window.refreshAnalytics, 30000);
+            }
+            // Subscribe to real-time updates for immediate reflection
+            if (typeof subscribeToBookings === 'function') {
+                subscribeToBookings(() => window.refreshAnalytics());
+            }
+            if (typeof subscribeToOrders === 'function') {
+                subscribeToOrders(() => window.refreshAnalytics());
             }
         };
 
