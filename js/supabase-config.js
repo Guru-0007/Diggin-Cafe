@@ -5,11 +5,11 @@
 const SUPABASE_URL = 'https://gjylrvqhvjpdodhqdweg.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_J6YFy9g_h4S0jfctuQc8Dw_0EBYPZ3h';
 
-let supabase;
+var _sb;
 try {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     console.log("[Supabase] Client initialized");
-    supabase.from('orders').select('*').limit(1).then(({ data, error }) => {
+    _sb.from('orders').select('*').limit(1).then(({ data, error }) => {
         console.log("[Supabase] Test query result:", data, error);
     });
 } catch (e) {
@@ -26,10 +26,10 @@ const _activeChannels = new Map();
 function _getOrCreateChannel(name, table, callback) {
     // Remove existing channel to prevent duplicates
     if (_activeChannels.has(name)) {
-        try { supabase.removeChannel(_activeChannels.get(name)); } catch(e) {}
+        try { _sb.removeChannel(_activeChannels.get(name)); } catch(e) {}
         _activeChannels.delete(name);
     }
-    if (!supabase) return null;
+    if (!_sb) return null;
 
     // Debounce rapid updates to prevent UI flicker
     let _debounceTimer = null;
@@ -38,7 +38,7 @@ function _getOrCreateChannel(name, table, callback) {
         _debounceTimer = setTimeout(() => callback(payload), 200);
     };
 
-    const channel = supabase
+    const channel = _sb
         .channel(name)
         .on('postgres_changes', { event: '*', schema: 'public', table }, (payload) => {
             debouncedCallback(payload);
@@ -61,7 +61,7 @@ function _getOrCreateChannel(name, table, callback) {
 
 function removeAllChannels() {
     _activeChannels.forEach((channel, name) => {
-        try { supabase?.removeChannel(channel); } catch(e) {}
+        try { _sb?.removeChannel(channel); } catch(e) {}
     });
     _activeChannels.clear();
 }
@@ -69,8 +69,8 @@ function removeAllChannels() {
 /* ─── ORDER HELPERS ───────────────────────── */
 
 async function insertOrder(orderData) {
-    if (!supabase) throw new Error('Supabase not configured');
-    const { data, error } = await supabase
+    if (!_sb) throw new Error('Supabase not configured');
+    const { data, error } = await _sb
         .from('orders')
         .insert([orderData])
         .select();
@@ -82,8 +82,8 @@ async function insertOrder(orderData) {
 }
 
 async function fetchOrders(statusFilter) {
-    if (!supabase) return [];
-    let query = supabase
+    if (!_sb) return [];
+    let query = _sb
         .from('orders')
         .select('*')
         .order('created_at', { ascending: true }); // Oldest first for chef
@@ -105,8 +105,8 @@ async function fetchOrders(statusFilter) {
 }
 
 async function fetchOrdersDesc(statusFilter) {
-    if (!supabase) return [];
-    let query = supabase
+    if (!_sb) return [];
+    let query = _sb
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false });
@@ -128,12 +128,12 @@ async function fetchOrdersDesc(statusFilter) {
 }
 
 async function updateOrderStatus(orderId, newStatus, eta = null, timerEnd = null) {
-    if (!supabase) throw new Error('Supabase not configured');
+    if (!_sb) throw new Error('Supabase not configured');
     const updateData = { status: newStatus };
     if (eta) updateData.eta = eta;
     if (timerEnd) updateData.timer_end = timerEnd;
     
-    const { error } = await supabase
+    const { error } = await _sb
         .from('orders')
         .update(updateData)
         .eq('id', orderId);
@@ -144,10 +144,10 @@ async function updateOrderStatus(orderId, newStatus, eta = null, timerEnd = null
 }
 
 async function updateOrderTimer(orderId, timerEnd, eta = null) {
-    if (!supabase) return;
+    if (!_sb) return;
     const updateData = { timer_end: timerEnd };
     if (eta) updateData.eta = eta;
-    const { error } = await supabase
+    const { error } = await _sb
         .from('orders')
         .update(updateData)
         .eq('id', orderId);
@@ -155,8 +155,8 @@ async function updateOrderTimer(orderId, timerEnd, eta = null) {
 }
 
 async function fetchOrderById(orderId) {
-    if (!supabase) return null;
-    const { data, error } = await supabase
+    if (!_sb) return null;
+    const { data, error } = await _sb
         .from('orders')
         .select('*')
         .eq('id', orderId)
@@ -168,8 +168,8 @@ async function fetchOrderById(orderId) {
 /* ─── CALL WAITER HELPERS ─────────────────── */
 
 async function insertCall(callData) {
-    if (!supabase) throw new Error('Supabase not configured');
-    const { data, error } = await supabase
+    if (!_sb) throw new Error('Supabase not configured');
+    const { data, error } = await _sb
         .from('calls')
         .insert([callData])
         .select();
@@ -181,8 +181,8 @@ async function insertCall(callData) {
 }
 
 async function fetchActiveCalls() {
-    if (!supabase) return [];
-    const { data, error } = await supabase
+    if (!_sb) return [];
+    const { data, error } = await _sb
         .from('calls')
         .select('*')
         .eq('status', 'active')
@@ -195,8 +195,8 @@ async function fetchActiveCalls() {
 }
 
 async function dismissCall(callId) {
-    if (!supabase) return;
-    const { error } = await supabase
+    if (!_sb) return;
+    const { error } = await _sb
         .from('calls')
         .update({ status: 'dismissed' })
         .eq('id', callId);
@@ -206,8 +206,8 @@ async function dismissCall(callId) {
 /* ─── BOOKING / RESERVATION HELPERS ──────── */
 
 async function checkDoubleBooking(date, time, outlet) {
-    if (!supabase) return false;
-    const { data, error } = await supabase
+    if (!_sb) return false;
+    const { data, error } = await _sb
         .from('bookings')
         .select('id, guests')
         .eq('date', date)
@@ -220,9 +220,9 @@ async function checkDoubleBooking(date, time, outlet) {
 }
 
 async function suggestAlternativeSlots(date, outlet) {
-    if (!supabase) return [];
+    if (!_sb) return [];
     const allSlots = ['11:00','12:30','14:00','15:30','17:00','18:30','20:00','21:30'];
-    const { data, error } = await supabase
+    const { data, error } = await _sb
         .from('bookings')
         .select('time')
         .eq('date', date)
@@ -235,7 +235,7 @@ async function suggestAlternativeSlots(date, outlet) {
 }
 
 async function insertBooking(bookingData) {
-    if (!supabase) throw new Error('Supabase not configured');
+    if (!_sb) throw new Error('Supabase not configured');
 
     // Check for double booking
     const isFull = await checkDoubleBooking(bookingData.date, bookingData.time, bookingData.outlet);
@@ -246,7 +246,7 @@ async function insertBooking(bookingData) {
         throw err;
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await _sb
         .from('bookings')
         .insert([bookingData])
         .select();
@@ -258,8 +258,8 @@ async function insertBooking(bookingData) {
 }
 
 async function fetchBookings() {
-    if (!supabase) return [];
-    const { data, error } = await supabase
+    if (!_sb) return [];
+    const { data, error } = await _sb
         .from('bookings')
         .select('*')
         .order('created_at', { ascending: false });
@@ -271,8 +271,8 @@ async function fetchBookings() {
 }
 
 async function updateBookingStatus(bookingId, newStatus) {
-    if (!supabase) return;
-    const { error } = await supabase
+    if (!_sb) return;
+    const { error } = await _sb
         .from('bookings')
         .update({ status: newStatus })
         .eq('id', bookingId);
@@ -282,12 +282,12 @@ async function updateBookingStatus(bookingId, newStatus) {
 /* ─── ANALYTICS HELPERS ──────────────────── */
 
 async function fetchAnalytics() {
-    if (!supabase) return { orders: [], revenue: 0, topItems: [] };
+    if (!_sb) return { orders: [], revenue: 0, topItems: [] };
     
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    const { data: todayOrders, error } = await supabase
+    const { data: todayOrders, error } = await _sb
         .from('orders')
         .select('*')
         .gte('created_at', today.toISOString())
@@ -320,12 +320,12 @@ async function fetchAnalytics() {
 }
 
 async function fetchWeeklyRevenue() {
-    if (!supabase) return [];
+    if (!_sb) return [];
     
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
     
-    const { data, error } = await supabase
+    const { data, error } = await _sb
         .from('orders')
         .select('total, created_at, status')
         .eq('status', 'paid')

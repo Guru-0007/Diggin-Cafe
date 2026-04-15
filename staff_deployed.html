@@ -19,11 +19,11 @@
 const SUPABASE_URL = 'https://gjylrvqhvjpdodhqdweg.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_J6YFy9g_h4S0jfctuQc8Dw_0EBYPZ3h';
 
-var _sb;
+let supabase;
 try {
-    _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     console.log("[Supabase] Client initialized");
-    _sb.from('orders').select('*').limit(1).then(({ data, error }) => {
+    supabase.from('orders').select('*').limit(1).then(({ data, error }) => {
         console.log("[Supabase] Test query result:", data, error);
     });
 } catch (e) {
@@ -40,10 +40,10 @@ const _activeChannels = new Map();
 function _getOrCreateChannel(name, table, callback) {
     // Remove existing channel to prevent duplicates
     if (_activeChannels.has(name)) {
-        try { _sb.removeChannel(_activeChannels.get(name)); } catch(e) {}
+        try { supabase.removeChannel(_activeChannels.get(name)); } catch(e) {}
         _activeChannels.delete(name);
     }
-    if (!_sb) return null;
+    if (!supabase) return null;
 
     // Debounce rapid updates to prevent UI flicker
     let _debounceTimer = null;
@@ -52,7 +52,7 @@ function _getOrCreateChannel(name, table, callback) {
         _debounceTimer = setTimeout(() => callback(payload), 200);
     };
 
-    const channel = _sb
+    const channel = supabase
         .channel(name)
         .on('postgres_changes', { event: '*', schema: 'public', table }, (payload) => {
             debouncedCallback(payload);
@@ -75,7 +75,7 @@ function _getOrCreateChannel(name, table, callback) {
 
 function removeAllChannels() {
     _activeChannels.forEach((channel, name) => {
-        try { _sb?.removeChannel(channel); } catch(e) {}
+        try { supabase?.removeChannel(channel); } catch(e) {}
     });
     _activeChannels.clear();
 }
@@ -83,8 +83,8 @@ function removeAllChannels() {
 /* ─── ORDER HELPERS ───────────────────────── */
 
 async function insertOrder(orderData) {
-    if (!_sb) throw new Error('Supabase not configured');
-    const { data, error } = await _sb
+    if (!supabase) throw new Error('Supabase not configured');
+    const { data, error } = await supabase
         .from('orders')
         .insert([orderData])
         .select();
@@ -96,8 +96,8 @@ async function insertOrder(orderData) {
 }
 
 async function fetchOrders(statusFilter) {
-    if (!_sb) return [];
-    let query = _sb
+    if (!supabase) return [];
+    let query = supabase
         .from('orders')
         .select('*')
         .order('created_at', { ascending: true }); // Oldest first for chef
@@ -119,8 +119,8 @@ async function fetchOrders(statusFilter) {
 }
 
 async function fetchOrdersDesc(statusFilter) {
-    if (!_sb) return [];
-    let query = _sb
+    if (!supabase) return [];
+    let query = supabase
         .from('orders')
         .select('*')
         .order('created_at', { ascending: false });
@@ -142,12 +142,12 @@ async function fetchOrdersDesc(statusFilter) {
 }
 
 async function updateOrderStatus(orderId, newStatus, eta = null, timerEnd = null) {
-    if (!_sb) throw new Error('Supabase not configured');
+    if (!supabase) throw new Error('Supabase not configured');
     const updateData = { status: newStatus };
     if (eta) updateData.eta = eta;
     if (timerEnd) updateData.timer_end = timerEnd;
     
-    const { error } = await _sb
+    const { error } = await supabase
         .from('orders')
         .update(updateData)
         .eq('id', orderId);
@@ -158,10 +158,10 @@ async function updateOrderStatus(orderId, newStatus, eta = null, timerEnd = null
 }
 
 async function updateOrderTimer(orderId, timerEnd, eta = null) {
-    if (!_sb) return;
+    if (!supabase) return;
     const updateData = { timer_end: timerEnd };
     if (eta) updateData.eta = eta;
-    const { error } = await _sb
+    const { error } = await supabase
         .from('orders')
         .update(updateData)
         .eq('id', orderId);
@@ -169,8 +169,8 @@ async function updateOrderTimer(orderId, timerEnd, eta = null) {
 }
 
 async function fetchOrderById(orderId) {
-    if (!_sb) return null;
-    const { data, error } = await _sb
+    if (!supabase) return null;
+    const { data, error } = await supabase
         .from('orders')
         .select('*')
         .eq('id', orderId)
@@ -182,8 +182,8 @@ async function fetchOrderById(orderId) {
 /* ─── CALL WAITER HELPERS ─────────────────── */
 
 async function insertCall(callData) {
-    if (!_sb) throw new Error('Supabase not configured');
-    const { data, error } = await _sb
+    if (!supabase) throw new Error('Supabase not configured');
+    const { data, error } = await supabase
         .from('calls')
         .insert([callData])
         .select();
@@ -195,8 +195,8 @@ async function insertCall(callData) {
 }
 
 async function fetchActiveCalls() {
-    if (!_sb) return [];
-    const { data, error } = await _sb
+    if (!supabase) return [];
+    const { data, error } = await supabase
         .from('calls')
         .select('*')
         .eq('status', 'active')
@@ -209,8 +209,8 @@ async function fetchActiveCalls() {
 }
 
 async function dismissCall(callId) {
-    if (!_sb) return;
-    const { error } = await _sb
+    if (!supabase) return;
+    const { error } = await supabase
         .from('calls')
         .update({ status: 'dismissed' })
         .eq('id', callId);
@@ -220,8 +220,8 @@ async function dismissCall(callId) {
 /* ─── BOOKING / RESERVATION HELPERS ──────── */
 
 async function checkDoubleBooking(date, time, outlet) {
-    if (!_sb) return false;
-    const { data, error } = await _sb
+    if (!supabase) return false;
+    const { data, error } = await supabase
         .from('bookings')
         .select('id, guests')
         .eq('date', date)
@@ -234,9 +234,9 @@ async function checkDoubleBooking(date, time, outlet) {
 }
 
 async function suggestAlternativeSlots(date, outlet) {
-    if (!_sb) return [];
+    if (!supabase) return [];
     const allSlots = ['11:00','12:30','14:00','15:30','17:00','18:30','20:00','21:30'];
-    const { data, error } = await _sb
+    const { data, error } = await supabase
         .from('bookings')
         .select('time')
         .eq('date', date)
@@ -249,7 +249,7 @@ async function suggestAlternativeSlots(date, outlet) {
 }
 
 async function insertBooking(bookingData) {
-    if (!_sb) throw new Error('Supabase not configured');
+    if (!supabase) throw new Error('Supabase not configured');
 
     // Check for double booking
     const isFull = await checkDoubleBooking(bookingData.date, bookingData.time, bookingData.outlet);
@@ -260,7 +260,7 @@ async function insertBooking(bookingData) {
         throw err;
     }
 
-    const { data, error } = await _sb
+    const { data, error } = await supabase
         .from('bookings')
         .insert([bookingData])
         .select();
@@ -272,8 +272,8 @@ async function insertBooking(bookingData) {
 }
 
 async function fetchBookings() {
-    if (!_sb) return [];
-    const { data, error } = await _sb
+    if (!supabase) return [];
+    const { data, error } = await supabase
         .from('bookings')
         .select('*')
         .order('created_at', { ascending: false });
@@ -285,8 +285,8 @@ async function fetchBookings() {
 }
 
 async function updateBookingStatus(bookingId, newStatus) {
-    if (!_sb) return;
-    const { error } = await _sb
+    if (!supabase) return;
+    const { error } = await supabase
         .from('bookings')
         .update({ status: newStatus })
         .eq('id', bookingId);
@@ -296,12 +296,12 @@ async function updateBookingStatus(bookingId, newStatus) {
 /* ─── ANALYTICS HELPERS ──────────────────── */
 
 async function fetchAnalytics() {
-    if (!_sb) return { orders: [], revenue: 0, topItems: [] };
+    if (!supabase) return { orders: [], revenue: 0, topItems: [] };
     
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
-    const { data: todayOrders, error } = await _sb
+    const { data: todayOrders, error } = await supabase
         .from('orders')
         .select('*')
         .gte('created_at', today.toISOString())
@@ -334,12 +334,12 @@ async function fetchAnalytics() {
 }
 
 async function fetchWeeklyRevenue() {
-    if (!_sb) return [];
+    if (!supabase) return [];
     
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
     
-    const { data, error } = await _sb
+    const { data, error } = await supabase
         .from('orders')
         .select('total, created_at, status')
         .eq('status', 'paid')
@@ -855,8 +855,8 @@ window.subscribeToCalls = subscribeToCalls;
             try {
                 await updateOrderStatus(id, 'preparing', `${mins}m`);
                 // Update timer_end
-                if (_sb) {
-                    await _sb.from('orders').update({ timer_end: timerEnd }).eq('id', id);
+                if (supabase) {
+                    await supabase.from('orders').update({ timer_end: timerEnd }).eq('id', id);
                 }
                 await window.refreshKitchen();
             } catch(e) { console.error("Start preparing error:", e); }
@@ -868,8 +868,8 @@ window.subscribeToCalls = subscribeToCalls;
             const timerEnd = new Date(Date.now() + mins * 60000).toISOString();
             
             try {
-                if (_sb) {
-                    await _sb.from('orders').update({ timer_end: timerEnd, eta: `${mins}m` }).eq('id', id);
+                if (supabase) {
+                    await supabase.from('orders').update({ timer_end: timerEnd, eta: `${mins}m` }).eq('id', id);
                 }
                 startCountdownDisplay(id, timerEnd);
             } catch(e) { console.error("Change timer error:", e); }
@@ -987,8 +987,8 @@ window.subscribeToCalls = subscribeToCalls;
         window.markPaid = async (id, grandTotal) => {
             try {
                 // Update order total to include taxes, mark as paid
-                if (_sb) {
-                    await _sb.from('orders').update({ status: 'paid', total: grandTotal }).eq('id', id);
+                if (supabase) {
+                    await supabase.from('orders').update({ status: 'paid', total: grandTotal }).eq('id', id);
                 } else {
                     await updateOrderStatus(id, 'paid');
                 }
