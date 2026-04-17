@@ -6,7 +6,27 @@
       "price": 295,
       "description": "Slow-steeped 18-hour cold brew, silky smooth with a hint of dark chocolate.",
       "image": "images/img_b535fa02.jpg",
-      "tag": "Chef's Pick"
+      "tag": "Chef's Pick",
+      "customizations": [
+        {
+          "name": "Milk Choice",
+          "type": "radio",
+          "options": [
+            { "name": "Regular", "price": 0 },
+            { "name": "Oat Milk", "price": 60 },
+            { "name": "Almond Milk", "price": 60 }
+          ]
+        },
+        {
+          "name": "Sweetness",
+          "type": "radio",
+          "options": [
+            { "name": "Normal", "price": 0 },
+            { "name": "Less Sugar", "price": 0 },
+            { "name": "No Sugar", "price": 0 }
+          ]
+        }
+      ]
     },
     {
       "id": "sig2",
@@ -14,7 +34,26 @@
       "price": 345,
       "description": "House-pulled espresso swirled with handmade caramel and steamed milk.",
       "image": "images/img_df98358e.jpg",
-      "tag": "Trending"
+      "tag": "Trending",
+      "customizations": [
+        {
+          "name": "Milk Choice",
+          "type": "radio",
+          "options": [
+            { "name": "Regular", "price": 0 },
+            { "name": "Oat Milk", "price": 60 },
+            { "name": "Almond Milk", "price": 60 }
+          ]
+        },
+        {
+          "name": "Add Syrup",
+          "type": "checkbox",
+          "options": [
+            { "name": "Vanilla Syrup", "price": 40 },
+            { "name": "Hazelnut Syrup", "price": 40 }
+          ]
+        }
+      ]
     },
     {
       "id": "sig3",
@@ -29,7 +68,24 @@
       "price": 325,
       "description": "Velvety foam kissed with roasted hazelnut and a dusting of cocoa.",
       "image": "images/img_49e4bd24.jpg",
-      "tag": "Instagram Favorite"
+      "tag": "Instagram Favorite",
+      "customizations": [
+        {
+          "name": "Milk Choice",
+          "type": "radio",
+          "options": [
+            { "name": "Regular", "price": 0 },
+            { "name": "Oat Milk", "price": 60 }
+          ]
+        },
+        {
+          "name": "Extra Shot",
+          "type": "checkbox",
+          "options": [
+            { "name": "Espresso Shot", "price": 50 }
+          ]
+        }
+      ]
     },
     {
       "id": "sig5",
@@ -96,7 +152,26 @@
       "price": 475,
       "description": "Creamy egg-based sauce with crispy pancetta — the Roman original.",
       "image": "images/img_753245ea.jpg",
-      "tag": "Chef's Pick"
+      "tag": "Chef's Pick",
+      "customizations": [
+        {
+          "name": "Pasta Type",
+          "type": "radio",
+          "options": [
+            { "name": "Spaghetti", "price": 0 },
+            { "name": "Penne", "price": 0 },
+            { "name": "Fettuccini", "price": 20 }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "type": "checkbox",
+          "options": [
+            { "name": "Extra Cheese", "price": 60 },
+            { "name": "Extra Garlic", "price": 20 }
+          ]
+        }
+      ]
     },
     {
       "id": "p2",
@@ -104,7 +179,25 @@
       "price": 425,
       "description": "Fresh basil, thyme, and roasted garlic tossed in olive oil and parmesan.",
       "image": "images/img_2d443949.jpg",
-      "tag": "Instagram Favorite"
+      "tag": "Instagram Favorite",
+      "customizations": [
+        {
+          "name": "Pasta Type",
+          "type": "radio",
+          "options": [
+            { "name": "Penne", "price": 0 },
+            { "name": "Spaghetti", "price": 0 }
+          ]
+        },
+        {
+          "name": "Vegetables",
+          "type": "checkbox",
+          "options": [
+            { "name": "Extra Mushrooms", "price": 50 },
+            { "name": "Bell Peppers", "price": 40 }
+          ]
+        }
+      ]
     },
     {
       "id": "p3",
@@ -112,7 +205,25 @@
       "price": 475,
       "description": "Fiery tomato sauce with chili flakes, baked under a golden cheese crust.",
       "image": "images/img_11193a9a.jpg",
-      "tag": "Trending"
+      "tag": "Trending",
+      "customizations": [
+        {
+          "name": "Spice Level",
+          "type": "radio",
+          "options": [
+            { "name": "Medium", "price": 0 },
+            { "name": "Spicy", "price": 0 },
+            { "name": "Extra Hot", "price": 0 }
+          ]
+        },
+        {
+          "name": "Add-ons",
+          "type": "checkbox",
+          "options": [
+            { "name": "Extra Mozzarella", "price": 60 }
+          ]
+        }
+      ]
     },
     {
       "id": "p4",
@@ -137,7 +248,27 @@
       "price": 525,
       "description": "San Marzano tomatoes, fresh mozzarella, basil — stone-baked perfection.",
       "image": "images/img_58ff40eb.jpg",
-      "tag": "Instagram Favorite"
+      "tag": "Instagram Favorite",
+      "customizations": [
+        {
+          "name": "Base Type",
+          "type": "radio",
+          "options": [
+            { "name": "Classic", "price": 0 },
+            { "name": "Thin Crust", "price": 40 },
+            { "name": "Whole Wheat", "price": 60 }
+          ]
+        },
+        {
+          "name": "Veggie Toppings",
+          "type": "checkbox",
+          "options": [
+            { "name": "Mushrooms", "price": 50 },
+            { "name": "Black Olives", "price": 50 },
+            { "name": "Jalapenos", "price": 40 }
+          ]
+        }
+      ]
     },
     {
       "id": "pz2",
@@ -145,7 +276,25 @@
       "price": 575,
       "description": "Roasted forest mushrooms with crumbled feta and rosemary-infused oil.",
       "image": "images/img_392dae04.jpg",
-      "tag": "Chef's Pick"
+      "tag": "Chef's Pick",
+      "customizations": [
+        {
+          "name": "Base Type",
+          "type": "radio",
+          "options": [
+            { "name": "Classic", "price": 0 },
+            { "name": "Thin Crust", "price": 40 }
+          ]
+        },
+        {
+          "name": "Extras",
+          "type": "checkbox",
+          "options": [
+            { "name": "Extra Feta", "price": 70 },
+            { "name": "Spinach", "price": 40 }
+          ]
+        }
+      ]
     },
     {
       "id": "pz3",
@@ -160,7 +309,25 @@
       "name": "Pepperoni Fuoco",
       "price": 625,
       "description": "Spicy pepperoni, jalapeños, mozzarella, and a drizzle of chili oil.",
-      "image": "images/img_28303ad1.jpg"
+      "image": "images/img_28303ad1.jpg",
+      "customizations": [
+        {
+          "name": "Base Type",
+          "type": "radio",
+          "options": [
+            { "name": "Classic", "price": 0 },
+            { "name": "Thin Crust", "price": 40 }
+          ]
+        },
+        {
+          "name": "Toppings",
+          "type": "checkbox",
+          "options": [
+            { "name": "Extra Pepperoni", "price": 90 },
+            { "name": "Hot Honey Drizzle", "price": 30 }
+          ]
+        }
+      ]
     }
   ],
   "starters": [

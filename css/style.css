@@ -1358,3 +1358,112 @@ html.light nav.scrolled {
         z-index: 999999 !important;
     }
 }
+
+/* ═══════════════════════════════════════════
+   CUSTOMIZATION MODAL — Zomato Style Luxury
+   ═══════════════════════════════════════════ */
+.cust-modal-overlay {
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.cust-option-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    background: var(--bg-surface);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cust-option-label:hover {
+    border-color: var(--accent-hover);
+    background: var(--bg-elevated);
+}
+
+.cust-option-input:checked + .cust-option-label {
+    border-color: var(--accent);
+    background: var(--accent-glow);
+}
+
+.cust-option-input {
+    display: none;
+}
+
+.cust-check-indicator {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--text-muted);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.cust-radio-indicator {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--text-muted);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.cust-option-input:checked + .cust-option-label .cust-check-indicator {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.cust-option-input:checked + .cust-option-label .cust-radio-indicator {
+    border-color: var(--accent);
+}
+.cust-option-input:checked + .cust-option-label .cust-radio-indicator::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+}
+
+.cust-instruction-box {
+    width: 100%;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    resize: none;
+    transition: border-color 0.2s ease;
+}
+
+.cust-instruction-box:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.cust-char-count {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-align: right;
+    margin-top: 0.25rem;
+    font-weight: 600;
+}
+
+/* Light mode specific tweaks for modal */
+html.light .cust-option-label {
+    background: #fff;
+}
+html.light .cust-option-input:checked + .cust-option-label {
+    background: rgba(176, 120, 48, 0.05);
+}
+html.light .cust-instruction-box {
+    background: #fff;
+}

@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     injectCheckoutModal();
     injectCallWaiterBtn();
     injectOrderTracker();
+    injectCustomizationModal();
     updateCartCount();
     initNavbarScroll();
     initImageFallbacks();
@@ -31,6 +32,7 @@ let cart = JSON.parse(localStorage.getItem("cafe_cart")) || [];
 let activeOrderId = sessionStorage.getItem("active_order_id") || null;
 let _audioCtx = null; // Reusable AudioContext
 let _pollInterval = null; // Track polling interval
+window.menuData = null; // Global access for customizations
 
 function getAudioCtx() {
     if (!_audioCtx || _audioCtx.state === 'closed') {
@@ -353,12 +355,14 @@ async function fetchMenuData() {
 
     let data;
     try {
-        const res = await fetch("data/menu.json");
+        res = await fetch("data/menu.json");
         if (!res.ok) throw new Error("Failed");
         data = await res.json();
+        window.menuData = data;
     } catch (e) {
         console.warn("Fetch failed, using fallback menu:", e);
         data = fallbackMenu;
+        window.menuData = data;
     }
 
     if (loading) loading.classList.add("hidden");
@@ -571,12 +575,35 @@ function renderRecommendations(menuData, container) {
 }
 
 // ─── CART LOGIC ──────────────────────────────
-window.addToCart = function (id, name, price, btnEl) {
-    const existing = cart.find(c => c.id === id);
+window.addToCart = function (id, name, price, btnEl, customizations = null) {
+    // If no customizations provided, check if item needs them
+    if (!customizations && window.menuData) {
+        let item = null;
+        for (const catItems of Object.values(window.menuData)) {
+            const found = catItems.find(i => i.id === id);
+            if (found) { item = found; break; }
+        }
+        if (item && item.customizations) {
+            showCustomizationModal(item, btnEl);
+            return;
+        }
+    }
+
+    // Create a unique key for cart items based on customizations
+    const cartId = id + (customizations ? JSON.stringify(customizations) : "");
+    const existing = cart.find(c => (c.cartId || c.id) === cartId);
+
     if (existing) {
         existing.quantity += 1;
     } else {
-        cart.push({ id, name, price, quantity: 1 });
+        cart.push({ 
+            id, 
+            cartId,
+            name, 
+            price: price + (customizations ? customizations.extraPrice : 0), 
+            quantity: 1,
+            customizations 
+        });
     }
     saveCart();
 
@@ -609,12 +636,151 @@ window.addToCart = function (id, name, price, btnEl) {
     showMiniToast(`${name} added to order`);
 };
 
+function injectCustomizationModal() {
+    if (document.getElementById("cust-modal")) return;
+    const modal = document.createElement("div");
+    modal.id = "cust-modal";
+    modal.className = "modal-overlay fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6";
+    modal.innerHTML = `
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" id="cust-modal-bg"></div>
+        <div class="relative bg-cafe-bg border border-white/[0.08] rounded-[2rem] w-full max-w-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-6 sm:p-8 border-b border-white/[0.04] flex justify-between items-center bg-cafe-card">
+                <div>
+                    <h3 class="text-xl sm:text-2xl font-serif italic text-cafe-text" id="cust-title">Customize Item</h3>
+                    <p class="text-cafe-muted text-xs sm:text-sm font-light mt-1" id="cust-price">Original Price: ₹0</p>
+                </div>
+                <button id="cust-modal-close-btn" class="p-2 text-cafe-muted hover:text-cafe-text transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="overflow-y-auto p-6 sm:p-8 space-y-8" id="cust-options-container">
+                <!-- Options will be injected here -->
+            </div>
+
+            <div class="p-6 sm:p-8 border-t border-white/[0.04] bg-cafe-card">
+                <div class="mb-6">
+                    <label class="block text-[11px] font-bold text-cafe-muted uppercase tracking-[0.2em] mb-3">Special Instructions (Max 250 characters)</label>
+                    <textarea id="cust-instructions" maxlength="250" rows="3" class="cust-instruction-box" placeholder="e.g. Less spicy, No onions, extra hot..."></textarea>
+                    <div id="cust-char-count" class="cust-char-count">0 / 250</div>
+                </div>
+                <button id="cust-confirm-btn" class="btn-press w-full py-4 bg-cafe-accent hover:bg-cafe-accentHover text-white font-bold uppercase tracking-[0.12em] rounded-xl transition-all shadow-lg text-sm flex items-center justify-center gap-2">
+                    Add to Order · <span id="cust-total-price">₹0</span>
+                </button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    document.getElementById("cust-modal-close-btn").onclick = hideCustomizationModal;
+    document.getElementById("cust-modal-bg").onclick = hideCustomizationModal;
+    
+    const instr = document.getElementById("cust-instructions");
+    instr.oninput = (e) => {
+        document.getElementById("cust-char-count").textContent = `${e.target.value.length} / 250`;
+    };
+}
+
+function hideCustomizationModal() {
+    const modal = document.getElementById("cust-modal");
+    if (modal) modal.classList.remove("open");
+    document.body.style.overflow = "";
+}
+
+window.showCustomizationModal = function(item, btnEl) {
+    const modal = document.getElementById("cust-modal");
+    if (!modal) return;
+
+    document.getElementById("cust-title").textContent = item.name;
+    document.getElementById("cust-price").textContent = `Base Price: ₹${item.price}`;
+    
+    const container = document.getElementById("cust-options-container");
+    container.innerHTML = "";
+    
+    item.customizations.forEach((group, gIdx) => {
+        const groupEl = document.createElement("div");
+        groupEl.innerHTML = `
+            <h4 class="text-[11px] font-bold text-cafe-accent uppercase tracking-[0.2em] mb-4">${group.name}</h4>
+            <div class="grid grid-cols-1 gap-3">
+                ${group.options.map((opt, oIdx) => `
+                    <input type="${group.type}" 
+                           name="group-${gIdx}" 
+                           id="opt-${gIdx}-${oIdx}" 
+                           class="cust-option-input" 
+                           data-price="${opt.price}" 
+                           data-name="${opt.name}"
+                           data-group="${group.name}"
+                           ${group.type === 'radio' && oIdx === 0 ? 'checked' : ''}>
+                    <label for="opt-${gIdx}-${oIdx}" class="cust-option-label">
+                        <div class="flex items-center gap-3">
+                            <div class="${group.type === 'radio' ? 'cust-radio-indicator' : 'cust-check-indicator'}"></div>
+                            <span class="text-cafe-text font-medium">${opt.name}</span>
+                        </div>
+                        ${opt.price > 0 ? `<span class="text-cafe-accent font-bold text-sm">+ ₹${opt.price}</span>` : ''}
+                    </label>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(groupEl);
+    });
+
+    // Reset instructions
+    const instr = document.getElementById("cust-instructions");
+    instr.value = "";
+    document.getElementById("cust-char-count").textContent = "0 / 250";
+
+    const updatePrice = () => {
+        let extra = 0;
+        modal.querySelectorAll(".cust-option-input:checked").forEach(input => {
+            extra += parseFloat(input.dataset.price || 0);
+        });
+        document.getElementById("cust-total-price").textContent = `₹${item.price + extra}`;
+    };
+
+    modal.querySelectorAll(".cust-option-input").forEach(input => {
+        input.onchange = updatePrice;
+    });
+    updatePrice();
+
+    document.getElementById("cust-confirm-btn").onclick = () => {
+        const selections = {};
+        let extraPrice = 0;
+        
+        item.customizations.forEach((group, gIdx) => {
+            const inputs = modal.querySelectorAll(`input[name="group-${gIdx}"]:checked`);
+            if (group.type === 'radio') {
+                if (inputs[0]) {
+                    selections[group.name] = inputs[0].dataset.name;
+                    extraPrice += parseFloat(inputs[0].dataset.price);
+                }
+            } else {
+                selections[group.name] = Array.from(inputs).map(i => {
+                    extraPrice += parseFloat(i.dataset.price);
+                    return i.dataset.name;
+                });
+            }
+        });
+
+        const customizations = {
+            selections,
+            extraPrice,
+            instructions: document.getElementById("cust-instructions").value.trim()
+        };
+
+        window.addToCart(item.id, item.name, item.price, btnEl, customizations);
+        hideCustomizationModal();
+    };
+
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+};
+
 window.updateQuantity = function (id, change) {
-    const item = cart.find(c => c.id === id);
+    const item = cart.find(c => (c.cartId || c.id) === id);
     if (!item) return;
     item.quantity += change;
     if (item.quantity <= 0) {
-        cart = cart.filter(c => c.id !== id);
+        cart = cart.filter(c => (c.cartId || c.id) !== id);
     }
     saveCart();
 };
@@ -733,17 +899,33 @@ function renderCartItems() {
         cart.forEach(item => {
             total += item.price * item.quantity;
             const row = document.createElement("div");
-            row.className = "flex justify-between items-center mb-4 p-4 bg-cafe-card rounded-xl border border-white/[0.04] transition-all duration-300 hover:border-cafe-accent/10";
+            row.className = "flex flex-col mb-4 p-4 bg-cafe-card rounded-xl border border-white/[0.04] transition-all duration-300 hover:border-cafe-accent/10";
+            
+            let custHTML = "";
+            if (item.customizations) {
+                custHTML = `<div class="mt-2 space-y-1">`;
+                for (const [key, val] of Object.entries(item.customizations.selections)) {
+                    custHTML += `<div class="text-[10px] text-cafe-muted font-medium uppercase tracking-wider">${key}: <span class="text-cafe-accent">${Array.isArray(val) ? val.join(', ') : val}</span></div>`;
+                }
+                if (item.customizations.instructions) {
+                    custHTML += `<div class="text-[10px] text-cafe-text font-serif italic mt-1.5 opacity-70">" ${item.customizations.instructions} "</div>`;
+                }
+                custHTML += `</div>`;
+            }
+
             row.innerHTML = `
-                <div class="flex-grow mr-4">
-                    <h4 class="text-cafe-text font-bold text-[15px] mb-0.5">${item.name}</h4>
-                    <span class="text-cafe-accent text-sm font-semibold">₹${item.price} × ${item.quantity}</span>
+                <div class="flex justify-between items-center w-full">
+                    <div class="flex-grow mr-4">
+                        <h4 class="text-cafe-text font-bold text-[15px] mb-0.5">${item.name}</h4>
+                        <span class="text-cafe-accent text-sm font-semibold">₹${item.price} × ${item.quantity}</span>
+                    </div>
+                    <div class="flex items-center gap-1 bg-cafe-bg rounded-lg border border-white/[0.04] p-1">
+                        <button onclick="updateQuantity('${item.cartId || item.id}', -1)" class="w-8 h-8 flex items-center justify-center text-cafe-muted hover:text-cafe-text hover:bg-white/5 rounded-md transition-colors font-bold text-lg">−</button>
+                        <span class="text-cafe-text font-bold w-7 text-center text-sm">${item.quantity}</span>
+                        <button onclick="updateQuantity('${item.cartId || item.id}', 1)" class="w-8 h-8 flex items-center justify-center text-cafe-muted hover:text-cafe-text hover:bg-white/5 rounded-md transition-colors font-bold text-lg">+</button>
+                    </div>
                 </div>
-                <div class="flex items-center gap-1 bg-cafe-bg rounded-lg border border-white/[0.04] p-1">
-                    <button onclick="updateQuantity('${item.id}', -1)" class="w-8 h-8 flex items-center justify-center text-cafe-muted hover:text-cafe-text hover:bg-white/5 rounded-md transition-colors font-bold text-lg">−</button>
-                    <span class="text-cafe-text font-bold w-7 text-center text-sm">${item.quantity}</span>
-                    <button onclick="updateQuantity('${item.id}', 1)" class="w-8 h-8 flex items-center justify-center text-cafe-muted hover:text-cafe-text hover:bg-white/5 rounded-md transition-colors font-bold text-lg">+</button>
-                </div>
+                ${custHTML}
             `;
             container.appendChild(row);
         });
@@ -979,7 +1161,12 @@ function injectCheckoutModal() {
         const orderData = {
             table_number: tableNum,
             customer_name: custName,
-            items: cart.map(i => ({ name: i.name, price: i.price, quantity: i.quantity })),
+            items: cart.map(i => ({ 
+                name: i.name, 
+                price: i.price, 
+                quantity: i.quantity,
+                customizations: i.customizations 
+            })),
             total: total,
             status: "pending"
         };

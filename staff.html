@@ -808,7 +808,26 @@ window.subscribeToBookings = subscribeToBookings;
                 document.getElementById("no-orders")?.classList.add("hidden");
 
                 cont.innerHTML = orders.map(o => {
-                    const items = (o.items || []).map(i => `<div class="flex justify-between text-sm py-1.5 border-b border-white/[0.03] last:border-0"><span>${i.quantity}× ${i.name}</span><span class="text-cafe-muted">₹${i.price * i.quantity}</span></div>`).join('');
+                    const items = (o.items || []).map(i => {
+                        let custInfo = "";
+                        if (i.customizations) {
+                            const sels = i.customizations.selections;
+                            const notes = Object.entries(sels).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`).join(' | ');
+                            custInfo = `<div class="text-[9px] text-cafe-accent font-bold mt-1 uppercase tracking-tight">${notes}</div>`;
+                            if (i.customizations.instructions) {
+                                custInfo += `<div class="text-[10px] text-cafe-text italic font-serif mt-1 opacity-80 border-l-2 border-cafe-accent pl-2">"${i.customizations.instructions}"</div>`;
+                            }
+                        }
+                        return `
+                            <div class="flex flex-col py-2 border-b border-white/[0.04] last:border-0">
+                                <div class="flex justify-between items-center text-sm font-bold">
+                                    <span>${i.quantity}× ${i.name}</span>
+                                    <span class="text-cafe-muted text-xs">₹${i.price * i.quantity}</span>
+                                </div>
+                                ${custInfo}
+                            </div>
+                        `;
+                    }).join('');
                     
                     const statusColors = {
                         pending: 'border-red-500/30 text-red-400 bg-red-500/5',
@@ -991,12 +1010,23 @@ window.subscribeToBookings = subscribeToBookings;
                 document.getElementById("no-cashier-orders")?.classList.add("hidden");
 
                 cont.innerHTML = allOrders.map(o => {
-                    const items = (o.items || []).map(i => `
-                        <div class="flex justify-between text-sm py-1.5 border-b border-white/[0.03] last:border-0">
-                            <span>${i.quantity}× ${i.name}</span>
-                            <span class="text-cafe-muted font-medium">₹${i.price * i.quantity}</span>
-                        </div>
-                    `).join('');
+                    const items = (o.items || []).map(i => {
+                        let custInfo = "";
+                        if (i.customizations) {
+                            const sels = i.customizations.selections;
+                            const notes = Object.entries(sels).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`).join(' | ');
+                            custInfo = `<div class="text-[9px] text-cafe-accent font-medium mt-0.5">${notes}</div>`;
+                        }
+                        return `
+                            <div class="flex flex-col py-1.5 border-b border-white/[0.03] last:border-0">
+                                <div class="flex justify-between text-sm">
+                                    <span>${i.quantity}× ${i.name}</span>
+                                    <span class="text-cafe-muted font-medium">₹${i.price * i.quantity}</span>
+                                </div>
+                                ${custInfo}
+                            </div>
+                        `;
+                    }).join('');
 
                     const subtotal = o.total || 0;
                     const gst = Math.round(subtotal * 0.05);
@@ -1082,12 +1112,22 @@ window.subscribeToBookings = subscribeToBookings;
             const service = Math.round(subtotal * 0.05);
             const grandTotal = subtotal + gst + service;
 
-            const itemsHTML = (order.items || []).map(i => `
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px;">
-                    <span style="flex: 2;">${i.quantity} x ${i.name}</span>
-                    <span style="flex: 1; text-align: right;">₹${i.price * i.quantity}</span>
-                </div>
-            `).join('');
+            const itemsHTML = (order.items || []).map(i => {
+                let custText = "";
+                if (i.customizations) {
+                    const sels = i.customizations.selections;
+                    custText = Object.entries(sels).map(([k, v]) => `${k}: ${Array.isArray(v) ? v.join(', ') : v}`).join(' | ');
+                }
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: bold;">
+                            <span style="flex: 2;">${i.quantity} x ${i.name}</span>
+                            <span style="flex: 1; text-align: right;">₹${i.price * i.quantity}</span>
+                        </div>
+                        ${custText ? `<div style="font-size: 10px; color: #555; margin-top: 2px;">${custText}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
 
             const date = new Date(order.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
